@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mainwidget.cpp
+    mainwidget.cpp \
+    imagewidget.cpp \
+    defectwidget.cpp
 
 HEADERS  += mainwindow.h \
-    mainwidget.h
+    mainwidget.h \
+    imagewidget.h \
+    defectwidget.h
 
 FORMS    += mainwindow.ui \
-    mainwidget.ui
+    mainwidget.ui \
+    imagewidget.ui \
+    defectwidget.ui

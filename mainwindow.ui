@@ -78,6 +78,18 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="imageDockWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="ImageWidget" name="imageWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="defectDockWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="DefectWidget" name="defectWidget"/>
+  </widget>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
@@ -145,6 +157,18 @@
    <class>MainWidget</class>
    <extends>QWidget</extends>
    <header>mainwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImageWidget</class>
+   <extends>QWidget</extends>
+   <header>imagewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DefectWidget</class>
+   <extends>QWidget</extends>
+   <header>defectwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
