@@ -51,3 +51,6 @@ win32 {
     RCC_DIR = $$BUILDDIR/.qrc
     UI_DIR = $$BUILDDIR/.ui
 }
+
+DISTFILES += \
+    doc/README.MD
