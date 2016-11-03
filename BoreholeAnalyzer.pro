@@ -32,6 +32,9 @@ FORMS    += mainwindow.ui \
     imagewidget.ui \
     defectwidget.ui
 
+RESOURCES += \
+    res.qrc
+
 CONFIG(debug, debug|release) {
     DESTDIR = debug
 } else {
