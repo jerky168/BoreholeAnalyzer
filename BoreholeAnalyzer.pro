@@ -27,3 +27,8 @@ FORMS    += mainwindow.ui \
     mainwidget.ui \
     imagewidget.ui \
     defectwidget.ui
+
+RESOURCES += \
+    res.qrc
+
+
