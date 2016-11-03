@@ -38,14 +38,16 @@ CONFIG(debug, debug|release) {
     DESTDIR = release
 }
 
+BUILDDIR = build
+
 win32 {
-    OBJECTS_DIR = $$DESTDIR/obj
-    MOC_DIR = $$DESTDIR/moc
-    RCC_DIR = $$DESTDIR/qrc
-    UI_DIR = $$DESTDIR/ui
+    OBJECTS_DIR = $$BUILDDIR/obj
+    MOC_DIR = $$BUILDDIR/moc
+    RCC_DIR = $$BUILDDIR/qrc
+    UI_DIR = $$BUILDDIR/ui
 } else {
-    OBJECTS_DIR = $$DESTDIR/.obj
-    MOC_DIR = $$DESTDIR/.moc
-    RCC_DIR = $$DESTDIR/.qrc
-    UI_DIR = $$DESTDIR/.ui
+    OBJECTS_DIR = $$BUILDDIR/.obj
+    MOC_DIR = $$BUILDDIR/.moc
+    RCC_DIR = $$BUILDDIR/.qrc
+    UI_DIR = $$BUILDDIR/.ui
 }
