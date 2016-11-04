@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>res/images/text.png</file>
     <file>res/images/auto-left-spin.png</file>
     <file>res/images/auto-right-spin.png</file>
     <file>res/images/contect.png</file>

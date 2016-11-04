@@ -554,6 +554,10 @@
    </property>
   </action>
   <action name="actionTextbox">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/text.png</normaloff>:/res/images/text.png</iconset>
+   </property>
    <property name="text">
     <string>文本框</string>
    </property>
