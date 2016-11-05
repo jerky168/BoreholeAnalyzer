@@ -50,6 +50,14 @@ Component.prototype.createOperations = function()
     try {
         // call the base create operations function
         component.createOperations();
+
+        if (systemInfo.productType === "windows") {
+            component.addOperation("CreateShortcut", "@TargetDir@/BoreholeAnalyzer.exe", "@StartMenuDir@/钻孔电视分析软件.lnk");
+            component.addOperation("CreateShortcut", "@TargetDir@/BoreholeAnalyzer.exe", "@HomeDir@/Desktop/钻孔电视分析软件.lnk");
+
+            component.addOperation("CreateShortcut", "@TargetDir@/maintenancetool.exe", "@StartMenuDir@/更新或卸载.lnk");
+        }
+
     } catch (e) {
         console.log(e);
     }
