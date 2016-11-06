@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QActionGroup* actionGroup = new QActionGroup(this);
+    actionGroup->addAction(ui->action2DView);
+    actionGroup->addAction(ui->action3DView);
 }
 
 MainWindow::~MainWindow()
