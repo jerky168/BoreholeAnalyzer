@@ -156,6 +156,9 @@
    <addaction name="helpMenu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>工具栏</string>
+   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
@@ -195,12 +198,18 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_1">
+   <property name="windowTitle">
+    <string>图像管理</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="ImageWidget" name="imageWidget"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2">
+   <property name="windowTitle">
+    <string>岩芯描述</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
