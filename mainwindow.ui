@@ -17,13 +17,36 @@
    <iconset resource="res.qrc">
     <normaloff>:/res/images/IDT.ico</normaloff>:/res/images/IDT.ico</iconset>
   </property>
-  <widget class="MainWidget" name="centralWidget">
+  <widget class="QWidget" name="centralWidget">
    <property name="font">
     <font>
      <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page2d">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QGraphicsView" name="graphicsView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page3d">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QOpenGLWidget" name="openGLWidget"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -383,6 +406,12 @@
    </property>
   </action>
   <action name="action2DView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/2D.png</normaloff>:/res/images/2D.png</iconset>
@@ -392,6 +421,9 @@
    </property>
   </action>
   <action name="action3DView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/3D.png</normaloff>:/res/images/3D.png</iconset>
@@ -574,12 +606,6 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
-  <customwidget>
-   <class>MainWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">mainwidget.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>ImageWidget</class>
    <extends>QWidget</extends>
