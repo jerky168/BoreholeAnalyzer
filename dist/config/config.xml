@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
-    <Name>IDT(M)</Name>
+    <Name>钻孔电视分析软件</Name>
     <Version>1.0.0</Version>
-    <Title>IDT Installer</Title>
+    <Title>IDT(M)安装包</Title>
     <Publisher>Y-Link</Publisher>
-    <StartMenuDir>BoreholeAnalyzer</StartMenuDir>
+    <StartMenuDir>钻孔电视分析软件</StartMenuDir>
     <TargetDir>@HomeDir@/BoreholeAnalyzer</TargetDir>
 </Installer>
