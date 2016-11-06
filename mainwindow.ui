@@ -136,9 +136,6 @@
     </property>
     <addaction name="actionProjectInfo"/>
     <addaction name="separator"/>
-    <addaction name="actionShortcutTool"/>
-    <addaction name="actionDrillCoreView"/>
-    <addaction name="actionImageParamsView"/>
    </widget>
    <widget class="QMenu" name="helpMenu">
     <property name="title">
@@ -197,7 +194,7 @@
    <addaction name="actionAutoRightSpin"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget_1">
+  <widget class="QDockWidget" name="dockWidgetImage">
    <property name="windowTitle">
     <string>图像管理</string>
    </property>
@@ -206,7 +203,7 @@
    </attribute>
    <widget class="ImageWidget" name="imageWidget"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
+  <widget class="QDockWidget" name="dockWidgetDefect">
    <property name="windowTitle">
     <string>岩芯描述</string>
    </property>
