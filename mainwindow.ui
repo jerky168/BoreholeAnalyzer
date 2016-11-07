@@ -438,6 +438,9 @@
    </property>
   </action>
   <action name="actionLeftSpin">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/left-spin.png</normaloff>:/res/images/left-spin.png</iconset>
@@ -447,6 +450,9 @@
    </property>
   </action>
   <action name="actionRightSpin">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/right-spin.png</normaloff>:/res/images/right-spin.png</iconset>
@@ -456,6 +462,9 @@
    </property>
   </action>
   <action name="actionAutoLeftSpin">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/auto-left-spin.png</normaloff>:/res/images/auto-left-spin.png</iconset>
@@ -465,6 +474,9 @@
    </property>
   </action>
   <action name="actionAutoRightSpin">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/auto-right-spin.png</normaloff>:/res/images/auto-right-spin.png</iconset>
