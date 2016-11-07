@@ -147,8 +147,8 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuTool"/>
    <addaction name="menuView"/>
+   <addaction name="menuTool"/>
    <addaction name="menuImage"/>
    <addaction name="helpMenu"/>
   </widget>
@@ -226,7 +226,7 @@
   </action>
   <action name="actionClean">
    <property name="text">
-    <string>清除菜单(M)</string>
+    <string>清除菜单(C)</string>
    </property>
   </action>
   <action name="actionSave">
