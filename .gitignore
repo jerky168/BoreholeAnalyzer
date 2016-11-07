@@ -40,4 +40,6 @@ CMakeLists.txt.user*
 /build
 setup/env.cmd
 setup/BoreHoleAnalyzer_*
+/release
+/debug
 
