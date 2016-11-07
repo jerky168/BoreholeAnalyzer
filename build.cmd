@@ -1,26 +1,30 @@
 @echo off
 
-echo Setting up a Qt environment...
-
 set QMAKESPEC=win32-msvc2015
+if exist env.cmd (
+	echo "environment set, using env.cmd."
+	call env.cmd 
+) else (
+	echo "environment not set, using default."
+	set QT_DIR=C:\Qt\Qt5.7.0\5.7\win32-msvc2015
+	set QT_INSTALLER_DIR=C:\Qt\QtIFW2.0.3
+	set VS_DIR="C:\Program Files (x86)\Microsoft Visual Studio 14.0"
+)
+
+echo Setting up a Qt environment...
 echo -- QMAKESPEC set to "win32-msvc2015"
-
-set QT_DIR=C:\Qt\Qt5.7.0\5.7\msvc2015
 echo -- QT_DIR set to %QT_DIR%
-
-set QT_INSTALLER_DIR=C:\Qt\QtIFW2.0.3
 echo -- QT_INSTALLER_DIR set to %QT_INSTALLER_DIR%
-
-set VS_DIR="C:\Program Files (x86)\Microsoft Visual Studio 14.0"
-call %VS_DIR%\VC\vcvarsall.bat x86
+echo -- VS_DIR set to %VS_DIR%
 
 set PATH=%QT_DIR%\bin;%QT_INSTALLER_DIR%\bin;%PATH%
 echo -- Added %QT_DIR%\bin;%QT_INSTALLER_DIR%\bin; to PATH
 
+
+call %VS_DIR%\VC\vcvarsall.bat x86
+
 set SRC=%cd%
 echo --SRC set to %SRC%
-
-rem 开始编译
 
 cd ..
 set CURRENT_TIME="%date:~0,4%-%date:~5,2%-%date:~8,2% %time:~0,2%.%time:~3,2%.%time:~6,2%"
@@ -40,13 +44,7 @@ rd /q /s build debug release
 
 
 cd dist\packages\com.ylink.idt\data
-copy %QT_DIR%\bin\Qt5Core.dll .
-copy %QT_DIR%\bin\Qt5Gui.dll .
-copy %QT_DIR%\bin\Qt5Widgets.dll .
-mkdir platforms
-cd platforms
-copy %QT_DIR%\plugins\platforms\qwindows.dll .
-cd ..
+windeployqt BoreholeAnalyzer.exe
 
 cd ..\..\..\..
 binarycreator.exe -c dist\config\config.xml -p dist\packages "IDT(M) Installer.exe" -v
