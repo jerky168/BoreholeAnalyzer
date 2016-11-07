@@ -38,4 +38,8 @@ CMakeLists.txt.user*
 
 # custom build
 /build
+setup/env.cmd
+setup/BoreHoleAnalyzer_*
+/release
+/debug
 

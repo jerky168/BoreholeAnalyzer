@@ -1,0 +1,32 @@
+<RCC>
+  <qresource prefix="/">
+    <file>res/images/text.png</file>
+    <file>res/images/auto-left-spin.png</file>
+    <file>res/images/auto-right-spin.png</file>
+    <file>res/images/contect.png</file>
+    <file>res/images/print.png</file>
+    <file>res/images/corss-cursor.png</file>
+    <file>res/images/2D.png</file>
+    <file>res/images/3D.png</file>
+    <file>res/images/save-report.png</file>
+    <file>res/images/left-spin.png</file>
+    <file>res/images/right-spin.png</file>
+    <file>res/images/zoom-in.png</file>
+    <file>res/images/zoom-out.png</file>
+    <file>res/images/exit.png</file>
+    <file>res/images/select-all.png</file>
+    <file>res/images/delete.png</file>
+    <file>res/images/copy.png</file>
+    <file>res/images/cut.png</file>
+    <file>res/images/paste.png</file>
+    <file>res/images/save-as.png</file>
+    <file>res/images/redo.png</file>
+    <file>res/images/undo.png</file>
+    <file>res/images/IDT.ico</file>
+    <file>res/images/about.png</file>
+    <file>res/images/close.png</file>
+    <file>res/images/open.png</file>
+    <file>res/images/save.png</file>
+    <file>res/images/save-img.png</file>
+  </qresource>
+</RCC>
