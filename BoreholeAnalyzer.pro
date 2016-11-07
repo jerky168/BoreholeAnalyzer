@@ -21,9 +21,11 @@ SOURCES += main.cpp\
     imagewidget.cpp \
     defectwidget.cpp
 
+
 HEADERS  += mainwindow.h \
     imagewidget.h \
     defectwidget.h
+
 
 FORMS    += mainwindow.ui \
     imagewidget.ui \
@@ -32,24 +34,11 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 
-CONFIG(debug, debug|release) {
-    DESTDIR = debug
-} else {
-    DESTDIR = release
-}
-
-BUILDDIR = build
-
 win32 {
-    OBJECTS_DIR = $$BUILDDIR/obj
-    MOC_DIR = $$BUILDDIR/moc
-    RCC_DIR = $$BUILDDIR/qrc
-    UI_DIR = $$BUILDDIR/ui
-} else {
-    OBJECTS_DIR = $$BUILDDIR/.obj
-    MOC_DIR = $$BUILDDIR/.moc
-    RCC_DIR = $$BUILDDIR/.qrc
-    UI_DIR = $$BUILDDIR/.ui
+    QT += axcontainer
+
+    HEADERS += qword.h  qexcel.h
+    SOURCES += qword.cpp qexcel.cpp
 }
 
 DISTFILES += \
