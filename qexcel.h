@@ -15,10 +15,10 @@ public:
     ~QExcel();
 
 public:
-    bool Open(UINT nSheet = 1, bool visible = false);//æ‰“å¼€xlsæ–‡ä»¶
+    bool Open(UINT nSheet = 1, bool visible = false);//´ò¿ªxlsÎÄ¼ş
     bool Open(QString xlsFile, UINT nSheet = 1, bool visible = false);
-    void Save();                //ä¿å­˜xlsæŠ¥è¡¨
-    void Close();               //å…³é—­xlsæŠ¥è¡¨
+    void Save();                //±£´æxls±¨±í
+    void Close();               //¹Ø±Õxls±¨±í
 
     void setCellString(const QString& cell, const QString& value);
     void setCellString(int row, int column, const QString& value);
@@ -34,23 +34,23 @@ protected:
     void Clear();
 
 private:
-    QAxObject *pExcel;      //æŒ‡å‘æ•´ä¸ªexcelåº”ç”¨ç¨‹åº
-    QAxObject *pWorkbooks;  //æŒ‡å‘å·¥ä½œç°¿é›†,excelæœ‰å¾ˆå¤šå·¥ä½œç°¿
-    QAxObject *pWorkbook;   //æŒ‡å‘sXlsFileå¯¹åº”çš„å·¥ä½œç°¿
-    QAxObject *pWorksheet;  //æŒ‡å‘å·¥ä½œç°¿ä¸­çš„æŸä¸ªsheetè¡¨å•
+    QAxObject *pExcel;      //Ö¸ÏòÕû¸öexcelÓ¦ÓÃ³ÌĞò
+    QAxObject *pWorkbooks;  //Ö¸Ïò¹¤×÷²¾¼¯,excelÓĞºÜ¶à¹¤×÷²¾
+    QAxObject *pWorkbook;   //Ö¸ÏòsXlsFile¶ÔÓ¦µÄ¹¤×÷²¾
+    QAxObject *pWorksheet;  //Ö¸Ïò¹¤×÷²¾ÖĞµÄÄ³¸ösheet±íµ¥
 
-    QString   sXlsFile;     //xlsæ–‡ä»¶è·¯å¾„
-    UINT      nCurrSheet;   //å½“å‰æ‰“å¼€çš„ç¬¬å‡ ä¸ªsheet
-    bool      bIsVisible;   //excelæ˜¯å¦å¯è§
-    int       nRowCount;    //è¡Œæ•°
-    int       nColumnCount; //åˆ—æ•°
-    int       nStartRow;    //å¼€å§‹æœ‰æ•°æ®çš„è¡Œä¸‹æ ‡å€¼
-    int       nStartColumn; //å¼€å§‹æœ‰æ•°æ®çš„åˆ—ä¸‹æ ‡å€¼
+    QString   sXlsFile;     //xlsÎÄ¼şÂ·¾¶
+    UINT      nCurrSheet;   //µ±Ç°´ò¿ªµÄµÚ¼¸¸ösheet
+    bool      bIsVisible;   //excelÊÇ·ñ¿É¼û
+    int       nRowCount;    //ĞĞÊı
+    int       nColumnCount; //ÁĞÊı
+    int       nStartRow;    //¿ªÊ¼ÓĞÊı¾İµÄĞĞÏÂ±êÖµ
+    int       nStartColumn; //¿ªÊ¼ÓĞÊı¾İµÄÁĞÏÂ±êÖµ
 
-    bool      bIsOpen;      //æ˜¯å¦å·²æ‰“å¼€
-    bool      bIsValid;     //æ˜¯å¦æœ‰æ•ˆ
-    bool      bIsANewFile;  //æ˜¯å¦æ˜¯ä¸€ä¸ªæ–°å»ºxlsæ–‡ä»¶ï¼Œç”¨æ¥åŒºåˆ†æ‰“å¼€çš„excelæ˜¯å·²å­˜åœ¨æ–‡ä»¶è¿˜æ˜¯æœ‰æœ¬ç±»æ–°å»ºçš„
-    bool      bIsSaveAlready;//é˜²æ­¢é‡å¤ä¿å­˜
+    bool      bIsOpen;      //ÊÇ·ñÒÑ´ò¿ª
+    bool      bIsValid;     //ÊÇ·ñÓĞĞ§
+    bool      bIsANewFile;  //ÊÇ·ñÊÇÒ»¸öĞÂ½¨xlsÎÄ¼ş£¬ÓÃÀ´Çø·Ö´ò¿ªµÄexcelÊÇÒÑ´æÔÚÎÄ¼ş»¹ÊÇÓĞ±¾ÀàĞÂ½¨µÄ
+    bool      bIsSaveAlready;//·ÀÖ¹ÖØ¸´±£´æ
 
 signals:
 

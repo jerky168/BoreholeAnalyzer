@@ -1,4 +1,3 @@
-
 #include <QFile>
 
 #include "qexcel.h"
@@ -59,16 +58,16 @@ QExcel::~QExcel()
 {
     if ( bIsOpen )
     {
-        //ææ„å‰ï¼Œå…ˆä¿å­˜æ•°æ®ï¼Œç„¶åå…³é—­workbook
+        //Îö¹¹Ç°£¬ÏÈ±£´æÊı¾İ£¬È»ºó¹Ø±Õworkbook
         Close();
     }
     OleUninitialize();
 }
 
 /**
-  *@brief æ‰“å¼€sXlsFileæŒ‡å®šçš„excelæŠ¥è¡¨
-  *@return true : æ‰“å¼€æˆåŠŸ
-  *        false: æ‰“å¼€å¤±è´¥
+  *@brief ´ò¿ªsXlsFileÖ¸¶¨µÄexcel±¨±í
+  *@return true : ´ò¿ª³É¹¦
+  *        false: ´ò¿ªÊ§°Ü
   */
 bool QExcel::Open(UINT nSheet, bool visible)
 {
@@ -111,7 +110,7 @@ bool QExcel::Open(UINT nSheet, bool visible)
         return bIsOpen;
     }
 
-    /*å¦‚æœæŒ‡å‘çš„æ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ™éœ€è¦æ–°å»ºä¸€ä¸ª*/
+    /*Èç¹ûÖ¸ÏòµÄÎÄ¼ş²»´æÔÚ£¬ÔòĞèÒªĞÂ½¨Ò»¸ö*/
     QFile f(sXlsFile);
     if (!f.exists())
     {
@@ -124,36 +123,36 @@ bool QExcel::Open(UINT nSheet, bool visible)
 
     if (!bIsANewFile)
     {
-        pWorkbooks = pExcel->querySubObject("WorkBooks"); //è·å–å·¥ä½œç°¿
-        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //æ‰“å¼€xlså¯¹åº”çš„å·¥ä½œç°¿
+        pWorkbooks = pExcel->querySubObject("WorkBooks"); //»ñÈ¡¹¤×÷²¾
+        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //´ò¿ªxls¶ÔÓ¦µÄ¹¤×÷²¾
     }
     else
     {
-        pWorkbooks = pExcel->querySubObject("WorkBooks");     //è·å–å·¥ä½œç°¿
-        pWorkbooks->dynamicCall("Add");                       //æ·»åŠ ä¸€ä¸ªæ–°çš„å·¥ä½œè–„
-        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //æ–°å»ºä¸€ä¸ªxls
+        pWorkbooks = pExcel->querySubObject("WorkBooks");     //»ñÈ¡¹¤×÷²¾
+        pWorkbooks->dynamicCall("Add");                       //Ìí¼ÓÒ»¸öĞÂµÄ¹¤×÷±¡
+        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //ĞÂ½¨Ò»¸öxls
     }
 
-    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//æ‰“å¼€ç¬¬ä¸€ä¸ªsheet
+    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//´ò¿ªµÚÒ»¸ösheet
 
-    //è‡³æ­¤å·²æ‰“å¼€ï¼Œå¼€å§‹è·å–ç›¸åº”å±æ€§
-    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//è·å–è¯¥sheetçš„ä½¿ç”¨èŒƒå›´å¯¹è±¡
+    //ÖÁ´ËÒÑ´ò¿ª£¬¿ªÊ¼»ñÈ¡ÏàÓ¦ÊôĞÔ
+    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//»ñÈ¡¸ÃsheetµÄÊ¹ÓÃ·¶Î§¶ÔÏó
     QAxObject *rows = usedrange->querySubObject("Rows");
     QAxObject *columns = usedrange->querySubObject("Columns");
 
-    //å› ä¸ºexcelå¯ä»¥ä»ä»»æ„è¡Œåˆ—å¡«æ•°æ®è€Œä¸ä¸€å®šæ˜¯ä»0,0å¼€å§‹ï¼Œå› æ­¤è¦è·å–é¦–è¡Œåˆ—ä¸‹æ ‡
-    nStartRow    = usedrange->property("Row").toInt();    //ç¬¬ä¸€è¡Œçš„èµ·å§‹ä½ç½®
-    nStartColumn = usedrange->property("Column").toInt(); //ç¬¬ä¸€åˆ—çš„èµ·å§‹ä½ç½®
+    //ÒòÎªexcel¿ÉÒÔ´ÓÈÎÒâĞĞÁĞÌîÊı¾İ¶ø²»Ò»¶¨ÊÇ´Ó0,0¿ªÊ¼£¬Òò´ËÒª»ñÈ¡Ê×ĞĞÁĞÏÂ±ê
+    nStartRow    = usedrange->property("Row").toInt();    //µÚÒ»ĞĞµÄÆğÊ¼Î»ÖÃ
+    nStartColumn = usedrange->property("Column").toInt(); //µÚÒ»ÁĞµÄÆğÊ¼Î»ÖÃ
 
-    nRowCount    = rows->property("Count").toInt();       //è·å–è¡Œæ•°
-    nColumnCount = columns->property("Count").toInt();    //è·å–åˆ—æ•°
+    nRowCount    = rows->property("Count").toInt();       //»ñÈ¡ĞĞÊı
+    nColumnCount = columns->property("Count").toInt();    //»ñÈ¡ÁĞÊı
 
     bIsOpen  = true;
     return bIsOpen;
 }
 
 /**
-  *@brief Open()çš„é‡è½½å‡½æ•°
+  *@brief Open()µÄÖØÔØº¯Êı
   */
 bool QExcel::Open(QString xlsFile, UINT nSheet, bool visible)
 {
@@ -165,7 +164,7 @@ bool QExcel::Open(QString xlsFile, UINT nSheet, bool visible)
 }
 
 /**
-  *@brief ä¿å­˜è¡¨æ ¼æ•°æ®ï¼ŒæŠŠæ•°æ®å†™å…¥æ–‡ä»¶
+  *@brief ±£´æ±í¸ñÊı¾İ£¬°ÑÊı¾İĞ´ÈëÎÄ¼ş
   */
 void QExcel::Save()
 {
@@ -180,7 +179,7 @@ void QExcel::Save()
         {
             pWorkbook->dynamicCall("Save()");
         }
-        else /*å¦‚æœè¯¥æ–‡æ¡£æ˜¯æ–°å»ºå‡ºæ¥çš„ï¼Œåˆ™ä½¿ç”¨å¦å­˜ä¸ºCOMæ¥å£*/
+        else /*Èç¹û¸ÃÎÄµµÊÇĞÂ½¨³öÀ´µÄ£¬ÔòÊ¹ÓÃÁí´æÎªCOM½Ó¿Ú*/
         {
             pWorkbook->dynamicCall("SaveAs (const QString&,int,const QString&,const QString&,bool,bool)",
                 sXlsFile,56,QString(""),QString(""),false,false);
@@ -193,11 +192,11 @@ void QExcel::Save()
 
 
 /**
-  *@brief å…³é—­å‰å…ˆä¿å­˜æ•°æ®ï¼Œç„¶åå…³é—­å½“å‰Excel COMå¯¹è±¡ï¼Œå¹¶é‡Šæ”¾å†…å­˜
+  *@brief ¹Ø±ÕÇ°ÏÈ±£´æÊı¾İ£¬È»ºó¹Ø±Õµ±Ç°Excel COM¶ÔÏó£¬²¢ÊÍ·ÅÄÚ´æ
   */
 void QExcel::Close()
 {
-    //å…³é—­å‰å…ˆä¿å­˜æ•°æ®
+    //¹Ø±ÕÇ°ÏÈ±£´æÊı¾İ
     Save();
 
     if ( pExcel && pWorkbook )
@@ -230,17 +229,17 @@ void QExcel::setCellString(int row, int column, const QString& value)
     range->setProperty("HorizontalAlignment", -4108);//xlCenter
 }
 
-//åˆå¹¶å•å…ƒæ ¼
+//ºÏ²¢µ¥Ôª¸ñ
 void QExcel::mergeCells(const QString& cell)
 {
     QAxObject *range = pWorksheet->querySubObject("Range(const QString&)", cell);
-    range->setProperty("VerticalAlignment", -4108);//å‚ç›´å±…ä¸­
-    range->setProperty("HorizontalAlignment", -4108);//æ°´å¹³å±…ä¸­
+    range->setProperty("VerticalAlignment", -4108);//´¹Ö±¾ÓÖĞ
+    range->setProperty("HorizontalAlignment", -4108);//Ë®Æ½¾ÓÖĞ
     range->setProperty("WrapText", true);
     range->setProperty("MergeCells", true);
 }
 
-//åˆå¹¶å•å…ƒæ ¼é‡è½½å‡½æ•°
+//ºÏ²¢µ¥Ôª¸ñÖØÔØº¯Êı
 void QExcel::mergeCells(int topLeftRow, int topLeftColumn, int bottomRightRow, int bottomRightColumn)
 {
     QString cell;
@@ -279,7 +278,7 @@ void QExcel::setRowHeight(int row, int height)
 }
 
 /**
-  *@brief æ¸…ç©ºé™¤æŠ¥è¡¨ä¹‹å¤–çš„æ•°æ®
+  *@brief Çå¿Õ³ı±¨±íÖ®ÍâµÄÊı¾İ
   */
 void QExcel::Clear()
 {
@@ -291,9 +290,9 @@ void QExcel::Clear()
 }
 
 /**
-  *@brief åˆ¤æ–­excelæ˜¯å¦å·²è¢«æ‰“å¼€
-  *@return true : å·²æ‰“å¼€
-  *        false: æœªæ‰“å¼€
+  *@brief ÅĞ¶ÏexcelÊÇ·ñÒÑ±»´ò¿ª
+  *@return true : ÒÑ´ò¿ª
+  *        false: Î´´ò¿ª
   */
 bool QExcel::IsOpen()
 {
@@ -301,9 +300,9 @@ bool QExcel::IsOpen()
 }
 
 /**
-  *@brief åˆ¤æ–­excel COMå¯¹è±¡æ˜¯å¦è°ƒç”¨æˆåŠŸï¼Œexcelæ˜¯å¦å¯ç”¨
-  *@return true : å¯ç”¨
-  *        false: ä¸å¯ç”¨
+  *@brief ÅĞ¶Ïexcel COM¶ÔÏóÊÇ·ñµ÷ÓÃ³É¹¦£¬excelÊÇ·ñ¿ÉÓÃ
+  *@return true : ¿ÉÓÃ
+  *        false: ²»¿ÉÓÃ
   */
 bool QExcel::IsValid()
 {

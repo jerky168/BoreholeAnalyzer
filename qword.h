@@ -20,78 +20,78 @@ public:
     QAxObject* getDocument(){return m_document;}
     QAxObject* getWordApp(){return m_word;}
 
-    //è·å¾—wordçš„ç‰ˆæœ¬å·
+    //»ñµÃwordµÄ°æ±¾ºÅ
     QString GetWordVersion();
 public:
     /**************************************************************************/
-    /* æ–‡ä»¶   æ“ä½œ                                                            */
+    /* ÎÄ¼ş   ²Ù×÷                                                            */
     /**************************************************************************/
-    //ä¿å­˜æ“ä½œå†…å®¹
+    //±£´æ²Ù×÷ÄÚÈİ
     void save();
-    //å…³é—­ é€€å‡º ææ„æ—¶å€™ä¹Ÿä¼šè‡ªåŠ¨è°ƒç”¨ä¸€æ¬¡
+    //¹Ø±Õ ÍË³ö Îö¹¹Ê±ºòÒ²»á×Ô¶¯µ÷ÓÃÒ»´Î
     void close();
-    //æ–°å»ºWordå¦å­˜ä¸º
+    //ĞÂ½¨WordÁí´æÎª
     void saveAs();
-    //åˆ›å»ºä¸€ä¸ªæ–°çš„Word
+    //´´½¨Ò»¸öĞÂµÄWord
     bool createNewWord();
-    //æ‰“å¼€ä¸€ä¸ªç°æœ‰çš„Word
+    //´ò¿ªÒ»¸öÏÖÓĞµÄWord
     void openWord();
-    //åˆ›å»ºä¸€ä¸ªæ–°çš„Word
+    //´´½¨Ò»¸öĞÂµÄWord
     bool createNewWord(const QString& filePath );
 
     /**************************************************************************/
-    /* æ“ä½œ                                                            */
+    /* ²Ù×÷                                                            */
     /**************************************************************************/
-    //è¡¨æ ¼è‡ªåŠ¨æ‹‰ä¼¸åˆ— 0å›ºå®š  1æ ¹æ®å†…å®¹è°ƒæ•´  2 æ ¹æ®çª—å£è°ƒæ•´
+    //±í¸ñ×Ô¶¯À­ÉìÁĞ 0¹Ì¶¨  1¸ù¾İÄÚÈİµ÷Õû  2 ¸ù¾İ´°¿Úµ÷Õû
     void setTableAutoFitBehavior(int flag);
-    //è®¾ç½®é¡µé¢0ä¸ºçºµå‘wdOrientPortrait  1ä¸ºæ¨ªå‘wdOrientLandscape
+    //ÉèÖÃÒ³Ãæ0Îª×İÏòwdOrientPortrait  1ÎªºáÏòwdOrientLandscape
     void setPageOrientation(int flag);
-    //è®¾ç½®é¡µé¢è§†å›¾ï¼Œæ˜¯webè§†å›¾wdWebView 6è¿˜æ˜¯é¡µé¢è§†å›¾wdPrintView 3 æˆ–è€…é˜…è¯»è§†å›¾wdReadingView 7
+    //ÉèÖÃÒ³ÃæÊÓÍ¼£¬ÊÇwebÊÓÍ¼wdWebView 6»¹ÊÇÒ³ÃæÊÓÍ¼wdPrintView 3 »òÕßÔÄ¶ÁÊÓÍ¼wdReadingView 7
     void setWordPageView(int flag);
-    //è®¾ç½®å­—ä½“å¤§å°
+    //ÉèÖÃ×ÖÌå´óĞ¡
     void setFontSize(int fontsize);
-    //è®¾ç½®å­—ä½“	æ¯”å¦‚ â€œå®‹ä½“â€
+    //ÉèÖÃ×ÖÌå	±ÈÈç ¡°ËÎÌå¡±
     void setFontName(QString& fontName);
-    //å­—ä½“åŠ ç²—
+    //×ÖÌå¼Ó´Ö
     void setFontBold(bool flag);
-    //è®¾ç½®é€‰ä¸­ä½ç½®æ–‡å­—å±…ä¸­ 0 ,å±…å·¦ 1,å±…å³ 2
+    //ÉèÖÃÑ¡ÖĞÎ»ÖÃÎÄ×Ö¾ÓÖĞ 0 ,¾Ó×ó 1,¾ÓÓÒ 2
     void setParagraphAlignment(int flag);
-    //è®¾ç½®åˆ—å®½
+    //ÉèÖÃÁĞ¿í
     void setColumnWidth(int column, int width);
-    //è®¾ç½®å•å…ƒæ ¼æ–‡æœ¬
+    //ÉèÖÃµ¥Ôª¸ñÎÄ±¾
     void setCellString(int row, int column, const QString& text);
-    //è®¾ç½®å•å…ƒæ ¼å­—ä½“å†…å®¹ç²—ä½“  isBoldæ§åˆ¶æ˜¯å¦ç²—ä½“
+    //ÉèÖÃµ¥Ôª¸ñ×ÖÌåÄÚÈİ´ÖÌå  isBold¿ØÖÆÊÇ·ñ´ÖÌå
     void setCellFontBold(int row, int column, bool isBold);
-    //è®¾ç½®å•å…ƒæ ¼æ–‡å­—å¤§å°
+    //ÉèÖÃµ¥Ôª¸ñÎÄ×Ö´óĞ¡
     void setCellFontSize(int row, int column, int size);
-    //è®¾ç½®å®¡é˜…çš„æ‹¼å†™æ£€æŸ¥  trueå¼€å¯æ£€æŸ¥  false å–æ¶ˆæ£€æŸ¥
+    //ÉèÖÃÉóÔÄµÄÆ´Ğ´¼ì²é  true¿ªÆô¼ì²é  false È¡Ïû¼ì²é
     void setOptionCheckSpell(bool flags);
 
-    //è·å–å†…å®¹
+    //»ñÈ¡ÄÚÈİ
     QString GetText();
     void getUsedRange(int *topLeftRow, int *topLeftColumn, int *bottomRightRow, int *bottomRightColumn);
-    //"SetRange(1, 9)"ç¬¬1ä¸ªå­—ç¬¦åå¼€å§‹ï¼Œåˆ°ç¬¬9ä¸ªå­—ç¬¦ç»“æŸèŒƒå›´
+    //"SetRange(1, 9)"µÚ1¸ö×Ö·ûºó¿ªÊ¼£¬µ½µÚ9¸ö×Ö·û½áÊø·¶Î§
     void setSelectionRange(int start,int end);
-    //è·å–å•å…ƒæ ¼å†…å®¹
+    //»ñÈ¡µ¥Ôª¸ñÄÚÈİ
     QVariant getCellValue(int row, int column);
-    //è·å–wordä¸­è¡¨æ ¼æ€»æ•°
+    //»ñÈ¡wordÖĞ±í¸ñ×ÜÊı
     int getTableCount();
 
 
-    //è·å–ä»£ç ä¸­å‡ºç°çš„é”™è¯¯ä¿¡æ¯å¯ä»¥ç”¨QMessageBox::informationæ‰“å° åœ¨cppä¸ç”¨QMessageBox æ˜¯æ€•ä½ ä»¬åœ¨çº¿ç¨‹ä¸­è°ƒå¯¼å‡ºæŠ¥è¡¨
+    //»ñÈ¡´úÂëÖĞ³öÏÖµÄ´íÎóĞÅÏ¢¿ÉÒÔÓÃQMessageBox::information´òÓ¡ ÔÚcpp²»ÓÃQMessageBox ÊÇÅÂÄãÃÇÔÚÏß³ÌÖĞµ÷µ¼³ö±¨±í
     QString getStrErrorInfo(){return m_strError;}
-    //åˆ é™¤æŒ‡å®šçš„åˆ—
+    //É¾³ıÖ¸¶¨µÄÁĞ
     void deleteSelectColumn(int column);
-    //ç§»åŠ¨é€‰å®šå¯¹è±¡åˆ°æ–‡æ¡£æœ«å°¾
+    //ÒÆ¶¯Ñ¡¶¨¶ÔÏóµ½ÎÄµµÄ©Î²
     void moveForEnd();
 
-    //å•å…ƒæ ¼æ’å…¥å›¾ç‰‡
+    //µ¥Ôª¸ñ²åÈëÍ¼Æ¬
     void insertCellPic(int row,int column,const QString& picPath);
-    //æ’å…¥ä¸€ä¸ªå‡ è¡Œå‡ åˆ—è¡¨æ ¼
+    //²åÈëÒ»¸ö¼¸ĞĞ¼¸ÁĞ±í¸ñ
     void intsertTable(int row,int column);
-    //æ’å…¥å›è½¦
+    //²åÈë»Ø³µ
     void insertMoveDown();
-    //æ’å…¥æ–‡å­—
+    //²åÈëÎÄ×Ö
     void insertText(const QString& text);
 
     void insertPic(QString& picPath);
