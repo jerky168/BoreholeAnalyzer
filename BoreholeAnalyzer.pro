@@ -14,7 +14,7 @@ TEMPLATE = app
 CONFIG += precompile_header debug_and_release
 
 # Use Precompiled headers (PCH)
-PRECOMPILED_HEADER = stable.h
+PRECOMPILED_HEADER = precompiled.h
 
 SOURCES += main.cpp\
         mainwindow.cpp \
