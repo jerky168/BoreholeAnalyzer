@@ -27,3 +27,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "打开工程文件");
+
+}
