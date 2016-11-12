@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QDebug>
 
-
+// database handler
+#include "dbhandler.h"
 
 namespace Ui {
 class MainWindow;
@@ -13,6 +15,12 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+typedef enum{
+    IDLE,
+    Opened
+}AppStatus;
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);

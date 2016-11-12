@@ -15,8 +15,21 @@ public:
     explicit ImageWidget(QWidget *parent = 0);
     ~ImageWidget();
 
+public slots:
+    void reset();
+
+
+private slots:
+    void on_lastButton_clicked();
+    void on_nextButton_clicked();
+
 private:
     Ui::ImageWidget *ui;
+
+signals:
+    void lastImage();
+    void nextImage();
+
 };
 
 #endif // IMAGEWIDGET_H

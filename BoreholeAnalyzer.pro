@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,16 +20,13 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
             defectwidget.cpp \
-    dbhandler.cpp \
-    dbbigimages.cpp
+            dbhandler.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
             defectwidget.h \
-    dbhandler.h \
-    precompiled.h \
-    dbbigimages.h
+            dbhandler.h
 
 
 FORMS    += mainwindow.ui \
