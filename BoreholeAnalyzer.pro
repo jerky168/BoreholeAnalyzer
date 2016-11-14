@@ -42,10 +42,10 @@ win32 {
 #    HEADERS += qword.h  qexcel.h
 #    SOURCES += qword.cpp qexcel.cpp
 
-    INCLUDEPATH += $$(QXORM_DIR)\include \
-                   $$(BOOST_INCLUDE)
-    CONFIG(release, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrm
-    else:CONFIG(debug, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrmd
+#    INCLUDEPATH += $$(QXORM_DIR)\include \
+#                   $$(BOOST_INCLUDE)
+#    CONFIG(release, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrm
+#    else:CONFIG(debug, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrmd
 
 }
 

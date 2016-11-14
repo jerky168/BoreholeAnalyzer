@@ -21,10 +21,10 @@ void ImageWidget::reset()
 
 void ImageWidget::on_lastButton_clicked()
 {
-    emit lastImage();
+    emit switchToLast();
 }
 
 void ImageWidget::on_nextButton_clicked()
 {
-    emit nextImage();
+    emit switchToNext();
 }

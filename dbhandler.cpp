@@ -59,21 +59,18 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
 
     query.exec("select * from ProjectInfo");
     query.first();
-    prjInfo.startHeight = query.value(1).toString();
+    prjInfo.startHeight = query.value(1).toInt();
 
 
     query.exec("select * from bigImages");
     query.last();
-    prjInfo.endHeight = query.value(1).toString();
-
-
-
+    prjInfo.endHeight = query.value(0).toInt();
 
     return prjInfo;
 }
 
 
-QPixmap DbHandler::getBigImage(quint16 index)
+DbHandler::BigImage DbHandler::getBigImage(quint16 index)
 {
     QSqlQuery query(database);
     query.prepare("select * from bigImages where id > ? and id <= ?");
@@ -82,12 +79,13 @@ QPixmap DbHandler::getBigImage(quint16 index)
     query.exec();
     query.first();
 
-    quint32 depth = query.value(0).toInt();
+    BigImage bigImage;
+    bigImage.start = index*10000;
+    bigImage.end = query.value(0).toInt();
     QByteArray imgData = query.value(1).toByteArray();
+    bigImage.pixmap.loadFromData(imgData);
 
-    QPixmap pixmap;
-    pixmap.loadFromData(imgData);
-    return pixmap;
+    return bigImage;
 }
 
 

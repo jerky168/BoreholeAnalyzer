@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
 
 
+    // switch images
+    connect(ui->imageWidget, SIGNAL(switchToLast()), this, SLOT());
+    connect(ui->imageWidget, SIGNAL(switchToNext()), this, SLOT());
 }
 
 MainWindow::~MainWindow()
@@ -33,8 +36,9 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionOpen_triggered()
 {
     QString filename = QFileDialog::getOpenFileName(this, "打开工程文件", QDir::homePath(), "工程文件 (*.ylink)");
-    DbHandler *handler = new DbHandler(filename, this);
+    handler = new DbHandler(filename, this);
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
 
-    qDebug() << prjInfo.startHeight << prjInfo
+    DbHandler::BigImage bigImage = handler->getBigImage(0);
+
 }

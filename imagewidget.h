@@ -27,8 +27,8 @@ private:
     Ui::ImageWidget *ui;
 
 signals:
-    void lastImage();
-    void nextImage();
+    void switchToLast();
+    void switchToNext();
 
 };
 

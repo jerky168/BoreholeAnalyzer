@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QPixmap>
 #include <QDebug>
 
 // database handler
@@ -31,6 +32,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    DbHandler *handler;
+
+
 };
 
 #endif // MAINWINDOW_H

@@ -70,7 +70,9 @@ public:
     PrjInfo getPrjInfo();
 
     // get image
-    QPixmap getBigImage(quint16 index);
+    BigImage getBigImage(quint16 index);
+
+
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
 signals:
