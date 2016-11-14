@@ -20,13 +20,15 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
             defectwidget.cpp \
-            dbhandler.cpp
+            dbhandler.cpp \
+    GraphicsView.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
             defectwidget.h \
-            dbhandler.h
+            dbhandler.h \
+    GraphicsView.h
 
 
 FORMS    += mainwindow.ui \
@@ -42,10 +44,6 @@ win32 {
 #    HEADERS += qword.h  qexcel.h
 #    SOURCES += qword.cpp qexcel.cpp
 
-#    INCLUDEPATH += $$(QXORM_DIR)\include \
-#                   $$(BOOST_INCLUDE)
-#    CONFIG(release, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrm
-#    else:CONFIG(debug, debug|release): LIBS += -L$$(QXORM_DIR)/lib -lQxOrmd
 
 }
 

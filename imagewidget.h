@@ -2,6 +2,7 @@
 #define IMAGEWIDGET_H
 
 #include <QWidget>
+#include "dbhandler.h"
 
 namespace Ui {
 class ImageWidget;
@@ -15,8 +16,8 @@ public:
     explicit ImageWidget(QWidget *parent = 0);
     ~ImageWidget();
 
-public slots:
-    void reset();
+    void updatePrjInfo(DbHandler::PrjInfo prjInfo);
+    void clear();
 
 
 private slots:
@@ -26,9 +27,12 @@ private slots:
 private:
     Ui::ImageWidget *ui;
 
+    quint16 index;
+    quint16 maxIndex;
+
+
 signals:
-    void switchToLast();
-    void switchToNext();
+    void sigSwitchImage(quint16 index);
 
 };
 

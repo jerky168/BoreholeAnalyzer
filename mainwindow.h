@@ -5,6 +5,9 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+
 
 // database handler
 #include "dbhandler.h"
@@ -27,13 +30,21 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+     void switchImage(quint16 index);
+
+
 private slots:
     void on_actionOpen_triggered();
+    void on_actionClose_triggered();
+
 
 private:
     Ui::MainWindow *ui;
 
     DbHandler *handler;
+    QGraphicsScene *scene;
+    QGraphicsPixmapItem *pixmapItem;
 
 
 };
