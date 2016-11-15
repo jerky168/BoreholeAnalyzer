@@ -4,6 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    undosStack(new QUndoStack(this)),
     scene(new QGraphicsScene())
 {
     ui->setupUi(this);
@@ -67,3 +68,14 @@ void MainWindow::switchImage(quint16 index)
     pixmapItem->setPixmap(bigImage.pixmap);
 }
 
+// undo
+void MainWindow::on_actionUndo_triggered()
+{
+
+}
+
+// redo
+void MainWindow::on_actionRedo_triggered()
+{
+
+}

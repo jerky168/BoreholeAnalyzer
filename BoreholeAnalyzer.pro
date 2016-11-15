@@ -21,14 +21,16 @@ SOURCES +=  main.cpp\
             imagewidget.cpp \
             defectwidget.cpp \
             dbhandler.cpp \
-    GraphicsView.cpp
+    GraphicsView.cpp \
+    MyCommand.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
             defectwidget.h \
             dbhandler.h \
-    GraphicsView.h
+    GraphicsView.h \
+    MyCommand.h
 
 
 FORMS    += mainwindow.ui \
