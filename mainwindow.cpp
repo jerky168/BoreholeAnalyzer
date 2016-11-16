@@ -4,16 +4,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    undosStack(new QUndoStack(this)),
-    scene(new QGraphicsScene())
+    undosStack(new QUndoStack(this))
 {
     ui->setupUi(this);
-
-    // QGraphicsScene
-    ui->graphicsView->setScene(scene);
-    QPixmap pixmap;
-    pixmapItem = scene->addPixmap(pixmap);
-
     //add the toobar and dock windows to menu view
     ui->menuView->addAction(ui->mainToolBar->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetImage->toggleViewAction());
@@ -31,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // switch images
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
+
+
+    QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), ui->graphicsView, SLOT(updatePixmap(QPixmap)));
+    QObject::connect(this, SIGNAL(clearPixmap()), ui->graphicsView, SLOT(clearPixmap()));
 }
 
 MainWindow::~MainWindow()
@@ -52,10 +49,8 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    QPixmap pixmap;
-    pixmapItem->setPixmap(pixmap);
+    emit clearPixmap();
     ui->imageWidget->clear();
-
     ui->actionClose->setEnabled(false);
 }
 
@@ -65,7 +60,7 @@ void MainWindow::on_actionClose_triggered()
 void MainWindow::switchImage(quint16 index)
 {
     DbHandler::BigImage bigImage = handler->getBigImage(index);
-    pixmapItem->setPixmap(bigImage.pixmap);
+    emit updatePixmap(bigImage.pixmap);
 }
 
 // undo

@@ -5,10 +5,6 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QDebug>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-
-
 #include <QUndoCommand>
 #include <QUndoStack>
 
@@ -51,9 +47,9 @@ private:
     QUndoStack *undosStack;
 
 
-    QGraphicsScene *scene;
-    QGraphicsPixmapItem *pixmapItem;
-
+signals:
+    void updatePixmap(QPixmap pixmap);
+    void clearPixmap();
 
 };
 

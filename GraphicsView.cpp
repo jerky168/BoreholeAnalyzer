@@ -6,13 +6,18 @@
 #include <qmath.h>
 #include <QPainter>
 
-GraphicsView::GraphicsView( QWidget * parent  )
-	:QGraphicsView(parent)
+GraphicsView::GraphicsView( QWidget * parent ) :
+    QGraphicsView(parent),
+    scene(new QGraphicsScene())
 {
 	setDragMode(ScrollHandDrag);
 	setMouseTracking(true);
 	totalFactor = 1;
 	scale(0.23, 0.23);
+
+    this->setScene(scene);
+    QPixmap pixmap;
+    pixmapItem = scene->addPixmap(pixmap);
 }
 
 void GraphicsView::wheelEvent( QWheelEvent *event )
@@ -25,3 +30,14 @@ void GraphicsView::wheelEvent( QWheelEvent *event )
 	scale(factor, factor);
 }
 
+
+void GraphicsView::updatePixmap(QPixmap pixmap)
+{
+    pixmapItem->setPixmap(pixmap);
+}
+
+void GraphicsView::clearPixmap()
+{
+    QPixmap pixmap;
+    pixmapItem->setPixmap(pixmap);
+}

@@ -22,7 +22,9 @@ SOURCES +=  main.cpp\
             defectwidget.cpp \
             dbhandler.cpp \
     GraphicsView.cpp \
-    MyCommand.cpp
+    MyCommand.cpp \
+    OpenGLWidget.cpp \
+    GraphicsTextItem.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -30,7 +32,9 @@ HEADERS  += mainwindow.h \
             defectwidget.h \
             dbhandler.h \
     GraphicsView.h \
-    MyCommand.h
+    MyCommand.h \
+    OpenGLWidget.h \
+    GraphicsTextItem.h
 
 
 FORMS    += mainwindow.ui \
