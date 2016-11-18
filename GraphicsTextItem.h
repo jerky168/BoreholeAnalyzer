@@ -2,9 +2,6 @@
 
 #include <QGraphicsTextItem>
 
-class QFocusEvent;
-class QGraphicsSceneMouseEvent;
-
 class GraphicsTextItem : public QGraphicsSimpleTextItem
 {
 public:

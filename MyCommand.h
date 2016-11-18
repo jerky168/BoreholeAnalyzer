@@ -1,6 +1,7 @@
 #ifndef MYCOMMAND_H
 #define MYCOMMAND_H
 
+#include <QUndoCommand>
 
 class MyCommand : public QUndoCommand
 {
@@ -8,8 +9,8 @@ public:
     MyCommand();
     ~MyCommand();
 
-    redo();
-    undo();
+    void redo();
+    void undo();
 
 
 

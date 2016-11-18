@@ -13,12 +13,12 @@ MyCommand::~MyCommand()
 }
 
 
-MyCommand::redo()
+void MyCommand::redo()
 {
 
 }
 
-MyCommand::undo()
+void MyCommand::undo()
 {
 
 }
