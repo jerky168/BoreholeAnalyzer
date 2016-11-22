@@ -1,34 +1,32 @@
 #pragma once
 
 #include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <QPixmap>
+#include <QWheelEvent>
+#include <QPinchGesture>
+#include <QtMath>
+#include <QPainter>
+
+#include <QGraphicsSceneMouseEvent>
+#include "GraphicsScene.h"
 
 
-class QMouseEvent;
-class QWheelEvent;
 class GraphicsView : public QGraphicsView
 {
 	Q_OBJECT
 		
 public:
     GraphicsView(QWidget *parent = Q_NULLPTR);
-	
-public slots:
-    void updatePixmap(QPixmap pixmap);
-    void clearPixmap();
+    ~GraphicsView();
 
+    GraphicsScene *scene;
 
 protected:
 	void wheelEvent(QWheelEvent *event);
-
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
 
 private:
 	double factor;
 	double totalFactor;
 
-    QGraphicsScene *scene;
-    QGraphicsPixmapItem *pixmapItem;
 
 };

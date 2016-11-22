@@ -2,7 +2,7 @@
 #define IMAGEWIDGET_H
 
 #include <QWidget>
-#include "dbhandler.h"
+#include "DbHandler.h"
 
 namespace Ui {
 class ImageWidget;

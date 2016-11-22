@@ -20,21 +20,25 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
             defectwidget.cpp \
-            dbhandler.cpp \
     GraphicsView.cpp \
     MyCommand.cpp \
     OpenGLWidget.cpp \
-    GraphicsTextItem.cpp
+    GraphicsTextItem.cpp \
+    GraphicsSettings.cpp \
+    DbHandler.cpp \
+    GraphicsScene.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
             defectwidget.h \
-            dbhandler.h \
     GraphicsView.h \
     MyCommand.h \
     OpenGLWidget.h \
-    GraphicsTextItem.h
+    GraphicsTextItem.h \
+    GraphicsSettings.h \
+    DbHandler.h \
+    GraphicsScene.h
 
 
 FORMS    += mainwindow.ui \

@@ -8,9 +8,7 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 
-
-// database handler
-#include "dbhandler.h"
+#include "DbHandler.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,11 +17,6 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-typedef enum{
-    IDLE,
-    Opened
-}AppStatus;
 
 
 public:
@@ -39,6 +32,7 @@ private slots:
     void on_actionClose_triggered();
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
+    void on_actionTextbox_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -46,8 +40,13 @@ private:
     DbHandler *handler;
     QUndoStack *undosStack;
 
+    typedef enum{
+        IDLE,
+        Opened
+    }AppStatus;
 
 signals:
+    // 更新显示的照片
     void updatePixmap(QPixmap pixmap);
     void clearPixmap();
 

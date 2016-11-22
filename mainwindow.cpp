@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
 
-    QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), ui->graphicsView, SLOT(updatePixmap(QPixmap)));
-    QObject::connect(this, SIGNAL(clearPixmap()), ui->graphicsView, SLOT(clearPixmap()));
+    QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), ui->graphicsView->scene, SLOT(updatePixmap(QPixmap)));
+    QObject::connect(this, SIGNAL(clearPixmap()), ui->graphicsView->scene, SLOT(clearPixmap()));
 }
 
 MainWindow::~MainWindow()
@@ -42,8 +42,9 @@ void MainWindow::on_actionOpen_triggered()
     handler = new DbHandler(filename, this);
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
-
     ui->actionClose->setEnabled(true);
+
+
 }
 
 
@@ -55,22 +56,27 @@ void MainWindow::on_actionClose_triggered()
 }
 
 
-
-
 void MainWindow::switchImage(quint16 index)
 {
     DbHandler::BigImage bigImage = handler->getBigImage(index);
     emit updatePixmap(bigImage.pixmap);
 }
 
-// undo
+
+
 void MainWindow::on_actionUndo_triggered()
 {
 
 }
 
-// redo
 void MainWindow::on_actionRedo_triggered()
+{
+
+}
+
+
+// 文本框
+void MainWindow::on_actionTextbox_triggered()
 {
 
 }
