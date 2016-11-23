@@ -18,7 +18,9 @@ public:
     GraphicsView(QWidget *parent = Q_NULLPTR);
     ~GraphicsView();
 
-    GraphicsScene *scene;
+public slots:
+    void handleItemInserted(QGraphicsItem* const &insertedItem);
+
 
 protected:
 	void wheelEvent(QWheelEvent *event);
@@ -28,5 +30,8 @@ private:
 	double factor;
 	double totalFactor;
 
+
+signals:
+    void mouseMoved(QMouseEvent *event);
 
 };

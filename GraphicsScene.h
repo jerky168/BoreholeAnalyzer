@@ -3,8 +3,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
+#include <QDebug>
 
 #include <QGraphicsSceneMouseEvent>
+
+#include "GraphicsTextItem.h"
+
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -14,7 +18,7 @@ public:
     GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-    enum Mode {Normal, Move, InsertText};
+    enum Mode {MoveItem, InsertSlitWidth, InsertRectangle, InsertAnyShape, InsertOccurance, InsertText};
 
     Mode getCurMode() {return curMode;}
     void setCurMode(Mode mode) {curMode = mode;}
@@ -29,7 +33,14 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 
 private:
-    QGraphicsPixmapItem *pixmapItem;
     Mode curMode;
+
+    QGraphicsPixmapItem *pixmapItem;
+    QGraphicsItem *item;
+    QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
+
+signals:
+    void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
+    void itemInserted(QGraphicsItem* const &);
 
 };

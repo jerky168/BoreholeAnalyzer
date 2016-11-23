@@ -26,7 +26,8 @@ SOURCES +=  main.cpp\
             GraphicsTextItem.cpp \
             GraphicsSettings.cpp \
             DbHandler.cpp \
-            GraphicsScene.cpp
+            GraphicsScene.cpp \
+    TextDialog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
             GraphicsTextItem.h \
             GraphicsSettings.h \
             DbHandler.h \
-            GraphicsScene.h
+            GraphicsScene.h \
+    TextDialog.h
 
 
 FORMS    += mainwindow.ui \

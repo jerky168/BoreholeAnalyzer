@@ -587,26 +587,41 @@
    </property>
   </action>
   <action name="actionSlitWidth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>缝宽</string>
    </property>
   </action>
   <action name="actionRectangle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>矩形</string>
    </property>
   </action>
   <action name="actionAnyShape">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>任意形状</string>
    </property>
   </action>
   <action name="actionOccurrence">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>产状</string>
    </property>
   </action>
   <action name="actionTextbox">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/text.png</normaloff>:/res/images/text.png</iconset>
@@ -616,6 +631,9 @@
    </property>
   </action>
   <action name="actionCross">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/corss-cursor.png</normaloff>:/res/images/corss-cursor.png</iconset>
