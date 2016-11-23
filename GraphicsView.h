@@ -6,7 +6,7 @@
 #include <QtMath>
 #include <QPainter>
 
-#include <QGraphicsSceneMouseEvent>
+#include <QMouseEvent>
 #include "GraphicsScene.h"
 
 
@@ -22,7 +22,7 @@ public:
 
 protected:
 	void wheelEvent(QWheelEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mouseMoveEvent(QMouseEvent *mouseEvent);
 
 private:
 	double factor;

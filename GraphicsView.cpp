@@ -28,7 +28,7 @@ void GraphicsView::wheelEvent(QWheelEvent *event)
 	scale(factor, factor);
 }
 
-void GraphicsView::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
     QGraphicsView::mouseMoveEvent(mouseEvent);
 }

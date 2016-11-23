@@ -20,25 +20,25 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
             defectwidget.cpp \
-    GraphicsView.cpp \
-    MyCommand.cpp \
-    OpenGLWidget.cpp \
-    GraphicsTextItem.cpp \
-    GraphicsSettings.cpp \
-    DbHandler.cpp \
-    GraphicsScene.cpp
+            GraphicsView.cpp \
+            MyCommand.cpp \
+            OpenGLWidget.cpp \
+            GraphicsTextItem.cpp \
+            GraphicsSettings.cpp \
+            DbHandler.cpp \
+            GraphicsScene.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
             defectwidget.h \
-    GraphicsView.h \
-    MyCommand.h \
-    OpenGLWidget.h \
-    GraphicsTextItem.h \
-    GraphicsSettings.h \
-    DbHandler.h \
-    GraphicsScene.h
+            GraphicsView.h \
+            MyCommand.h \
+            OpenGLWidget.h \
+            GraphicsTextItem.h \
+            GraphicsSettings.h \
+            DbHandler.h \
+            GraphicsScene.h
 
 
 FORMS    += mainwindow.ui \
@@ -53,8 +53,6 @@ win32 {
 
 #    HEADERS += qword.h  qexcel.h
 #    SOURCES += qword.cpp qexcel.cpp
-
-
 }
 
 DISTFILES += \
