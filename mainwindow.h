@@ -30,6 +30,10 @@ public slots:
      void switchImage(quint16 index);
      void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
 
+     void handleItemInserted(QGraphicsItem* const &insertedItem);
+     void handleItemDeleted(QGraphicsItem* const &deletedItem);
+
+
 private slots:
     void on_actionOpen_triggered();
     void on_actionClose_triggered();

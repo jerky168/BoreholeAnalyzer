@@ -20,7 +20,7 @@ public:
 
 public slots:
     void handleItemInserted(QGraphicsItem* const &insertedItem);
-
+    void handleItemDeleted(QGraphicsItem* const &deletedItem);
 
 protected:
 	void wheelEvent(QWheelEvent *event);

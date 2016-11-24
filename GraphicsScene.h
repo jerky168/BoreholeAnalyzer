@@ -41,6 +41,7 @@ private:
 
 signals:
     void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-    void itemInserted(QGraphicsItem* const &);
+    void itemInserted(QGraphicsItem* const &insertedItem);
+    void itemDeleted(QGraphicsItem* const &deletedItem);
 
 };

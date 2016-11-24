@@ -39,6 +39,7 @@ QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent
     case InsertText:
     {
         item = new GraphicsTextItem(mouseEvent->scenePos());
+        emit itemInserted(item);
         break;
     }
     default:

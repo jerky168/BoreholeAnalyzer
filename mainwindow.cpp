@@ -60,8 +60,8 @@ void MainWindow::createConnections()
     QObject::connect(ui->graphicsView, SIGNAL(mouseMoved(QMouseEvent *)), this, SLOT(handleMouseMoved(QMouseEvent *)));
 
     // 当scene中添加了新的item
-    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), ui->graphicsView, SLOT(handleItemInserted(QGraphicsItem* const &)));
     QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), this, SLOT(handleItemInserted(QGraphicsItem* const &)));
+    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), ui->graphicsView, SLOT(handleItemInserted(QGraphicsItem* const &)));
 }
 
 // 打开文件
@@ -148,4 +148,16 @@ void MainWindow::modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode c
     }
 }
 
+
+// 当插入item后
+void MainWindow::handleItemInserted(QGraphicsItem* const &insertedItem)
+{
+
+}
+
+// 当删除item后
+void MainWindow::handleItemDeleted(QGraphicsItem* const &deletedItem)
+{
+
+}
 
