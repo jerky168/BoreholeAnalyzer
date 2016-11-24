@@ -69,11 +69,15 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 // 鼠标移动事件
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+
+
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 //　鼠标释放事件
 void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+
+
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }

@@ -54,7 +54,9 @@ private:
     QUndoStack *undosStack;
     GraphicsScene *scene;
 
+    // 2D、3D视图切换
     QActionGroup *actionGroup;
+    // 编辑
     QActionGroup *editActionGroup;
 
     typedef enum{
