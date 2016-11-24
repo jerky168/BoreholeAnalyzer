@@ -33,7 +33,11 @@
       <widget class="QWidget" name="page2d">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QGraphicsView" name="graphicsView"/>
+         <widget class="GraphicsView" name="graphicsView">
+          <property name="dragMode">
+           <enum>QGraphicsView::ScrollHandDrag</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -54,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>944</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -583,26 +587,41 @@
    </property>
   </action>
   <action name="actionSlitWidth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>缝宽</string>
    </property>
   </action>
   <action name="actionRectangle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>矩形</string>
    </property>
   </action>
   <action name="actionAnyShape">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>任意形状</string>
    </property>
   </action>
   <action name="actionOccurrence">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>产状</string>
    </property>
   </action>
   <action name="actionTextbox">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/text.png</normaloff>:/res/images/text.png</iconset>
@@ -612,6 +631,9 @@
    </property>
   </action>
   <action name="actionCross">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/corss-cursor.png</normaloff>:/res/images/corss-cursor.png</iconset>
@@ -634,6 +656,11 @@
    <extends>QWidget</extends>
    <header>defectwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>GraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,20 +16,36 @@ CONFIG += precompile_header debug_and_release
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = precompiled.h
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    imagewidget.cpp \
-    defectwidget.cpp
+SOURCES +=  main.cpp\
+            mainwindow.cpp \
+            imagewidget.cpp \
+            defectwidget.cpp \
+            GraphicsView.cpp \
+            MyCommand.cpp \
+            OpenGLWidget.cpp \
+            GraphicsTextItem.cpp \
+            GraphicsSettings.cpp \
+            DbHandler.cpp \
+            GraphicsScene.cpp \
+    TextDialog.cpp
 
 
 HEADERS  += mainwindow.h \
-    imagewidget.h \
-    defectwidget.h
+            imagewidget.h \
+            defectwidget.h \
+            GraphicsView.h \
+            MyCommand.h \
+            OpenGLWidget.h \
+            GraphicsTextItem.h \
+            GraphicsSettings.h \
+            DbHandler.h \
+            GraphicsScene.h \
+    TextDialog.h
 
 
 FORMS    += mainwindow.ui \
-    imagewidget.ui \
-    defectwidget.ui
+            imagewidget.ui \
+            defectwidget.ui
 
 RESOURCES += \
     res.qrc
