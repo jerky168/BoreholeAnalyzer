@@ -24,7 +24,7 @@ void GraphicsView::handleItemInserted(QGraphicsItem * const &insertedItem)
 // 当删除item后
 void GraphicsView::handleItemDeleted(QGraphicsItem* const &deletedItem)
 {
-    setDragMode(QGraphics);
+    setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
 
