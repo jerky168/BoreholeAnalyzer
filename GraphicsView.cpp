@@ -3,7 +3,7 @@
 GraphicsView::GraphicsView( QWidget * parent ) :
     QGraphicsView(parent)
 {
-    setDragMode(QGraphicsView::NoDrag);
+    setDragMode(QGraphicsView::ScrollHandDrag);
 	setMouseTracking(true);
 	totalFactor = 1;
 	scale(0.23, 0.23);
@@ -13,6 +13,20 @@ GraphicsView::~GraphicsView()
 {
 
 }
+
+// 当scene编辑模式发生改变时 鼠标样式放生改变
+void GraphicsView::handleModeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode)
+{
+    if (curMode != GraphicsScene::Normal)
+    {
+        setDragMode(QGraphicsView::NoDrag);
+    }
+    else
+    {
+        setDragMode(QGraphicsView::ScrollHandDrag);
+    }
+}
+
 
 // 当插入item后
 void GraphicsView::handleItemInserted(QGraphicsItem * const &insertedItem)

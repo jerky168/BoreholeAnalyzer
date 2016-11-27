@@ -59,7 +59,11 @@ void MainWindow::createConnections()
     // 当view中发生鼠标移动
     QObject::connect(ui->graphicsView, SIGNAL(mouseMoved(QMouseEvent *)), this, SLOT(handleMouseMoved(QMouseEvent *)));
 
-    // 当scene中添加了新的item
+    // scene的模式改变相关
+    QObject::connect(this, SIGNAL(), scene, SLOT());
+    QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode, GraphicsScene::Mode)), ui->graphicsView, SLOT());
+
+    // 当scene中添加了新的item时
     QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), this, SLOT(handleItemInserted(QGraphicsItem* const &)));
     QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), ui->graphicsView, SLOT(handleItemInserted(QGraphicsItem* const &)));
 }
@@ -104,35 +108,42 @@ void MainWindow::on_actionRedo_triggered()
 
 void MainWindow::on_actionSlitWidth_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertSlitWidth);
+    qDebug() << "on_actionSlitWidth_triggered";
 }
 
 void MainWindow::on_actionRectangle_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertRectangle);
+    qDebug() << "on_actionRectangle_triggered";
 }
 
 void MainWindow::on_actionAnyShape_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertAnyShape);
+    qDebug() << "on_actionAnyShape_triggered";
 }
 
 void MainWindow::on_actionOccurrence_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertOccurance);
+    qDebug() << "on_actionOccurrence_triggered";
 }
 
 void MainWindow::on_actionTextbox_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertTextBox);
+    qDebug() << "on_actionTextbox_triggered";
 }
 
 void MainWindow::on_actionCross_triggered()
 {
-
+    scene->setCurMode(GraphicsScene::InsertCross);
+    qDebug() << "on_actionCross_triggered";
 }
 
 
+// 将所有action重置
 void MainWindow::resetActions()
 {
     for (quint8 i = 0; i < editActionGroup->actions().count(); i++)
