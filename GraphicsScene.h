@@ -4,9 +4,11 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QDebug>
-
 #include <QGraphicsSceneMouseEvent>
+#include <QList>
+
 #include "GraphicsTextItem.h"
+#include "GraphicsLineItem.h"
 
 
 class GraphicsScene : public QGraphicsScene
@@ -17,15 +19,17 @@ public:
     GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-    enum Mode {Normal, MoveItem, InsertSlitWidth, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
+    enum Mode {MoveItem, InsertLine, InsertRuler, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
     void initItem();
+
     void setCurMode(Mode mode);
     Mode getCurMode() {return curMode;}
 
 public slots:
     void updatePixmap(QPixmap pixmap);
-    void clearPixmap();
+    void clearScene();
+
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -34,14 +38,13 @@ protected:
 
 private:
     Mode curMode;
+    QList<QGraphicsItem *> itemGroup;
 
     QGraphicsPixmapItem *pixmapItem;
     QGraphicsItem *item;
     QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
 
 signals:
-    void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-    void itemInserted(QGraphicsItem* const &insertedItem);
-    void itemDeleted(QGraphicsItem* const &deletedItem);
+    void modeChanged(GraphicsScene::Mode curMode);
 
 };

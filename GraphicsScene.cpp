@@ -7,14 +7,16 @@
  * */
 
 /******************************** public functions **************************************/
-
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent),
-    curMode(Normal),
+    curMode(MoveItem),
     item(Q_NULLPTR)
 {
     QPixmap pixmap;
     pixmapItem = this->addPixmap(pixmap);
+
+    // clear item group
+    itemGroup.clear();
 }
 
 GraphicsScene::~GraphicsScene()
@@ -36,82 +38,111 @@ void GraphicsScene::initItem()
 // 更改模式
 void GraphicsScene::setCurMode(Mode mode)
 {
-    emit modeChanged(curMode, mode);
     curMode = mode;
+    emit modeChanged(curMode);
 }
 
 /******************************** public slots **************************************/
-// 更新图片
+
 void GraphicsScene::updatePixmap(QPixmap pixmap)
 {
     pixmapItem->setPixmap(pixmap);
+
+    // clear all items
+    for (int i = 0; i < itemGroup.count(); i++)
+    {
+        removeItem(itemGroup[i]);
+    }
+    itemGroup.clear();
 }
 
-// 清除图片
-void GraphicsScene::clearPixmap()
+void GraphicsScene::clearScene()
 {
+    // clear pixmap
     QPixmap pixmap;
     pixmapItem->setPixmap(pixmap);
-}
 
+    // clear all items
+    for (int i = 0; i < itemGroup.count(); i++)
+    {
+        removeItem(itemGroup[i]);
+    }
+    itemGroup.clear();
+}
 
 
 
 // 根据当前模式创建item
 QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    if (item != Q_NULLPTR)
+        return item;
+
     switch (curMode)
     {
-    case InsertTextBox:
-    {
-        item = new GraphicsTextItem(mouseEvent->scenePos());
-        emit itemInserted(item);
-        break;
-    }
-    default:
-        break;
-    }
+        // 添加文本框
+        case InsertTextBox:
+        {
+            item = new GraphicsTextItem(mouseEvent->scenePos());
+            itemGroup.append(item);
+            break;
+        }
+
+        // 插入直线
+        case InsertLine:
+        {
+            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            itemGroup.append(item);
+            break;
+        }
+
+        // 插入产状
+//        case InsertOccurance:
+//        {
+//            item = new GraphicsAngleItem(mouseEvent->scenePos());
+//            itemGroup.append(item);
+//            break;
+//        }
+
+
+        default:
+            break;
+        }
     return item;
 }
 
 
-// 鼠标点击事件
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() != Qt::LeftButton)
-    {
-        initItem();
-        emit modeChanged(curMode, Normal);
-        curMode = Normal;
-    }
-    else if (curMode != Normal)
+    if (curMode != MoveItem && item == Q_NULLPTR)
     {
         item = createNewItem(mouseEvent);
-        this->addItem(item);
-        emit itemInserted(item);
+        addItem(item);
+    }
+    else
+    {
+        curMode = MoveItem;
+        emit modeChanged(curMode);
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
-
-// 鼠标移动事件
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
-//　鼠标释放事件
 void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    // 如果右键释放 退出编辑模式
-//    if (mouseEvent->button() == Qt::RightButton)
-//    {
-//        if (curMode != Normal)
-//        {
-//            emit itemInserted(item);
-//            initItem();
-//        }
-//    }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+
+    if (curMode != MoveItem)
+    {
+        curMode = MoveItem;
+        emit modeChanged(curMode);
+
+        initItem();
+    }
 }
+

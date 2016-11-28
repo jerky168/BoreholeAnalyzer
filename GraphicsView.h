@@ -19,9 +19,8 @@ public:
     ~GraphicsView();
 
 public slots:
-    void handleModeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
+    void handleModeChanged(GraphicsScene::Mode curMode);
     void handleItemInserted(QGraphicsItem* const &insertedItem);
-    void handleItemDeleted(QGraphicsItem* const &deletedItem);
 
 protected:
 	void wheelEvent(QWheelEvent *event);
@@ -30,7 +29,6 @@ protected:
 private:
 	double factor;
 	double totalFactor;
-
 
 signals:
     void mouseMoved(QMouseEvent *event);

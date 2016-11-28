@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QPen>
-#include <QApplication>
 #include <QGraphicsSimpleTextItem>
 
+#include "GraphicsSettings.h"
 #include "TextDialog.h"
 
 
@@ -13,7 +13,17 @@ public:
     GraphicsTextItem(const QPointF& position, const QString& text = QString(), QGraphicsItem *parent = Q_NULLPTR);
     ~GraphicsTextItem();
 
+    bool getTextDialogCloseFlag();
+
+    //ItemType getType() {return TextBox;}
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
+    bool sceneEvent(QEvent *event);
+
 private:
-    bool textDialogCloseFlag;
     void showTextDialog(QFont font);
+    bool textDialogCloseFlag;
 };

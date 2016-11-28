@@ -195,6 +195,7 @@
    <addaction name="actionRightSpin"/>
    <addaction name="actionAutoLeftSpin"/>
    <addaction name="actionAutoRightSpin"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetImage">

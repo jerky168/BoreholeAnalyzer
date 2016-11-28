@@ -28,11 +28,7 @@ public:
 
 public slots:
      void switchImage(quint16 index);
-     void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-
-     void handleItemInserted(QGraphicsItem* const &insertedItem);
-     void handleItemDeleted(QGraphicsItem* const &deletedItem);
-
+     void handleModeChanged(GraphicsScene::Mode curMode);
 
 private slots:
     void on_actionOpen_triggered();
@@ -64,14 +60,15 @@ private:
         Opened
     }AppStatus;
 
-
+    void createActionGroups();
+    void createSceneAndView();
     void createConnections();
     void resetActions();
 
 
 signals:
     void updatePixmap(QPixmap pixmap);
-    void clearPixmap();
+    void clearScene();
 
 
 

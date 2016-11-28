@@ -10,6 +10,20 @@ MainWindow::MainWindow(QWidget *parent) :
     editActionGroup(new QActionGroup(this))
 {
     ui->setupUi(this);
+
+    createActionGroups();
+    createSceneAndView();
+    createConnections();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+// create action group
+void MainWindow::createActionGroups()
+{
     //add the toobar and dock windows to menu view
     ui->menuView->addAction(ui->mainToolBar->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetImage->toggleViewAction());
@@ -26,20 +40,17 @@ MainWindow::MainWindow(QWidget *parent) :
     editActionGroup->addAction(ui->actionOccurrence);
     editActionGroup->addAction(ui->actionTextbox);
     editActionGroup->addAction(ui->actionCross);
-
-    // graphics view
-    ui->graphicsView->setScene(scene);
-
-    // create connections
-    createConnections();
 }
 
-MainWindow::~MainWindow()
+
+// graphics view
+void MainWindow::createSceneAndView()
 {
-    delete ui;
+    ui->graphicsView->setScene(scene);
+    scene->setBackgroundBrush(QBrush(Qt::white));
 }
 
-
+// create connections
 void MainWindow::createConnections()
 {
     //switch 2D view and 3D view
@@ -51,26 +62,19 @@ void MainWindow::createConnections()
 
     // 更新照片
     QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), scene, SLOT(updatePixmap(QPixmap)));
-    QObject::connect(this, SIGNAL(clearPixmap()), scene, SLOT(clearPixmap()));
+    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
 
     // 编辑模式改变
-    QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode, GraphicsScene::Mode)), this, SLOT(modeChanged(GraphicsScene::Mode, GraphicsScene::Mode)));
-
-    // 当view中发生鼠标移动
-    QObject::connect(ui->graphicsView, SIGNAL(mouseMoved(QMouseEvent *)), this, SLOT(handleMouseMoved(QMouseEvent *)));
-
-    // scene的模式改变相关
-    QObject::connect(this, SIGNAL(), scene, SLOT());
-    QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode, GraphicsScene::Mode)), ui->graphicsView, SLOT());
-
-    // 当scene中添加了新的item时
-    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), this, SLOT(handleItemInserted(QGraphicsItem* const &)));
-    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem* const &)), ui->graphicsView, SLOT(handleItemInserted(QGraphicsItem* const &)));
+    QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
+    QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), ui->graphicsView, SLOT(handleModeChanged(GraphicsScene::Mode)));
 }
+
 
 // 打开文件
 void MainWindow::on_actionOpen_triggered()
 {
+    emit clearScene();
+
     QString filename = QFileDialog::getOpenFileName(this, "打开工程文件", QDir::homePath(), "工程文件 (*.ylink)");
     handler = new DbHandler(filename, this);
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
@@ -81,7 +85,8 @@ void MainWindow::on_actionOpen_triggered()
 // 关闭文件
 void MainWindow::on_actionClose_triggered()
 {
-    emit clearPixmap();
+    emit clearScene();
+
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
 }
@@ -105,42 +110,36 @@ void MainWindow::on_actionRedo_triggered()
 
 }
 
-
 void MainWindow::on_actionSlitWidth_triggered()
 {
-    scene->setCurMode(GraphicsScene::InsertSlitWidth);
-    qDebug() << "on_actionSlitWidth_triggered";
+    scene->setCurMode(GraphicsScene::InsertLine);
 }
 
 void MainWindow::on_actionRectangle_triggered()
 {
     scene->setCurMode(GraphicsScene::InsertRectangle);
-    qDebug() << "on_actionRectangle_triggered";
 }
 
 void MainWindow::on_actionAnyShape_triggered()
 {
     scene->setCurMode(GraphicsScene::InsertAnyShape);
-    qDebug() << "on_actionAnyShape_triggered";
 }
 
 void MainWindow::on_actionOccurrence_triggered()
 {
     scene->setCurMode(GraphicsScene::InsertOccurance);
-    qDebug() << "on_actionOccurrence_triggered";
 }
 
 void MainWindow::on_actionTextbox_triggered()
 {
     scene->setCurMode(GraphicsScene::InsertTextBox);
-    qDebug() << "on_actionTextbox_triggered";
 }
 
 void MainWindow::on_actionCross_triggered()
 {
     scene->setCurMode(GraphicsScene::InsertCross);
-    qDebug() << "on_actionCross_triggered";
 }
+
 
 
 // 将所有action重置
@@ -151,24 +150,10 @@ void MainWindow::resetActions()
 }
 
 
-void MainWindow::modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode)
+void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
 {
     if (curMode == GraphicsScene::MoveItem)
     {
         resetActions();
     }
 }
-
-
-// 当插入item后
-void MainWindow::handleItemInserted(QGraphicsItem* const &insertedItem)
-{
-
-}
-
-// 当删除item后
-void MainWindow::handleItemDeleted(QGraphicsItem* const &deletedItem)
-{
-
-}
-

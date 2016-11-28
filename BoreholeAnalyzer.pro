@@ -24,10 +24,11 @@ SOURCES +=  main.cpp\
             MyCommand.cpp \
             OpenGLWidget.cpp \
             GraphicsTextItem.cpp \
-            GraphicsSettings.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
-    TextDialog.cpp
+    TextDialog.cpp \
+    GraphicsLineItem.cpp \
+    GraphicsSettings.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -37,10 +38,11 @@ HEADERS  += mainwindow.h \
             MyCommand.h \
             OpenGLWidget.h \
             GraphicsTextItem.h \
-            GraphicsSettings.h \
             DbHandler.h \
             GraphicsScene.h \
-    TextDialog.h
+    TextDialog.h \
+    GraphicsLineItem.h \
+    GraphicsSettings.h
 
 
 FORMS    += mainwindow.ui \

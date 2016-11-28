@@ -8,13 +8,13 @@ TextDialog::TextDialog(QFont font, QWidget *parent) :
     resize(250, 100);
     textEdit = new QTextEdit;
     textEdit->setMinimumSize(250, 100);
-    okBtn = new QPushButton(tr("OK"));
+    okBtn = new QPushButton("确认");
     okBtn->setMinimumSize(50, 30);
     connect(okBtn, SIGNAL(clicked()), this, SLOT(okBtnClicked()));
-    cancelBtn = new QPushButton(tr("Cancel"));
+    cancelBtn = new QPushButton("取消");
     cancelBtn->setMinimumSize(50, 30);
     connect(cancelBtn, SIGNAL(clicked()), this, SLOT(close()));
-    selectFontBtn = new QPushButton(tr("Select font..."));
+    selectFontBtn = new QPushButton(tr("选择文本"));
     selectFontBtn->setMinimumSize(50, 30);
     connect(selectFontBtn, SIGNAL(clicked()), this, SLOT(selectFont()));
 
@@ -51,6 +51,7 @@ void TextDialog::selectFont()
     }
 }
 
+// 设置文本
 void TextDialog::setText(const QString& text)
 {
     textEdit->setText(text);

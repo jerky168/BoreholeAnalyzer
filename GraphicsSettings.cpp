@@ -1,37 +1,44 @@
 #include "GraphicsSettings.h"
 
-GraphicsSettings::GraphicsSettings()
+GraphicsSettings* GraphicsSettings::GraphicsSettingInstance = Q_NULLPTR;
+
+GraphicsSettings* GraphicsSettings::instance()
 {
-    penFont = QApplication::font();
-    penFont.setPointSize(30);
-    penColor = QColor(Qt::black);
-    penWidth = 8;
-    isDrawingFlag = false;
+    if (GraphicsSettingInstance == Q_NULLPTR)
+    {
+        GraphicsSettingInstance = new GraphicsSettings;
+    }
+    return GraphicsSettingInstance;
 }
+
 
 GraphicsSettings::~GraphicsSettings()
 {
-//    if (GraphicsSettingInstance != Q_NULLPTR)
-//        delete GraphicsSettingInstance;
-//    GraphicsSettingInstance = Q_NULLPTR;
+    if (GraphicsSettingInstance != Q_NULLPTR)
+    {
+        delete GraphicsSettingInstance;
+        GraphicsSettingInstance = Q_NULLPTR;
+    }
 }
 
-//GraphicsSettings* GraphicsSettings::instance()
-//{
-//    if (GraphicsSettingInstance == Q_NULLPTR)
-//        GraphicsSettingInstance = new GraphicsSettings();
-//    return GraphicsSettingInstance;
-//}
 
-
-void GraphicsSettings::setColor(QColor color)
+GraphicsSettings::GraphicsSettings() :
+    penWidth(8),
+    isDrawingFlag(false),
+    penFont(QApplication::font()),
+    penColor(Qt::black)
 {
-    penColor = color;
+    penFont.setPointSize(30);
 }
 
-void GraphicsSettings::setPenWidth(quint8 width)
+void GraphicsSettings::setPenWidth(int width)
 {
     penWidth = width;
+}
+
+void GraphicsSettings::setIsDrawing(bool isDrawing)
+{
+    isDrawingFlag = isDrawing;
 }
 
 void GraphicsSettings::setFont(QFont font)
@@ -39,9 +46,7 @@ void GraphicsSettings::setFont(QFont font)
     penFont = font;
 }
 
-void GraphicsSettings::setIsDrawing(bool flag)
+void GraphicsSettings::setColor(QColor color)
 {
-    isDrawingFlag = flag;
+    penColor = color;
 }
-
-

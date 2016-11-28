@@ -4,30 +4,75 @@ GraphicsTextItem::GraphicsTextItem(const QPointF& position, const QString& text,
     QGraphicsSimpleTextItem(parent),
     textDialogCloseFlag(false)
 {
-    this->setPos(position);
-    this->setText(text);
-    this->setPen(QPen(Qt::black));
-    this->setFlag(QGraphicsItem::ItemIsMovable);
+    setPos(position);
+    setText(text);
+    setPen(QPen(GraphicsSettings::instance()->getPenColor(), 0));
+    setFlag(QGraphicsItem::ItemIsMovable);
 
-    this->showTextDialog(QApplication::font());
+    showTextDialog(GraphicsSettings::instance()->getFont());
 }
+
 
 GraphicsTextItem::~GraphicsTextItem()
 {
 
 }
 
-
-void GraphicsTextItem::showTextDialog(QFont f)
+bool GraphicsTextItem::getTextDialogCloseFlag()
 {
-    TextDialog* dialog = new TextDialog(f);
-    dialog->setText(text());
-    dialog->setWindowTitle(QObject::tr("Input text"));
-    dialog->exec();
-    if (1 == dialog->getCloseFlag())
+    return textDialogCloseFlag;
+}
+
+void GraphicsTextItem::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
+{
+    event = Q_NULLPTR;
+    setFlag(QGraphicsItem::ItemIsMovable, false);
+}
+
+void GraphicsTextItem::mousePressEvent( QGraphicsSceneMouseEvent *event )
+{
+    event = Q_NULLPTR;
+    if (isSelected())
     {
-        textDialogCloseFlag = 1;
+        setFlag(QGraphicsItem::ItemIsMovable);
     }
+    else
+    {
+        GraphicsSettings::instance()->setIsDrawing(true);
+    }
+}
+void GraphicsTextItem::mouseReleaseEvent( QGraphicsSceneMouseEvent *event )
+{
+    QGraphicsItem::mouseReleaseEvent(event);
+}
+
+
+bool GraphicsTextItem::sceneEvent( QEvent *event )
+{
+    if (event->type() == QEvent::GraphicsSceneMouseDoubleClick)
+    {
+        GraphicsSettings::instance()->setFont(font());
+        showTextDialog(GraphicsSettings::instance()->getFont());
+    }
+    else
+    {
+        QGraphicsItem::sceneEvent(event);
+    }
+    return true;
+}
+
+void GraphicsTextItem::showTextDialog(QFont font)
+{
+    TextDialog *dialog = new TextDialog(font);
+    dialog->setText(this->text());
+    dialog->setWindowTitle("输入文本");
+    dialog->exec();
+
+    if (dialog->getCloseFlag())
+    {
+        textDialogCloseFlag = true;
+    }
+
     if (!dialog->getText().isEmpty())
     {
         this->setText(dialog->getText());
