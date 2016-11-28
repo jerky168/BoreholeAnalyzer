@@ -6,7 +6,6 @@
 #include <QDebug>
 
 #include <QGraphicsSceneMouseEvent>
-
 #include "GraphicsTextItem.h"
 
 
@@ -18,10 +17,11 @@ public:
     GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-    enum Mode {MoveItem, InsertSlitWidth, InsertRectangle, InsertAnyShape, InsertOccurance, InsertText};
+    enum Mode {Normal, MoveItem, InsertSlitWidth, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
+    void initItem();
+    void setCurMode(Mode mode);
     Mode getCurMode() {return curMode;}
-    void setCurMode(Mode mode) {curMode = mode;}
 
 public slots:
     void updatePixmap(QPixmap pixmap);
@@ -41,6 +41,7 @@ private:
 
 signals:
     void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-    void itemInserted(QGraphicsItem* const &);
+    void itemInserted(QGraphicsItem* const &insertedItem);
+    void itemDeleted(QGraphicsItem* const &deletedItem);
 
 };

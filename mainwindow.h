@@ -30,6 +30,10 @@ public slots:
      void switchImage(quint16 index);
      void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
 
+     void handleItemInserted(QGraphicsItem* const &insertedItem);
+     void handleItemDeleted(QGraphicsItem* const &deletedItem);
+
+
 private slots:
     void on_actionOpen_triggered();
     void on_actionClose_triggered();
@@ -50,7 +54,9 @@ private:
     QUndoStack *undosStack;
     GraphicsScene *scene;
 
+    // 2D、3D视图切换
     QActionGroup *actionGroup;
+    // 编辑
     QActionGroup *editActionGroup;
 
     typedef enum{
