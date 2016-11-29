@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QDateTime>
+#include <QVector>
 
 class DbHandler : public QObject
 {
@@ -17,7 +18,6 @@ class DbHandler : public QObject
 
 public:
     DbHandler(QObject *parent = Q_NULLPTR);
-    DbHandler(QString filename, QObject *parent = 0);
     ~DbHandler();
 
     typedef struct PrjInfo{
@@ -58,22 +58,48 @@ public:
         NoImages
     }ErrorCode;
 
+    typedef struct {
+        double x, y;
+        QString content;
+    }TextItem;
+
+    typedef struct {
+        double x1, y1;
+        double x2, y2;
+    }WidthItem;
+
+    typedef struct {
+        double x1, y1;
+        double x2, y2;
+        double x3, y3;
+    }AngleItem;
 
 
-    // open database
-    void openDatabase(QString filepath);
+    bool openDatabase(QString filepath);
+    void closeDatabase();
+    bool isOpened();
 
-    // return error code
+
     ErrorCode lastError() { return errorCode; }
 
     // get project infomation
     PrjInfo getPrjInfo();
 
-    // get image
+    // get big images
     BigImage getBigImage(quint16 index);
 
-
+    // get small images
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
+
+    // get all item
+    QVector<TextItem> getTextItem();
+    QVector<WidthItem> getWidthItem();
+    QVector<AngleItem> getAngleItem();
+
+    // save all item
+    void saveTextItem(QVector<TextItem> items);
+    void saveWidthItem(QVector<WidthItem> items);
+    void saveWidthItem(QVector<AngleItem> items);
 
 signals:
 

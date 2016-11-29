@@ -1,10 +1,10 @@
 #include "TextDialog.h"
 
 TextDialog::TextDialog(QFont font, QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    closeFlag(false),
+    curFont(font)
 {
-    closeFlag = 0;
-    curFont = font;
     resize(250, 100);
     textEdit = new QTextEdit;
     textEdit->setMinimumSize(250, 100);
@@ -36,8 +36,8 @@ TextDialog::~TextDialog()
 
 void TextDialog::okBtnClicked()
 {
-    closeFlag = 1;
-    close();
+    closeFlag = true;
+    this->close();
 }
 
 void TextDialog::selectFont()
@@ -51,7 +51,6 @@ void TextDialog::selectFont()
     }
 }
 
-// 设置文本
 void TextDialog::setText(const QString& text)
 {
     textEdit->setText(text);

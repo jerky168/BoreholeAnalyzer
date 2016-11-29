@@ -4,7 +4,6 @@
 #include <QColor>
 #include <QFont>
 
-
 class GraphicsSettings
 {
 public:

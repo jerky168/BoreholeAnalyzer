@@ -20,7 +20,6 @@ public:
 
 public slots:
     void handleModeChanged(GraphicsScene::Mode curMode);
-    void handleItemInserted(QGraphicsItem* const &insertedItem);
 
 protected:
 	void wheelEvent(QWheelEvent *event);

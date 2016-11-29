@@ -14,6 +14,7 @@ GraphicsView::~GraphicsView()
 
 }
 
+// 当模式发生改变时
 void GraphicsView::handleModeChanged(GraphicsScene::Mode curMode)
 {
     if (curMode != GraphicsScene::MoveItem)
@@ -26,13 +27,7 @@ void GraphicsView::handleModeChanged(GraphicsScene::Mode curMode)
     }
 }
 
-
-void GraphicsView::handleItemInserted(QGraphicsItem * const &insertedItem)
-{
-    setDragMode(QGraphicsView::ScrollHandDrag);
-}
-
-
+// 滚轮事件
 void GraphicsView::wheelEvent(QWheelEvent *event)
 {
 	double numDegress = event->delta() / 8.0;

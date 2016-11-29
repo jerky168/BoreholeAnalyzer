@@ -16,11 +16,8 @@
 class GraphicsLineItem : public QGraphicsLineItem
 {
 public:
-    GraphicsLineItem(const QLineF & line, QGraphicsItem * parent = 0);
+    GraphicsLineItem(const QLineF & line, QGraphicsItem * parent = Q_NULLPTR);
     ~GraphicsLineItem();
-
-    //ItemType getType() {return SlitWidth;}
-
 
     void paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = Q_NULLPTR);
     QPainterPath shape() const;

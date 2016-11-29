@@ -4,8 +4,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    handler(new DbHandler(this)),
     undosStack(new QUndoStack(this)),
-    scene(new GraphicsScene()),
+    scene(new GraphicsScene(handler, this)),
     actionGroup(new QActionGroup(this)),
     editActionGroup(new QActionGroup(this))
 {
@@ -70,25 +71,28 @@ void MainWindow::createConnections()
 }
 
 
-// 打开文件
 void MainWindow::on_actionOpen_triggered()
 {
-    emit clearScene();
+    on_actionClose_triggered();
 
     QString filename = QFileDialog::getOpenFileName(this, "打开工程文件", QDir::homePath(), "工程文件 (*.ylink)");
-    handler = new DbHandler(filename, this);
+    if (!handler->openDatabase(filename))
+        return;
+
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
     ui->actionClose->setEnabled(true);
 }
 
-// 关闭文件
 void MainWindow::on_actionClose_triggered()
 {
     emit clearScene();
-
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
+
+    // 如果数据库被打开 则关闭
+    if (handler->isOpened())
+        handler->closeDatabase();
 }
 
 
@@ -108,6 +112,11 @@ void MainWindow::on_actionUndo_triggered()
 void MainWindow::on_actionRedo_triggered()
 {
 
+}
+
+void MainWindow::on_actionShift_triggered()
+{
+    scene->setCurMode(GraphicsScene::InsertShift);
 }
 
 void MainWindow::on_actionSlitWidth_triggered()
@@ -141,8 +150,6 @@ void MainWindow::on_actionCross_triggered()
 }
 
 
-
-// 将所有action重置
 void MainWindow::resetActions()
 {
     for (quint8 i = 0; i < editActionGroup->actions().count(); i++)
@@ -150,6 +157,7 @@ void MainWindow::resetActions()
 }
 
 
+// 当模式发生改变时
 void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
 {
     if (curMode == GraphicsScene::MoveItem)

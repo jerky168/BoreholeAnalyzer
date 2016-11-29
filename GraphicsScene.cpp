@@ -7,13 +7,15 @@
  * */
 
 /******************************** public functions **************************************/
-GraphicsScene::GraphicsScene(QObject *parent) :
+GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
     QGraphicsScene(parent),
     curMode(MoveItem),
     item(Q_NULLPTR)
 {
     QPixmap pixmap;
     pixmapItem = this->addPixmap(pixmap);
+
+    handler = dbHandler;
 
     // clear item group
     itemGroup.clear();
@@ -30,7 +32,6 @@ void GraphicsScene::initItem()
 {
     if (item != Q_NULLPTR)
     {
-        item->ungrabMouse();
         item = Q_NULLPTR;
     }
 }
@@ -75,9 +76,6 @@ void GraphicsScene::clearScene()
 // 根据当前模式创建item
 QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (item != Q_NULLPTR)
-        return item;
-
     switch (curMode)
     {
         // 添加文本框
@@ -96,14 +94,12 @@ QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent
             break;
         }
 
-        // 插入产状
-//        case InsertOccurance:
-//        {
-//            item = new GraphicsAngleItem(mouseEvent->scenePos());
-//            itemGroup.append(item);
-//            break;
-//        }
-
+        case InsertShift:
+        {
+            item = new GraphicsAngleItem(mouseEvent->scenePos());
+            itemGroup.append(item);
+            break;
+        }
 
         default:
             break;
@@ -146,3 +142,8 @@ void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
 }
 
+
+void GraphicsScene::clearItemVector()
+{
+
+}

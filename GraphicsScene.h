@@ -5,10 +5,12 @@
 #include <QPixmap>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
-#include <QList>
+#include <QVector>
 
+#include "DbHandler.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
+#include "GraphicsAngleItem.h"
 
 
 class GraphicsScene : public QGraphicsScene
@@ -16,10 +18,10 @@ class GraphicsScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    GraphicsScene(QObject *parent = Q_NULLPTR);
+    GraphicsScene(DbHandler *dbHandler, QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-    enum Mode {MoveItem, InsertLine, InsertRuler, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
+    enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
     void initItem();
 
@@ -30,7 +32,6 @@ public slots:
     void updatePixmap(QPixmap pixmap);
     void clearScene();
 
-
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -38,11 +39,18 @@ protected:
 
 private:
     Mode curMode;
-    QList<QGraphicsItem *> itemGroup;
+
+    DbHandler *handler;
+
+    QVector<QGraphicsItem *> itemGroup;
+
 
     QGraphicsPixmapItem *pixmapItem;
     QGraphicsItem *item;
     QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
+
+    void clearItemVector();
+
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode);

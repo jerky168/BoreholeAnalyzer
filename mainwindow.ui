@@ -182,6 +182,7 @@
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
+   <addaction name="actionShift"/>
    <addaction name="actionSlitWidth"/>
    <addaction name="actionRectangle"/>
    <addaction name="actionAnyShape"/>

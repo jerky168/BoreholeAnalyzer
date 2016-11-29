@@ -6,6 +6,7 @@
 #include "GraphicsSettings.h"
 #include "TextDialog.h"
 
+#include "stable.h"
 
 class GraphicsTextItem : public QGraphicsSimpleTextItem
 {
@@ -14,8 +15,6 @@ public:
     ~GraphicsTextItem();
 
     bool getTextDialogCloseFlag();
-
-    //ItemType getType() {return TextBox;}
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

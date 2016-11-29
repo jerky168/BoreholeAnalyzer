@@ -36,6 +36,7 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
 
+    void on_actionShift_triggered();
     void on_actionSlitWidth_triggered();
     void on_actionRectangle_triggered();
     void on_actionAnyShape_triggered();
@@ -45,14 +46,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
     DbHandler *handler;
     QUndoStack *undosStack;
     GraphicsScene *scene;
 
-    // 2D、3D视图切换
     QActionGroup *actionGroup;
-    // 编辑
     QActionGroup *editActionGroup;
 
     typedef enum{

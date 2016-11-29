@@ -1,3 +1,5 @@
+#pragma once
+
 /* Add C includes here */
 
 extern double FACTORBTPIXELWITHMM;
