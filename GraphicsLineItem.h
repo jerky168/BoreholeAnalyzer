@@ -16,7 +16,7 @@
 class GraphicsLineItem : public QGraphicsLineItem
 {
 public:
-    GraphicsLineItem(const QLineF & line, QGraphicsItem * parent = Q_NULLPTR);
+    GraphicsLineItem(const QLineF & line, QGraphicsItem *parent = Q_NULLPTR);
     ~GraphicsLineItem();
 
     void paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = Q_NULLPTR);
@@ -27,5 +27,8 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
     bool sceneEvent(QEvent *event);
+
+private:
+    bool isCurrentMode();
 
 };

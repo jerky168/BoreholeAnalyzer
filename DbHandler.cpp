@@ -132,6 +132,9 @@ QVector<QPixmap> DbHandler::getSmallImage(quint32 start, quint32 end)
 }
 
 
+
+
+
 QVector<DbHandler::TextItem> DbHandler::getTextItem()
 {
     QVector<TextItem> items;

@@ -11,6 +11,7 @@
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsAngleItem.h"
+#include "GraphicsRectItem.h"
 
 
 class GraphicsScene : public QGraphicsScene
@@ -44,12 +45,9 @@ private:
 
     QVector<QGraphicsItem *> itemGroup;
 
-
     QGraphicsPixmapItem *pixmapItem;
     QGraphicsItem *item;
     QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
-
-    void clearItemVector();
 
 
 signals:

@@ -90,7 +90,6 @@ void MainWindow::on_actionClose_triggered()
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
 
-    // 如果数据库被打开 则关闭
     if (handler->isOpened())
         handler->closeDatabase();
 }

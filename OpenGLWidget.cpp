@@ -6,7 +6,3 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) :
 
 }
 
-OpenGLWidget::~OpenGLWidget()
-{
-
-}

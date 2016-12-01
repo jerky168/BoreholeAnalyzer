@@ -78,47 +78,51 @@ QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent
 {
     switch (curMode)
     {
-        // 添加文本框
-        case InsertTextBox:
+        case InsertTextBox :
         {
             item = new GraphicsTextItem(mouseEvent->scenePos());
             itemGroup.append(item);
             break;
         }
 
-        // 插入直线
-        case InsertLine:
+        case InsertLine :
         {
             item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
             itemGroup.append(item);
             break;
         }
 
-        case InsertShift:
+        case InsertShift :
         {
             item = new GraphicsAngleItem(mouseEvent->scenePos());
             itemGroup.append(item);
             break;
         }
 
-        default:
+        case InsertRectangle :
+        {
+            item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            itemGroup.append(item);
             break;
         }
+
+        default:
+        {
+            break;
+        }
+
+    }
     return item;
 }
 
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    qDebug() << "1 Mode: " << curMode;
     if (curMode != MoveItem && item == Q_NULLPTR)
     {
         item = createNewItem(mouseEvent);
-        addItem(item);
-    }
-    else
-    {
-        curMode = MoveItem;
-        emit modeChanged(curMode);
+        this->addItem(item);
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
@@ -133,6 +137,7 @@ void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 
+    qDebug() << "3 Mode: " << curMode;
     if (curMode != MoveItem)
     {
         curMode = MoveItem;
@@ -140,10 +145,4 @@ void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
         initItem();
     }
-}
-
-
-void GraphicsScene::clearItemVector()
-{
-
 }
