@@ -47,7 +47,7 @@ void GraphicsTextItem::mouseReleaseEvent( QGraphicsSceneMouseEvent *event )
 }
 
 
-bool GraphicsTextItem::sceneEvent( QEvent *event )
+bool GraphicsTextItem::sceneEvent(QEvent *event)
 {
     if (event->type() == QEvent::GraphicsSceneMouseDoubleClick)
     {

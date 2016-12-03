@@ -3,6 +3,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <QtMath>
 
 #include "GraphicsScene.h"
 #include "GraphicsSettings.h"
@@ -17,9 +18,11 @@ public:
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    bool sceneEvent(QEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    bool isCurrentMode();
+    bool hasDrawed;
+    QPointF origPos;
+
 };

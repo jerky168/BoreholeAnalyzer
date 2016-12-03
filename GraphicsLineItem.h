@@ -29,6 +29,6 @@ protected:
     bool sceneEvent(QEvent *event);
 
 private:
-    bool isCurrentMode();
+
 
 };

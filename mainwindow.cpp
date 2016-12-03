@@ -63,7 +63,7 @@ void MainWindow::createConnections()
 
     // 更新照片
     QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), scene, SLOT(updatePixmap(QPixmap)));
-    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
+    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clear()));
 
     // 编辑模式改变
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));

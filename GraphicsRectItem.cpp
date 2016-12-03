@@ -1,10 +1,13 @@
 #include "GraphicsRectItem.h"
 
 GraphicsRectItem::GraphicsRectItem(const QRectF &rect, QGraphicsItem *parent) :
-    QGraphicsRectItem(rect, parent)
+    QGraphicsRectItem(rect, parent),
+    hasDrawed(false),
+    origPos(rect.topLeft())
 {
     setRect(rect);
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
+
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
@@ -22,7 +25,7 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setRenderHint(QPainter::Antialiasing);
 
     QPen thisPen;
-    thisPen.setColor(pen().color());
+    thisPen.setColor(Qt::yellow);
     thisPen.setWidth(pen().width());
     thisPen.setStyle(Qt::SolidLine);
     painter->setPen(thisPen);
@@ -33,63 +36,40 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 void GraphicsRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    event = Q_NULLPTR;
-    if (isSelected())
-    {
-        setFlag(QGraphicsItem::ItemIsMovable);
-    }
+    qDebug() << "item press event";
 }
 
-void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+
+void GraphicsRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    event = Q_NULLPTR;
-    setFlag(QGraphicsItem::ItemIsMovable, false);
-}
-
-bool GraphicsRectItem::sceneEvent(QEvent *event)
-{
-    QGraphicsSceneMouseEvent *e = dynamic_cast<QGraphicsSceneMouseEvent *>(event);
-
-    if (isCurrentMode())
+    if (!hasDrawed)
     {
-        switch(event->type())
-        {
-            case QEvent::GraphicsSceneMousePress :
-            {
-                GraphicsSettings::instance()->setIsDrawing(true);
-                break;
-            }
+        qreal x = (origPos.x() > event->pos().x() ? event->pos().x() : origPos.x());
+        qreal y = (origPos.y() > event->pos().y() ? event->pos().y() : origPos.y());
+        qreal w = qFabs(origPos.x() - event->pos().x());
+        qreal h = qFabs(origPos.y() - event->pos().y());
 
-            case QEvent::GraphicsSceneMouseMove :
-            {
-                QRectF newRect(rect().topLeft(), e->scenePos());
-                setRect(newRect);
-                break;
-            }
-
-            case QEvent::GraphicsSceneMouseRelease :
-            {
-                GraphicsSettings::instance()->setIsDrawing(false);
-                break;
-            }
-
-            default:
-            {
-                return false;
-            }
-        }
+        QRectF newRect(x, y, w, h);
+        setRect(newRect);
     }
-    else
-    {
-        QGraphicsItem::sceneEvent(event);
-    }
-    return true;
+
+    qDebug() << "item move event";
 }
 
-
-bool GraphicsRectItem::isCurrentMode()
+void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    return (scene->getCurMode() == GraphicsScene::InsertRectangle);
+    if (!hasDrawed)
+    {
+        qreal x = rect().x() + rect().width() / 2;
+        qreal y = rect().y() + rect().height() / 2;
+        qreal area = rect().width() * rect().height() / qPow(GraphicsScene::getRatio(), 2);
+        QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(area, 'f', 2).append("m2"), QFont("Times", 40, QFont::Bold));
+        textItem->setParentItem(this);
+        textItem->setPos(x, y);
+    }
+
+    hasDrawed = true;
+    qDebug() << "item release event";
 }
+
 

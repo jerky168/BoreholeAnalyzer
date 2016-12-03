@@ -1,6 +1,6 @@
 #include "GraphicsLineItem.h"
 
-GraphicsLineItem::GraphicsLineItem(const QLineF & line, QGraphicsItem *parent) :
+GraphicsLineItem::GraphicsLineItem(const QLineF &line, QGraphicsItem *parent) :
     QGraphicsLineItem(line, parent)
 {
     setLine(line);
@@ -88,12 +88,13 @@ QPainterPath GraphicsLineItem::shapeFromPath(const  QPainterPath& p,const QPen& 
 }
 
 
-
-bool GraphicsLineItem::sceneEvent( QEvent *event )
+bool GraphicsLineItem::sceneEvent(QEvent *event)
 {
     QGraphicsSceneMouseEvent* e = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
 
-    if (isCurrentMode())
+    qDebug() << GraphicsScene::getCurMode();
+
+    if (GraphicsScene::getCurMode() == GraphicsScene::InsertLine)
     {
         switch (event->type())
         {
@@ -118,7 +119,7 @@ bool GraphicsLineItem::sceneEvent( QEvent *event )
                 double y2 = line().p2().y();
                 double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
 
-                QGraphicsSimpleTextItem *textItem = this->scene()->addSimpleText(QString::number(dis/10000, 'f', 2).append("m"), QFont("Times", 40, QFont::Bold));
+                QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(dis/GraphicsScene::getRatio(), 'f', 2).append("m"), QFont("Times", 40, QFont::Bold));
                 textItem->setParentItem(this);
                 textItem->setPos(x2+20, y2+20);
 
@@ -139,8 +140,3 @@ bool GraphicsLineItem::sceneEvent( QEvent *event )
     return true;
 }
 
-bool GraphicsLineItem::isCurrentMode()
-{
-    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    return (scene->getCurMode() == GraphicsScene::InsertLine);
-}

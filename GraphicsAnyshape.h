@@ -13,7 +13,13 @@ public:
 protected:
     bool sceneEvent(QEvent *event);
 
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
 private:
-    bool isCurrentMode();
+    bool hasDrawed;
+    QVector<QPointF> poinsts;
+
 };
 

@@ -6,12 +6,27 @@ GraphicsAnyshape::GraphicsAnyshape()
 }
 
 
+void GraphicsAnyshape::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
+void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
+void GraphicsAnyshape::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
 
 bool GraphicsAnyshape::sceneEvent(QEvent *event)
 {
     QGraphicsSceneMouseEvent *e = dynamic_cast<QGraphicsSceneMouseEvent *>(event);
 
-    if (isCurrentMode())
+    if (GraphicsScene::getCurMode() == GraphicsScene::InsertAnyShape)
     {
         switch (event->type())
         {
@@ -42,8 +57,3 @@ bool GraphicsAnyshape::sceneEvent(QEvent *event)
 
 
 
-bool GraphicsAnyshape::isCurrentMode()
-{
-    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    return (scene->getCurMode() == GraphicsScene::InsertRectangle);
-}

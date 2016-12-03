@@ -109,7 +109,7 @@ QRectF GraphicsAngleItem::boundingRect() const
 bool GraphicsAngleItem::sceneEvent(QEvent *event)
 {
     QGraphicsSceneMouseEvent *e = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
-    if (((GraphicsScene *)scene())->getCurMode() == GraphicsScene::InsertShift)
+    if (GraphicsScene::getCurMode() == GraphicsScene::InsertShift)
     {
         switch (event->type())
         {
