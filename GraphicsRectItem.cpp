@@ -63,7 +63,7 @@ void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         qreal x = rect().x() + rect().width() / 2;
         qreal y = rect().y() + rect().height() / 2;
         qreal area = rect().width() * rect().height() / qPow(GraphicsScene::getRatio(), 2);
-        QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(area, 'f', 2).append("m2"), QFont("Times", 40, QFont::Bold));
+        QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(area * 10000, 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
         textItem->setParentItem(this);
         textItem->setPos(x, y);
     }

@@ -2,24 +2,28 @@
 
 #include <QGraphicsPolygonItem>
 
-
+#include "GraphicsSettings.h"
 #include "GraphicsScene.h"
 
 class GraphicsAnyshape : public QGraphicsPolygonItem
 {
 public:
-    GraphicsAnyshape();
+    GraphicsAnyshape(QPointF pos, QGraphicsItem *parent = Q_NULLPTR);
+    ~GraphicsAnyshape();
 
 protected:
-    bool sceneEvent(QEvent *event);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    bool hasDrawed;
-    QVector<QPointF> poinsts;
+    bool hasDrawed, drawLine, hasEnded;
+
+    void clearPoints();
+    void addPoint(QPointF pos);
+    void updatePoint(QPointF pos);
 
 };
 

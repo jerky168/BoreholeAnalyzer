@@ -12,6 +12,7 @@
 #include "GraphicsLineItem.h"
 #include "GraphicsAngleItem.h"
 #include "GraphicsRectItem.h"
+#include "GraphicsAnyshape.h"
 
 
 class GraphicsScene : public QGraphicsScene

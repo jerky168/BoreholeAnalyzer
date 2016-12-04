@@ -79,6 +79,12 @@ QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent
             break;
         }
 
+        case InsertAnyShape :
+        {
+            item = new GraphicsAnyshape(mouseEvent->pos());
+            break;
+        }
+
         default:
         {
             break;
@@ -113,7 +119,7 @@ void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (curMode != MoveItem)
     {
         curMode = MoveItem;
-        item->ungrabMouse();
+        //item->ungrabMouse();
         emit modeChanged(curMode);
 
         initItem();
