@@ -44,7 +44,7 @@
       <widget class="QWidget" name="page3d">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QOpenGLWidget" name="openGLWidget"/>
+         <widget class="OpenGLWidget" name="openGLWidget"/>
         </item>
        </layout>
       </widget>
@@ -182,6 +182,7 @@
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
+   <addaction name="actionShift"/>
    <addaction name="actionSlitWidth"/>
    <addaction name="actionRectangle"/>
    <addaction name="actionAnyShape"/>
@@ -195,6 +196,7 @@
    <addaction name="actionRightSpin"/>
    <addaction name="actionAutoLeftSpin"/>
    <addaction name="actionAutoRightSpin"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetImage">
@@ -582,6 +584,9 @@
    </property>
   </action>
   <action name="actionShift">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>方位偏移</string>
    </property>
@@ -661,6 +666,11 @@
    <class>GraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>GraphicsView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>OpenGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>OpenGLWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

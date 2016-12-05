@@ -1,20 +1,20 @@
 #include "TextDialog.h"
 
 TextDialog::TextDialog(QFont font, QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    closeFlag(false),
+    curFont(font)
 {
-    closeFlag = 0;
-    curFont = font;
     resize(250, 100);
     textEdit = new QTextEdit;
     textEdit->setMinimumSize(250, 100);
-    okBtn = new QPushButton(tr("OK"));
+    okBtn = new QPushButton("确认");
     okBtn->setMinimumSize(50, 30);
     connect(okBtn, SIGNAL(clicked()), this, SLOT(okBtnClicked()));
-    cancelBtn = new QPushButton(tr("Cancel"));
+    cancelBtn = new QPushButton("取消");
     cancelBtn->setMinimumSize(50, 30);
     connect(cancelBtn, SIGNAL(clicked()), this, SLOT(close()));
-    selectFontBtn = new QPushButton(tr("Select font..."));
+    selectFontBtn = new QPushButton(tr("选择文本"));
     selectFontBtn->setMinimumSize(50, 30);
     connect(selectFontBtn, SIGNAL(clicked()), this, SLOT(selectFont()));
 
@@ -36,8 +36,8 @@ TextDialog::~TextDialog()
 
 void TextDialog::okBtnClicked()
 {
-    closeFlag = 1;
-    close();
+    closeFlag = true;
+    this->close();
 }
 
 void TextDialog::selectFont()

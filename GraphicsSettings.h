@@ -2,28 +2,32 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QFont>
 
 class GraphicsSettings
 {
 public:
-    GraphicsSettings();
+    static GraphicsSettings* instance();
     ~GraphicsSettings();
-    //static GraphicsSettings* instance();
 
+    void setPenWidth(int width);
+    void setIsDrawing(bool isDrawing);
+    void setFont(QFont);
     void setColor(QColor color);
-    void setPenWidth(quint8 width);
-    void setFont(QFont font);
-    void setIsDrawing(bool flag);
 
     inline const QColor& getPenColor(){return penColor;}
     inline int getPenWidth(){return penWidth;}
     inline bool getIsDrawingFlag(){return isDrawingFlag;}
     inline QFont getFont() {return penFont;}
 
+protected:
+    GraphicsSettings();
+
 private:
-    //static GraphicsSettings* GraphicsSettingInstance;
-    QColor penColor;
-    quint8 penWidth;
-    QFont penFont;
+    int penWidth;
     bool isDrawingFlag;
+    QFont penFont;
+    QColor penColor;
+
+    static GraphicsSettings* GraphicsSettingInstance;
 };

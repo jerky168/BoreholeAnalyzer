@@ -24,10 +24,15 @@ SOURCES +=  main.cpp\
             MyCommand.cpp \
             OpenGLWidget.cpp \
             GraphicsTextItem.cpp \
-            GraphicsSettings.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
-    TextDialog.cpp
+    TextDialog.cpp \
+    GraphicsLineItem.cpp \
+    GraphicsSettings.cpp \
+    GraphicsAngleItem.cpp \
+    GraphicsRectItem.cpp \
+    GraphicsAnyshape.cpp \
+    GraphicsOccurance.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -37,10 +42,16 @@ HEADERS  += mainwindow.h \
             MyCommand.h \
             OpenGLWidget.h \
             GraphicsTextItem.h \
-            GraphicsSettings.h \
             DbHandler.h \
             GraphicsScene.h \
-    TextDialog.h
+    TextDialog.h \
+    GraphicsLineItem.h \
+    GraphicsSettings.h \
+    GraphicsAngleItem.h \
+    GraphicsRectItem.h \
+    GraphicsAnyshape.h \
+    GraphicsOccurance.h \
+    type.h
 
 
 FORMS    += mainwindow.ui \

@@ -1,20 +1,20 @@
 #include "GraphicsScene.h"
 
 
+double GraphicsScene::ratio = 1.0;
+GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
+
 /* 本类负责item的管理和编辑模式的管理
  * item的管理：item的增删修改
  * 编辑模式的管理：根据鼠标在scene中的动作以及工具栏的action的动作 来决定模式的改变。
  * */
 
 /******************************** public functions **************************************/
-
-GraphicsScene::GraphicsScene(QObject *parent) :
+GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
     QGraphicsScene(parent),
-    curMode(Normal),
     item(Q_NULLPTR)
 {
-    QPixmap pixmap;
-    pixmapItem = this->addPixmap(pixmap);
+    handler = dbHandler;
 }
 
 GraphicsScene::~GraphicsScene()
@@ -23,95 +23,101 @@ GraphicsScene::~GraphicsScene()
 }
 
 
-// 重置item指针
-void GraphicsScene::initItem()
-{
-    if (item != Q_NULLPTR)
-    {
-        item->ungrabMouse();
-        item = Q_NULLPTR;
-    }
-}
-
 // 更改模式
 void GraphicsScene::setCurMode(Mode mode)
 {
-    emit modeChanged(curMode, mode);
     curMode = mode;
+    emit modeChanged(curMode);
 }
 
 /******************************** public slots **************************************/
-// 更新图片
 void GraphicsScene::updatePixmap(QPixmap pixmap)
 {
-    pixmapItem->setPixmap(pixmap);
+    clear();
+    this->setSceneRect(0, 0, pixmap.width(), pixmap.height());
+    this->addPixmap(pixmap);
+    ratio = (double)pixmap.height();
 }
 
-// 清除图片
-void GraphicsScene::clearPixmap()
+void GraphicsScene::itemInserted()
 {
-    QPixmap pixmap;
-    pixmapItem->setPixmap(pixmap);
+    item->ungrabMouse();
+    item = Q_NULLPTR;
+    curMode = MoveItem;
+    emit modeChanged(curMode);
 }
 
 
-
-
-// 根据当前模式创建item
-QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    switch (curMode)
-    {
-    case InsertTextBox:
-    {
-        item = new GraphicsTextItem(mouseEvent->scenePos());
-        emit itemInserted(item);
-        break;
-    }
-    default:
-        break;
-    }
-    return item;
-}
-
-
-// 鼠标点击事件
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() != Qt::LeftButton)
+    if (curMode == MoveItem || item != Q_NULLPTR)
     {
-        initItem();
-        emit modeChanged(curMode, Normal);
-        curMode = Normal;
+        QGraphicsScene::mousePressEvent(mouseEvent);
+        return;
     }
-    else if (curMode != Normal)
+
+    switch (curMode)
     {
-        item = createNewItem(mouseEvent);
-        this->addItem(item);
-        emit itemInserted(item);
+        case InsertTextBox :
+        {
+            item = new GraphicsTextItem(mouseEvent->scenePos());
+            addItem(item);
+            item = Q_NULLPTR;
+            curMode = MoveItem;
+            emit modeChanged(curMode);
+            break;
+        }
+        case InsertLine :
+        {
+            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertShift :
+        {
+            item = new GraphicsAngleItem(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertRectangle :
+        {
+            item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertAnyShape :
+        {
+            item = new GraphicsAnyshape(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+
+        case InsertOccurance :
+        {
+            item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+
+        default:
+        {
+            break;
+        }
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
 
-// 鼠标移动事件
-void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
 
-//　鼠标释放事件
-void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsScene::drawBackground(QPainter * painter, const QRectF & rect)
 {
-    // 如果右键释放 退出编辑模式
-//    if (mouseEvent->button() == Qt::RightButton)
-//    {
-//        if (curMode != Normal)
-//        {
-//            emit itemInserted(item);
-//            initItem();
-//        }
-//    }
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    painter->fillRect(rect, QBrush(Qt::lightGray));
+    painter->setBrush(QBrush(Qt::white));
+    painter->fillRect(QRect(sceneRect().x(), sceneRect().y(), width(), height()), QBrush(Qt::white));
 }

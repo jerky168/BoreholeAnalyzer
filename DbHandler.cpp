@@ -6,51 +6,78 @@ DbHandler::DbHandler(QObject *parent) :
 
 }
 
-DbHandler::DbHandler(QString filename, QObject *parent) :
-    QObject(parent)
-{
-    openDatabase(filename);
-}
-
 
 DbHandler::~DbHandler()
 {
-    database.close();
+    if (isOpened())
+        database.close();
 }
 
 
-
-
-void DbHandler::openDatabase(QString filepath)
+bool DbHandler::openDatabase(QString filepath)
 {
-    qDebug() << filepath;
     if (database.isOpen())
-        return;
+        return false;
     database = QSqlDatabase::addDatabase("QSQLITE", "DB");
     database.setDatabaseName(filepath);
     if (!database.open())
     {
         qDebug() << database.lastError();
         errorCode = OpenFailed;
-        return;
+        return false;
     }
 
+    // sql语句
     QSqlQuery query(database);
-
+    // 查询是否有工程信息
     if (!query.exec("select * from ProjectInfo") || !query.first())
     {
         qDebug() << query.lastError().text();
         errorCode = NoProjectInfo;
-        return;
+        return false;
     }
-
+    // 查询是否有大图
     if (!query.exec("select * from bigImages") || !query.first())
     {
         qDebug() << query.lastError().text();
         errorCode = NoBigImages;
-        return;
+        return false;
     }
+
+    // 查询是否有文本item
+    if (!query.exec("select * from TextItem"))
+    {
+        query.exec("create table TextItem(x real, y real, content text)");
+    }
+
+    // 查询是否有缝宽item
+    if (!query.exec("select * from WidthItem"))
+    {
+        query.exec("create table WidthItem(x1 real, y1 real, x2 real, y2 real)");
+    }
+
+    // 查询是否有角度item
+    if (!query.exec("select * from AngleItem"))
+    {
+        query.exec("create table AngleItem(x1 real, y1 real, x2 real, y2 real, x3 real, y3 real)");
+    }
+
+    return true;
 }
+
+void DbHandler::closeDatabase()
+{
+    database.close();
+}
+
+
+bool DbHandler::isOpened()
+{
+    return database.isOpen();
+}
+
+
+
 
 DbHandler::PrjInfo DbHandler::getPrjInfo()
 {
@@ -103,4 +130,5 @@ QVector<QPixmap> DbHandler::getSmallImage(quint32 start, quint32 end)
     }
     return QVector<QPixmap>();
 }
+
 

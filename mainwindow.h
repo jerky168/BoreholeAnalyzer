@@ -28,11 +28,7 @@ public:
 
 public slots:
      void switchImage(quint16 index);
-     void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-
-     void handleItemInserted(QGraphicsItem* const &insertedItem);
-     void handleItemDeleted(QGraphicsItem* const &deletedItem);
-
+     void handleModeChanged(GraphicsScene::Mode curMode);
 
 private slots:
     void on_actionOpen_triggered();
@@ -40,6 +36,7 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
 
+    void on_actionShift_triggered();
     void on_actionSlitWidth_triggered();
     void on_actionRectangle_triggered();
     void on_actionAnyShape_triggered();
@@ -49,14 +46,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
     DbHandler *handler;
     QUndoStack *undosStack;
     GraphicsScene *scene;
 
-    // 2D、3D视图切换
     QActionGroup *actionGroup;
-    // 编辑
     QActionGroup *editActionGroup;
 
     typedef enum{
@@ -64,14 +58,15 @@ private:
         Opened
     }AppStatus;
 
-
+    void createActionGroups();
+    void createSceneAndView();
     void createConnections();
     void resetActions();
 
 
 signals:
     void updatePixmap(QPixmap pixmap);
-    void clearPixmap();
+    void clearScene();
 
 
 

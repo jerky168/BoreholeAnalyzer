@@ -4,9 +4,16 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QDebug>
-
 #include <QGraphicsSceneMouseEvent>
+#include <QVector>
+
+#include "DbHandler.h"
 #include "GraphicsTextItem.h"
+#include "GraphicsLineItem.h"
+#include "GraphicsAngleItem.h"
+#include "GraphicsRectItem.h"
+#include "GraphicsAnyshape.h"
+#include "GraphicsOccurance.h"
 
 
 class GraphicsScene : public QGraphicsScene
@@ -14,34 +21,39 @@ class GraphicsScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    GraphicsScene(QObject *parent = Q_NULLPTR);
+    GraphicsScene(DbHandler *dbHandler, QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-    enum Mode {Normal, MoveItem, InsertSlitWidth, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
+    enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
-    void initItem();
     void setCurMode(Mode mode);
-    Mode getCurMode() {return curMode;}
+
+    static Mode getCurMode() {return curMode;}
+    static double getRatio() {return ratio;}
+
+    void itemInserted();
+
 
 public slots:
     void updatePixmap(QPixmap pixmap);
-    void clearPixmap();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
-    Mode curMode;
+    DbHandler *handler;
 
-    QGraphicsPixmapItem *pixmapItem;
+    // mode variable
+    static Mode curMode;
+    // most important variable
+    static double ratio;
+
     QGraphicsItem *item;
-    QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
+
+
 
 signals:
-    void modeChanged(GraphicsScene::Mode lastMode, GraphicsScene::Mode curMode);
-    void itemInserted(QGraphicsItem* const &insertedItem);
-    void itemDeleted(QGraphicsItem* const &deletedItem);
+    void modeChanged(GraphicsScene::Mode curMode);
 
 };

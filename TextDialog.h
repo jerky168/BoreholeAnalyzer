@@ -20,11 +20,12 @@ public:
     bool getCloseFlag() {return closeFlag;}
 
 private:
-    QFont curFont;
     QTextEdit *textEdit;
     QPushButton *selectFontBtn;
     QPushButton *okBtn;
     QPushButton *cancelBtn;
+
+    QFont curFont;
     bool closeFlag;
 
 private slots:
