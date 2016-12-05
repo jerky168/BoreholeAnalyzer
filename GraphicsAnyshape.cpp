@@ -15,7 +15,6 @@ GraphicsAnyshape::~GraphicsAnyshape()
 
 }
 
-
 void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     option = Q_NULLPTR;
@@ -44,6 +43,16 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         hasDrawed = true;
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
         scene->itemInserted();
+
+        if (polygon().count() <= 2)
+            return;
+
+        QGraphicsSimpleTextItem *textItem = this->scene()->addSimpleText(QString::number(calcArea()/qPow(GraphicsScene::getRatio(), 2), 'f', 2).append("m2"), QFont("Times", 40, QFont::Bold));
+        textItem->setParentItem(this);
+
+
+        textItem->setPos(polygon().last().x()+20, polygon().last().y()+20);
+
         return;
     }
 
@@ -64,6 +73,38 @@ void GraphicsAnyshape::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (hasDrawed)
         return;
+}
+
+
+
+qreal GraphicsAnyshape::calcArea()
+{
+    qreal area = 0.0;
+
+    qreal x1, y1, x2, y2;
+    for (int i = 0; i < polygon().count(); i++)
+    {
+        x1 = polygon().at(i).x();
+        y1 = polygon().at(i).y();
+
+
+        if (i + 1 == polygon().count())
+        {
+            x2 = polygon().first().x();
+            y2 = polygon().first().y();
+        }
+        else
+        {
+            x2 = polygon().at(i+1).x();
+            y2 = polygon().at(i+1).y();
+        }
+        area -= x1 * y2 - x2 * y1;
+    }
+
+    area /= 2;
+    area *= 10000;
+
+    return area;
 }
 
 

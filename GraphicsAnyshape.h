@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QGraphicsPolygonItem>
+#include <QGraphicsSimpleTextItem>
+#include <QtMath>
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
@@ -34,6 +36,7 @@ protected:
 private:
     bool hasDrawed;
 
+    qreal calcArea();
     void addPoint(QPointF pos);
     void updatePoint(QPointF pos);
     void clearPoints();
