@@ -31,7 +31,8 @@ SOURCES +=  main.cpp\
     GraphicsSettings.cpp \
     GraphicsAngleItem.cpp \
     GraphicsRectItem.cpp \
-    GraphicsAnyshape.cpp
+    GraphicsAnyshape.cpp \
+    GraphicsOccurance.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -48,7 +49,9 @@ HEADERS  += mainwindow.h \
     GraphicsSettings.h \
     GraphicsAngleItem.h \
     GraphicsRectItem.h \
-    GraphicsAnyshape.h
+    GraphicsAnyshape.h \
+    GraphicsOccurance.h \
+    type.h
 
 
 FORMS    += mainwindow.ui \

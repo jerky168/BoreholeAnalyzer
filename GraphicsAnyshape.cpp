@@ -2,8 +2,7 @@
 
 GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     QGraphicsPolygonItem(parent),
-    hasDrawed(false),
-    hasEnded(false)
+    hasDrawed(false)
 {
     addPoint(pos);
     addPoint(pos);
@@ -31,49 +30,43 @@ void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     painter->drawPolygon(this->polygon());
 
-    if (hasEnded)
-    {
-        return;
-    }
 }
 
 
 
 void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "item press event";
     if (hasDrawed)
         return;
 
-    if (event->button() == Qt::RightButton)
+    if (event->buttons() & Qt::RightButton)
     {
         hasDrawed = true;
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
         scene->itemInserted();
-
         return;
     }
 
-    addPoint(event->pos());
+    addPoint(event->scenePos());
 }
 
 
 void GraphicsAnyshape::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "item move event";
     if (hasDrawed)
         return;
 
-    updatePoint(event->pos());
+    updatePoint(event->scenePos());
 }
 
 
-void GraphicsAnyshape::clearPoints()
+void GraphicsAnyshape::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPolygonF polygon;
-    polygon.clear();
-    setPolygon(polygon);
+    if (hasDrawed)
+        return;
 }
+
+
 
 void GraphicsAnyshape::addPoint(QPointF pos)
 {
@@ -90,3 +83,16 @@ void GraphicsAnyshape::updatePoint(QPointF pos)
     setPolygon(polygon);
 }
 
+void GraphicsAnyshape::clearPoints()
+{
+    QPolygonF polygon;
+    polygon.clear();
+    setPolygon(polygon);
+}
+
+
+GraphicsAnyshape::Data GraphicsAnyshape::getData()
+{
+    Data data = {this->polygon()};
+    return data;
+}

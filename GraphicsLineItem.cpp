@@ -92,8 +92,6 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
 {
     QGraphicsSceneMouseEvent* e = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
 
-    qDebug() << GraphicsScene::getCurMode();
-
     if (GraphicsScene::getCurMode() == GraphicsScene::InsertLine)
     {
         switch (event->type())
@@ -123,6 +121,9 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
                 textItem->setParentItem(this);
                 textItem->setPos(x2+20, y2+20);
 
+                GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+                scene->itemInserted();
+
                 GraphicsSettings::instance()->setIsDrawing(false);
                 break;
             }
@@ -138,5 +139,14 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
         QGraphicsItem::sceneEvent(event);
     }
     return true;
+}
+
+
+GraphicsLineItem::Data GraphicsLineItem::getData()
+{
+    Data data;
+    data.points[0] = this->line().p1();
+    data.points[1] = this->line().p2();
+    return data;
 }
 

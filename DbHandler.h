@@ -58,21 +58,6 @@ public:
         NoImages
     }ErrorCode;
 
-    typedef struct {
-        double x, y;
-        QString content;
-    }TextItem;
-
-    typedef struct {
-        double x1, y1;
-        double x2, y2;
-    }WidthItem;
-
-    typedef struct {
-        double x1, y1;
-        double x2, y2;
-        double x3, y3;
-    }AngleItem;
 
 
     bool openDatabase(QString filepath);
@@ -91,15 +76,7 @@ public:
     // get small images
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
-    // get all item
-    QVector<TextItem> getTextItem();
-    QVector<WidthItem> getWidthItem();
-    QVector<AngleItem> getAngleItem();
 
-    // save all item
-    void saveTextItem(QVector<TextItem> items);
-    void saveWidthItem(QVector<WidthItem> items);
-    void saveWidthItem(QVector<AngleItem> items);
 
 signals:
 

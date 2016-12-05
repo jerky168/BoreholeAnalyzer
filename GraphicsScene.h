@@ -13,6 +13,7 @@
 #include "GraphicsAngleItem.h"
 #include "GraphicsRectItem.h"
 #include "GraphicsAnyshape.h"
+#include "GraphicsOccurance.h"
 
 
 class GraphicsScene : public QGraphicsScene

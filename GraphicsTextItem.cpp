@@ -82,4 +82,11 @@ void GraphicsTextItem::showTextDialog(QFont font)
 }
 
 
+GraphicsTextItem::Data GraphicsTextItem::getData()
+{
+    Data data;
+    data.point = this->scenePos();
+    data.content = this->text();
+    return data;
+}
 

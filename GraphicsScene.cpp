@@ -15,8 +15,6 @@ GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
     item(Q_NULLPTR)
 {
     handler = dbHandler;
-
-
 }
 
 GraphicsScene::~GraphicsScene()
@@ -41,7 +39,6 @@ void GraphicsScene::updatePixmap(QPixmap pixmap)
     ratio = (double)pixmap.height();
 }
 
-// 当item绘制完后
 void GraphicsScene::itemInserted()
 {
     item->ungrabMouse();
@@ -53,10 +50,7 @@ void GraphicsScene::itemInserted()
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (item != Q_NULLPTR)
-        return;
-
-    if (curMode == MoveItem)
+    if (curMode == MoveItem || item != Q_NULLPTR)
     {
         QGraphicsScene::mousePressEvent(mouseEvent);
         return;
@@ -67,35 +61,56 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         case InsertTextBox :
         {
             item = new GraphicsTextItem(mouseEvent->scenePos());
+            addItem(item);
+            item = Q_NULLPTR;
+            curMode = MoveItem;
+            emit modeChanged(curMode);
             break;
         }
         case InsertLine :
         {
             item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
             break;
         }
         case InsertShift :
         {
             item = new GraphicsAngleItem(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
             break;
         }
         case InsertRectangle :
         {
             item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
             break;
         }
         case InsertAnyShape :
         {
             item = new GraphicsAnyshape(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
             break;
         }
+
+        case InsertOccurance :
+        {
+            item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+
         default:
         {
             break;
         }
     }
-    this->addItem(item);
-    item->grabMouse();
+
+    QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
 

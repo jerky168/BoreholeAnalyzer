@@ -8,6 +8,8 @@
 #include "GraphicsScene.h"
 #include "GraphicsSettings.h"
 
+#include "type.h"
+
 class GraphicsRectItem : public QGraphicsRectItem
 {
 public:
@@ -15,6 +17,19 @@ public:
     ~GraphicsRectItem();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
+
+
+    typedef struct
+    {
+        QPointF points[2];
+    }Data;
+
+    int type() const
+    {
+        return Rect;
+    }
+    Data getData();
+
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

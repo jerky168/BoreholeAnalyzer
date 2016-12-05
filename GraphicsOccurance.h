@@ -1,28 +1,30 @@
 #pragma once
 
-#include <QGraphicsPolygonItem>
+#include <QGraphicsLineItem>
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
 
-#include "type.h"
-
-class GraphicsAnyshape : public QGraphicsPolygonItem
+class GraphicsOccurance : public QGraphicsLineItem
 {
 public:
-    GraphicsAnyshape(QPointF pos, QGraphicsItem *parent = Q_NULLPTR);
-    ~GraphicsAnyshape();
+    GraphicsOccurance(const QLineF &line, QGraphicsItem *parent = Q_NULLPTR);
+    ~GraphicsOccurance();
+
+    QString getItemText();
+
 
     typedef struct
     {
-        QPolygonF polygon;
+        QPointF points[2];
     }Data;
 
     int type() const
     {
-        return AnyShape;
+        return Occurance;
     }
     Data getData();
+
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
@@ -30,13 +32,5 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-private:
-    bool hasDrawed;
-
-    void addPoint(QPointF pos);
-    void updatePoint(QPointF pos);
-    void clearPoints();
-
 };
 

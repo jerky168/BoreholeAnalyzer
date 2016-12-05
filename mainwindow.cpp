@@ -35,6 +35,7 @@ void MainWindow::createActionGroups()
     actionGroup->addAction(ui->action3DView);
 
     // make edit action exlusive
+    editActionGroup->addAction(ui->actionShift);
     editActionGroup->addAction(ui->actionSlitWidth);
     editActionGroup->addAction(ui->actionRectangle);
     editActionGroup->addAction(ui->actionAnyShape);

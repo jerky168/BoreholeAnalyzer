@@ -36,7 +36,7 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 void GraphicsRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "item press event";
+
 }
 
 
@@ -52,8 +52,6 @@ void GraphicsRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QRectF newRect(x, y, w, h);
         setRect(newRect);
     }
-
-    qDebug() << "item move event";
 }
 
 void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -66,10 +64,18 @@ void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(area * 10000, 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
         textItem->setParentItem(this);
         textItem->setPos(x, y);
+
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemInserted();
     }
 
     hasDrawed = true;
-    qDebug() << "item release event";
 }
 
-
+GraphicsRectItem::Data GraphicsRectItem::getData()
+{
+    Data data;
+    data.points[0] = this->rect().topLeft();
+    data.points[1] = this->rect().bottomRight();
+    return data;
+}
