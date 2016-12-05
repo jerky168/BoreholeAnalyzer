@@ -25,15 +25,6 @@ GraphicsScene::~GraphicsScene()
 }
 
 
-// 重置item指针
-void GraphicsScene::initItem()
-{
-    if (item != Q_NULLPTR)
-    {
-        item = Q_NULLPTR;
-    }
-}
-
 // 更改模式
 void GraphicsScene::setCurMode(Mode mode)
 {
@@ -50,9 +41,27 @@ void GraphicsScene::updatePixmap(QPixmap pixmap)
     ratio = (double)pixmap.height();
 }
 
-
-QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent)
+// 当item绘制完后
+void GraphicsScene::itemInserted()
 {
+    item->ungrabMouse();
+    item = Q_NULLPTR;
+    curMode = MoveItem;
+    emit modeChanged(curMode);
+}
+
+
+void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    if (item != Q_NULLPTR)
+        return;
+
+    if (curMode == MoveItem)
+    {
+        QGraphicsScene::mousePressEvent(mouseEvent);
+        return;
+    }
+
     switch (curMode)
     {
         case InsertTextBox :
@@ -60,71 +69,35 @@ QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent
             item = new GraphicsTextItem(mouseEvent->scenePos());
             break;
         }
-
         case InsertLine :
         {
             item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
             break;
         }
-
         case InsertShift :
         {
             item = new GraphicsAngleItem(mouseEvent->scenePos());
             break;
         }
-
         case InsertRectangle :
         {
             item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
             break;
         }
-
         case InsertAnyShape :
         {
-            item = new GraphicsAnyshape(mouseEvent->pos());
+            item = new GraphicsAnyshape(mouseEvent->scenePos());
             break;
         }
-
         default:
         {
             break;
         }
-
     }
-    return item;
+    this->addItem(item);
+    item->grabMouse();
 }
 
-
-void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    if (curMode != MoveItem && item == Q_NULLPTR)
-    {
-        item = createNewItem(mouseEvent);
-        addItem(item);
-        item->grabMouse();
-    }
-
-    QGraphicsScene::mousePressEvent(mouseEvent);
-}
-
-void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
-
-void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
-
-    if (curMode != MoveItem)
-    {
-        curMode = MoveItem;
-        //item->ungrabMouse();
-        emit modeChanged(curMode);
-
-        initItem();
-    }
-}
 
 
 void GraphicsScene::drawBackground(QPainter * painter, const QRectF & rect)

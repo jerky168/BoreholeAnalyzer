@@ -3,10 +3,9 @@
 GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     QGraphicsPolygonItem(parent),
     hasDrawed(false),
-    drawLine(true),
     hasEnded(false)
 {
-    qDebug() << polygon.count();
+    addPoint(pos);
     addPoint(pos);
 
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
@@ -30,47 +29,42 @@ void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     thisPen.setStyle(Qt::SolidLine);
     painter->setPen(thisPen);
 
-    painter->drawPolygon(polygon());
+    painter->drawPolygon(this->polygon());
 
     if (hasEnded)
     {
         return;
     }
-
-
 }
 
 
 
 void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // 如果已经画完 则不对鼠标事件进行反应
+    qDebug() << "item press event";
     if (hasDrawed)
         return;
 
-    // 如果按下的是右键 结束绘画
-    if (event->buttons() & Qt::RightButton)
+    if (event->button() == Qt::RightButton)
     {
         hasDrawed = true;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemInserted();
+
         return;
     }
 
-    // 如果按下的是左键 添加新的点
     addPoint(event->pos());
 }
 
 
 void GraphicsAnyshape::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    qDebug() << "item move event";
     if (hasDrawed)
         return;
 
     updatePoint(event->pos());
-}
-
-void GraphicsAnyshape::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-
 }
 
 

@@ -25,22 +25,19 @@ public:
 
     enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
-    void initItem();
-
     void setCurMode(Mode mode);
 
     static Mode getCurMode() {return curMode;}
     static double getRatio() {return ratio;}
+
+    void itemInserted();
+
 
 public slots:
     void updatePixmap(QPixmap pixmap);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-
-    // draw background
     void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
@@ -51,10 +48,8 @@ private:
     // most important variable
     static double ratio;
 
-
-
     QGraphicsItem *item;
-    QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
+
 
 
 signals:
