@@ -11,6 +11,9 @@
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsAngleItem.h"
+#include "GraphicsRectItem.h"
+#include "GraphicsAnyshape.h"
+#include "GraphicsOccurance.h"
 
 
 class GraphicsScene : public QGraphicsScene
@@ -23,33 +26,31 @@ public:
 
     enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
-    void initItem();
-
     void setCurMode(Mode mode);
-    Mode getCurMode() {return curMode;}
+
+    static Mode getCurMode() {return curMode;}
+    static double getRatio() {return ratio;}
+
+    void itemInserted();
+
 
 public slots:
     void updatePixmap(QPixmap pixmap);
-    void clearScene();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
-    Mode curMode;
-
     DbHandler *handler;
 
-    QVector<QGraphicsItem *> itemGroup;
+    // mode variable
+    static Mode curMode;
+    // most important variable
+    static double ratio;
 
-
-    QGraphicsPixmapItem *pixmapItem;
     QGraphicsItem *item;
-    QGraphicsItem *createNewItem(QGraphicsSceneMouseEvent *mouseEvent);
 
-    void clearItemVector();
 
 
 signals:

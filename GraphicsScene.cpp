@@ -1,6 +1,9 @@
 #include "GraphicsScene.h"
 
 
+double GraphicsScene::ratio = 1.0;
+GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
+
 /* 本类负责item的管理和编辑模式的管理
  * item的管理：item的增删修改
  * 编辑模式的管理：根据鼠标在scene中的动作以及工具栏的action的动作 来决定模式的改变。
@@ -9,16 +12,9 @@
 /******************************** public functions **************************************/
 GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
     QGraphicsScene(parent),
-    curMode(MoveItem),
     item(Q_NULLPTR)
 {
-    QPixmap pixmap;
-    pixmapItem = this->addPixmap(pixmap);
-
     handler = dbHandler;
-
-    // clear item group
-    itemGroup.clear();
 }
 
 GraphicsScene::~GraphicsScene()
@@ -26,15 +22,6 @@ GraphicsScene::~GraphicsScene()
 
 }
 
-
-// 重置item指针
-void GraphicsScene::initItem()
-{
-    if (item != Q_NULLPTR)
-    {
-        item = Q_NULLPTR;
-    }
-}
 
 // 更改模式
 void GraphicsScene::setCurMode(Mode mode)
@@ -44,106 +31,93 @@ void GraphicsScene::setCurMode(Mode mode)
 }
 
 /******************************** public slots **************************************/
-
 void GraphicsScene::updatePixmap(QPixmap pixmap)
 {
-    pixmapItem->setPixmap(pixmap);
-
-    // clear all items
-    for (int i = 0; i < itemGroup.count(); i++)
-    {
-        removeItem(itemGroup[i]);
-    }
-    itemGroup.clear();
+    clear();
+    this->setSceneRect(0, 0, pixmap.width(), pixmap.height());
+    this->addPixmap(pixmap);
+    ratio = (double)pixmap.height();
 }
 
-void GraphicsScene::clearScene()
+void GraphicsScene::itemInserted()
 {
-    // clear pixmap
-    QPixmap pixmap;
-    pixmapItem->setPixmap(pixmap);
-
-    // clear all items
-    for (int i = 0; i < itemGroup.count(); i++)
-    {
-        removeItem(itemGroup[i]);
-    }
-    itemGroup.clear();
-}
-
-
-
-// 根据当前模式创建item
-QGraphicsItem *GraphicsScene::createNewItem(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    switch (curMode)
-    {
-        // 添加文本框
-        case InsertTextBox:
-        {
-            item = new GraphicsTextItem(mouseEvent->scenePos());
-            itemGroup.append(item);
-            break;
-        }
-
-        // 插入直线
-        case InsertLine:
-        {
-            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            itemGroup.append(item);
-            break;
-        }
-
-        case InsertShift:
-        {
-            item = new GraphicsAngleItem(mouseEvent->scenePos());
-            itemGroup.append(item);
-            break;
-        }
-
-        default:
-            break;
-        }
-    return item;
+    item->ungrabMouse();
+    item = Q_NULLPTR;
+    curMode = MoveItem;
+    emit modeChanged(curMode);
 }
 
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (curMode != MoveItem && item == Q_NULLPTR)
+    if (curMode == MoveItem || item != Q_NULLPTR)
     {
-        item = createNewItem(mouseEvent);
-        addItem(item);
+        QGraphicsScene::mousePressEvent(mouseEvent);
+        return;
     }
-    else
+
+    switch (curMode)
     {
-        curMode = MoveItem;
-        emit modeChanged(curMode);
+        case InsertTextBox :
+        {
+            item = new GraphicsTextItem(mouseEvent->scenePos());
+            addItem(item);
+            item = Q_NULLPTR;
+            curMode = MoveItem;
+            emit modeChanged(curMode);
+            break;
+        }
+        case InsertLine :
+        {
+            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertShift :
+        {
+            item = new GraphicsAngleItem(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertRectangle :
+        {
+            item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+        case InsertAnyShape :
+        {
+            item = new GraphicsAnyshape(mouseEvent->scenePos());
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+
+        case InsertOccurance :
+        {
+            item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+            addItem(item);
+            item->grabMouse();
+            break;
+        }
+
+        default:
+        {
+            break;
+        }
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
-void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+
+
+void GraphicsScene::drawBackground(QPainter * painter, const QRectF & rect)
 {
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
-
-void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
-
-    if (curMode != MoveItem)
-    {
-        curMode = MoveItem;
-        emit modeChanged(curMode);
-
-        initItem();
-    }
-}
-
-
-void GraphicsScene::clearItemVector()
-{
-
+    painter->fillRect(rect, QBrush(Qt::lightGray));
+    painter->setBrush(QBrush(Qt::white));
+    painter->fillRect(QRect(sceneRect().x(), sceneRect().y(), width(), height()), QBrush(Qt::white));
 }

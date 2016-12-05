@@ -109,7 +109,7 @@ QRectF GraphicsAngleItem::boundingRect() const
 bool GraphicsAngleItem::sceneEvent(QEvent *event)
 {
     QGraphicsSceneMouseEvent *e = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
-    if (((GraphicsScene *)scene())->getCurMode() == GraphicsScene::InsertShift)
+    if (GraphicsScene::getCurMode() == GraphicsScene::InsertShift)
     {
         switch (event->type())
         {
@@ -142,7 +142,8 @@ bool GraphicsAngleItem::sceneEvent(QEvent *event)
                 }
                 else if (polygonPoints.at(2) != QPointF())
                 {
-                    ungrabMouse();
+                    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+                    scene->itemInserted();
                 }
                 break;
             }
@@ -157,3 +158,13 @@ bool GraphicsAngleItem::sceneEvent(QEvent *event)
     return true;
 }
 
+
+GraphicsAngleItem::Data GraphicsAngleItem::getData()
+{
+    Data data;
+    data.points[0] = polygonPoints[0];
+    data.points[1] = polygonPoints[1];
+    data.points[2] = polygonPoints[2];
+
+    return data;
+}

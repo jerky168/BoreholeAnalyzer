@@ -10,6 +10,8 @@
 #include "GraphicsScene.h"
 #include "GraphicsSettings.h"
 
+#include "type.h"
+
 class GraphicsAngleItem : public QGraphicsPolygonItem
 {
 public:
@@ -17,6 +19,18 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
     QPainterPath shape() const;
     QRectF boundingRect() const;
+
+
+    typedef struct
+    {
+        QPointF points[3];
+    }Data;
+
+    int type() const
+    {
+        return Angle;
+    }
+    Data getData();
 
 protected:
     bool sceneEvent(QEvent *event);

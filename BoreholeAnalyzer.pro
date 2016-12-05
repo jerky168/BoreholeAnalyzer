@@ -29,7 +29,10 @@ SOURCES +=  main.cpp\
     TextDialog.cpp \
     GraphicsLineItem.cpp \
     GraphicsSettings.cpp \
-    GraphicsAngleItem.cpp
+    GraphicsAngleItem.cpp \
+    GraphicsRectItem.cpp \
+    GraphicsAnyshape.cpp \
+    GraphicsOccurance.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -44,7 +47,11 @@ HEADERS  += mainwindow.h \
     TextDialog.h \
     GraphicsLineItem.h \
     GraphicsSettings.h \
-    GraphicsAngleItem.h
+    GraphicsAngleItem.h \
+    GraphicsRectItem.h \
+    GraphicsAnyshape.h \
+    GraphicsOccurance.h \
+    type.h
 
 
 FORMS    += mainwindow.ui \

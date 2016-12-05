@@ -47,7 +47,7 @@ void GraphicsTextItem::mouseReleaseEvent( QGraphicsSceneMouseEvent *event )
 }
 
 
-bool GraphicsTextItem::sceneEvent( QEvent *event )
+bool GraphicsTextItem::sceneEvent(QEvent *event)
 {
     if (event->type() == QEvent::GraphicsSceneMouseDoubleClick)
     {
@@ -82,4 +82,11 @@ void GraphicsTextItem::showTextDialog(QFont font)
 }
 
 
+GraphicsTextItem::Data GraphicsTextItem::getData()
+{
+    Data data;
+    data.point = this->scenePos();
+    data.content = this->text();
+    return data;
+}
 

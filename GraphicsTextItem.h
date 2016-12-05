@@ -7,6 +7,7 @@
 #include "TextDialog.h"
 
 #include "stable.h"
+#include "type.h"
 
 class GraphicsTextItem : public QGraphicsSimpleTextItem
 {
@@ -15,6 +16,19 @@ public:
     ~GraphicsTextItem();
 
     bool getTextDialogCloseFlag();
+
+    typedef struct
+    {
+        QPointF point;
+        QString content;
+    }Data;
+
+    int type() const
+    {
+        return Text;
+    }
+    Data getData();
+
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

@@ -35,6 +35,7 @@ void MainWindow::createActionGroups()
     actionGroup->addAction(ui->action3DView);
 
     // make edit action exlusive
+    editActionGroup->addAction(ui->actionShift);
     editActionGroup->addAction(ui->actionSlitWidth);
     editActionGroup->addAction(ui->actionRectangle);
     editActionGroup->addAction(ui->actionAnyShape);
@@ -63,7 +64,7 @@ void MainWindow::createConnections()
 
     // 更新照片
     QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), scene, SLOT(updatePixmap(QPixmap)));
-    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
+    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clear()));
 
     // 编辑模式改变
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
@@ -90,7 +91,6 @@ void MainWindow::on_actionClose_triggered()
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
 
-    // 如果数据库被打开 则关闭
     if (handler->isOpened())
         handler->closeDatabase();
 }
