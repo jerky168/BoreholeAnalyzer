@@ -23,14 +23,12 @@ GraphicsScene::~GraphicsScene()
 }
 
 
-// 更改模式
 void GraphicsScene::setCurMode(Mode mode)
 {
     curMode = mode;
     emit modeChanged(curMode);
 }
 
-/******************************** public slots **************************************/
 void GraphicsScene::updatePixmap(QPixmap pixmap)
 {
     clear();
@@ -50,63 +48,68 @@ void GraphicsScene::itemInserted()
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (curMode == MoveItem || item != Q_NULLPTR)
+    if (item != Q_NULLPTR)
     {
-        QGraphicsScene::mousePressEvent(mouseEvent);
-        return;
     }
-
-    switch (curMode)
+    else if (curMode != MoveItem && (mouseEvent->buttons() & Qt::RightButton))
     {
-        case InsertTextBox :
+        curMode = MoveItem;
+        emit modeChanged(curMode);
+    }
+    else if (curMode != MoveItem && (mouseEvent->buttons() & Qt::LeftButton))
+    {
+        switch (curMode)
         {
-            item = new GraphicsTextItem(mouseEvent->scenePos());
-            addItem(item);
-            item = Q_NULLPTR;
-            curMode = MoveItem;
-            emit modeChanged(curMode);
-            break;
-        }
-        case InsertLine :
-        {
-            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertShift :
-        {
-            item = new GraphicsAngleItem(mouseEvent->scenePos());
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertRectangle :
-        {
-            item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertAnyShape :
-        {
-            item = new GraphicsAnyshape(mouseEvent->scenePos());
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
+            case InsertTextBox :
+            {
+                item = new GraphicsTextItem(mouseEvent->scenePos());
+                addItem(item);
+                item = Q_NULLPTR;
+                curMode = MoveItem;
+                emit modeChanged(curMode);
+                break;
+            }
+            case InsertLine :
+            {
+                item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertShift :
+            {
+                item = new GraphicsAngleItem(mouseEvent->scenePos());
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertRectangle :
+            {
+                item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertAnyShape :
+            {
+                item = new GraphicsAnyshape(mouseEvent->scenePos());
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
 
-        case InsertOccurance :
-        {
-            item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
+            case InsertOccurance :
+            {
+                item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
 
-        default:
-        {
-            break;
+            default:
+            {
+                break;
+            }
         }
     }
 

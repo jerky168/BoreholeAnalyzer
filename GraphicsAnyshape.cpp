@@ -45,10 +45,8 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (polygon().count() <= 2)
             return;
 
-        QGraphicsSimpleTextItem *textItem = this->scene()->addSimpleText(QString::number(calcArea()/qPow(GraphicsScene::getRatio(), 2), 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
+        QGraphicsSimpleTextItem *textItem = scene->addSimpleText(QString::number(calcArea(), 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
         textItem->setParentItem(this);
-
-
         textItem->setPos(polygon().last().x()+20, polygon().last().y()+20);
 
         return;
@@ -84,9 +82,6 @@ qreal GraphicsAnyshape::calcArea()
     polygon.append(polygon.first());
     int count = polygon.count();
 
-    qDebug() << count;
-    for (int i = 0; i < count; i++)
-        qDebug() << polygon.at(i);
 
     for (int i = 0; i < count - 1; i++)
     {
@@ -94,10 +89,11 @@ qreal GraphicsAnyshape::calcArea()
         y1 = polygon.at(i).y();
         x2 = polygon.at(i+1).x();
         y2 = polygon.at(i+1).y();
-        area += qFabs(x1 * y2 - x2 * y1);
+        area += x1 * y2 - x2 * y1;
     }
 
-    area /= 2;
+    area = qFabs(area);
+    area /= 2 * qPow(GraphicsScene::getRatio(), 2);
     area *= 10000;
 
     return area;
