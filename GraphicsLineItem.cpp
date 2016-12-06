@@ -117,7 +117,7 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
                 double y2 = line().p2().y();
                 double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
 
-                QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(dis/GraphicsScene::getRatio(), 'f', 2).append("m"), QFont("Times", 40, QFont::Bold));
+                QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(dis*100/GraphicsScene::getRatio(), 'f', 2).append("cm"), QFont("Times", 40, QFont::Bold));
                 textItem->setParentItem(this);
                 textItem->setPos(x2+20, y2+20);
 

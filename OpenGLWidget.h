@@ -17,6 +17,8 @@
 #include <QCoreApplication>
 
 #include <QtMath>
+#include <QVector>
+#include <QVector3D>
 
 class OpenGLWidget : public QOpenGLWidget
 {

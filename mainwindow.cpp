@@ -63,14 +63,16 @@ void MainWindow::createConnections()
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
     // 更新照片
-    QObject::connect(this, SIGNAL(updatePixmap(QPixmap)), scene, SLOT(updatePixmap(QPixmap)));
-    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clear()));
+    QObject::connect(this, SIGNAL(updatePixmap(QPixmap, qreal, qreal)), scene, SLOT(updatePixmap(QPixmap, qreal, qreal)));
+    QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
 
     // 编辑模式改变
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), ui->graphicsView, SLOT(handleModeChanged(GraphicsScene::Mode)));
-}
 
+    // 状态栏
+    QObject::connect(scene, SIGNAL(showStatus(QString, int)), ui->statusBar, SLOT(showMessage(QString, int)));
+}
 
 void MainWindow::on_actionOpen_triggered()
 {
@@ -96,10 +98,18 @@ void MainWindow::on_actionClose_triggered()
 }
 
 
+void MainWindow::on_actionSave_triggered()
+{
+
+}
+
+
+
+
 void MainWindow::switchImage(quint16 index)
 {
     DbHandler::BigImage bigImage = handler->getBigImage(index);
-    emit updatePixmap(bigImage.pixmap);
+    emit updatePixmap(bigImage.pixmap, (qreal)(bigImage.start) / 10000, (qreal)(bigImage.end) / 10000);
 }
 
 
@@ -150,6 +160,7 @@ void MainWindow::on_actionCross_triggered()
 }
 
 
+
 void MainWindow::resetActions()
 {
     for (quint8 i = 0; i < editActionGroup->actions().count(); i++)
@@ -157,7 +168,6 @@ void MainWindow::resetActions()
 }
 
 
-// 当模式发生改变时
 void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
 {
     if (curMode == GraphicsScene::MoveItem)

@@ -19,7 +19,6 @@ PRECOMPILED_HEADER = stable.h
 SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
-            defectwidget.cpp \
             GraphicsView.cpp \
             MyCommand.cpp \
             OpenGLWidget.cpp \
@@ -32,12 +31,12 @@ SOURCES +=  main.cpp\
     GraphicsAngleItem.cpp \
     GraphicsRectItem.cpp \
     GraphicsAnyshape.cpp \
-    GraphicsOccurance.cpp
+    GraphicsOccurance.cpp \
+    DefectWidget.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
-            defectwidget.h \
             GraphicsView.h \
             MyCommand.h \
             OpenGLWidget.h \
@@ -51,7 +50,8 @@ HEADERS  += mainwindow.h \
     GraphicsRectItem.h \
     GraphicsAnyshape.h \
     GraphicsOccurance.h \
-    type.h
+    type.h \
+    DefectWidget.h
 
 
 FORMS    += mainwindow.ui \
