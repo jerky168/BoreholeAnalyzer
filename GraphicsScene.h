@@ -21,7 +21,7 @@ class GraphicsScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    GraphicsScene(DbHandler *dbHandler, QObject *parent = Q_NULLPTR);
+    GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
     enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
@@ -42,11 +42,7 @@ protected:
     void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
-    DbHandler *handler;
-
-    // mode variable
     static Mode curMode;
-    // most important variable
     static double ratio;
 
     QGraphicsItem *item;

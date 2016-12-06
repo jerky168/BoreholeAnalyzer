@@ -83,7 +83,6 @@ void OpenGLWidget::cleanup()
 }
 
 
-// 设置范围
 void OpenGLWidget::setRollRange(int start, int end)
 {
     rollStart = start;

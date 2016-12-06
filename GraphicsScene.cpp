@@ -10,11 +10,11 @@ GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
  * */
 
 /******************************** public functions **************************************/
-GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
+GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent),
     item(Q_NULLPTR)
 {
-    handler = dbHandler;
+
 }
 
 GraphicsScene::~GraphicsScene()

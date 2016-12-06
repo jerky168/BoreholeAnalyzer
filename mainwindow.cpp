@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     undosStack(new QUndoStack(this)),
-    scene(new GraphicsScene(handler, this)),
+    scene(new GraphicsScene(this)),
     actionGroup(new QActionGroup(this)),
     editActionGroup(new QActionGroup(this))
 {
