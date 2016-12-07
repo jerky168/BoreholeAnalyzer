@@ -1,4 +1,4 @@
-#include "defectwidget.h"
+#include "DefectWidget.h"
 #include "ui_defectwidget.h"
 
 DefectWidget::DefectWidget(QWidget *parent) :

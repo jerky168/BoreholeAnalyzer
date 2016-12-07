@@ -28,6 +28,7 @@ public:
 
     void setCurMode(Mode mode);
 
+
     static Mode getCurMode() {return curMode;}
     static double getRatio() {return ratio;}
 
@@ -35,21 +36,28 @@ public:
 
 
 public slots:
-    void updatePixmap(QPixmap pixmap);
+    void clearScene();
+    void updatePixmap(QPixmap pixmap, qreal start, qreal end);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
     static Mode curMode;
     static double ratio;
 
+    QRectF pixmapRect;
+    qreal pixmap_start, pixmap_end;
+
+
     QGraphicsItem *item;
 
 
 
 signals:
-    void modeChanged(GraphicsScene::Mode curMode);
+    void modeChanged(GraphicsScene::Mode curMode); 
+    void showStatus(QString message, int timeout);
 
 };

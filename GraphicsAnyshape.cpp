@@ -5,8 +5,6 @@ GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     hasDrawed(false)
 {
     addPoint(pos);
-    addPoint(pos);
-
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
 }
 
@@ -47,10 +45,8 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (polygon().count() <= 2)
             return;
 
-        QGraphicsSimpleTextItem *textItem = this->scene()->addSimpleText(QString::number(calcArea()/qPow(GraphicsScene::getRatio(), 2), 'f', 2).append("m2"), QFont("Times", 40, QFont::Bold));
+        QGraphicsSimpleTextItem *textItem = scene->addSimpleText(QString::number(calcArea(), 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
         textItem->setParentItem(this);
-
-
         textItem->setPos(polygon().last().x()+20, polygon().last().y()+20);
 
         return;
@@ -80,33 +76,28 @@ void GraphicsAnyshape::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 qreal GraphicsAnyshape::calcArea()
 {
     qreal area = 0.0;
-
     qreal x1, y1, x2, y2;
-    for (int i = 0; i < polygon().count(); i++)
+
+    QPolygonF polygon = this->polygon();
+    polygon.append(polygon.first());
+    int count = polygon.count();
+
+
+    for (int i = 0; i < count - 1; i++)
     {
-        x1 = polygon().at(i).x();
-        y1 = polygon().at(i).y();
-
-
-        if (i + 1 == polygon().count())
-        {
-            x2 = polygon().first().x();
-            y2 = polygon().first().y();
-        }
-        else
-        {
-            x2 = polygon().at(i+1).x();
-            y2 = polygon().at(i+1).y();
-        }
-        area -= x1 * y2 - x2 * y1;
+        x1 = polygon.at(i).x();
+        y1 = polygon.at(i).y();
+        x2 = polygon.at(i+1).x();
+        y2 = polygon.at(i+1).y();
+        area += x1 * y2 - x2 * y1;
     }
 
-    area /= 2;
+    area = qFabs(area);
+    area /= 2 * qPow(GraphicsScene::getRatio(), 2);
     area *= 10000;
 
     return area;
 }
-
 
 
 void GraphicsAnyshape::addPoint(QPointF pos)
