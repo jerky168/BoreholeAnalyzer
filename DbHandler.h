@@ -11,6 +11,16 @@
 #include <QPixmap>
 #include <QDateTime>
 #include <QVector>
+#include <QGraphicsObject>
+#include <QtScript>
+
+#include "GraphicsAngleItem.h"
+#include "GraphicsAnyshape.h"
+#include "GraphicsLineItem.h"
+#include "GraphicsRectItem.h"
+#include "GraphicsTextItem.h"
+#include "GraphicsOccurance.h"
+#include "type.h"
 
 class DbHandler : public QObject
 {
@@ -50,6 +60,11 @@ public:
         QPixmap pixmap;
     }SmallImage;
 
+    typedef struct {
+        ItemType type;
+        QString  String;
+    }AggregateData;
+
     typedef enum {
         NoError,
         OpenFailed,
@@ -57,7 +72,6 @@ public:
         NoBigImages,
         NoImages
     }ErrorCode;
-
 
 
     bool openDatabase(QString filepath);
@@ -77,14 +91,23 @@ public:
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
 
+    // get all items
+    QVector<QString> getItem(QGraphicsItem *item);
+
 
 signals:
 
 public slots:
+    void receiverAdd(const QString &id, QGraphicsItem *item)
+    {
+
+    }
 
 private:
     QSqlDatabase database;
     ErrorCode errorCode;
+
+
 };
 
 #endif // DBHANDLER_H
