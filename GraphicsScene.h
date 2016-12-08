@@ -32,12 +32,17 @@ public:
     static Mode getCurMode() {return curMode;}
     static double getRatio() {return ratio;}
 
-    void itemInserted();
+    void itemFinished(QString content);
 
 
 public slots:
     void clearScene();
     void updatePixmap(QPixmap pixmap, qreal start, qreal end);
+
+    void saveLastItem();
+    void deleteLastItem();
+
+    void getSavedItem(QVector<QGraphicsItem *>items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -51,13 +56,18 @@ private:
     QRectF pixmapRect;
     qreal pixmap_start, pixmap_end;
 
-
     QGraphicsItem *item;
 
+    bool hasSaved, showInfo;
 
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode); 
     void showStatus(QString message, int timeout);
+
+    void showRealInfo(QString info);
+
+    void itemSaved(QGraphicsItem *item);
+
 
 };

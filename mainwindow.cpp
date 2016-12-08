@@ -72,6 +72,12 @@ void MainWindow::createConnections()
 
     // 状态栏
     QObject::connect(scene, SIGNAL(showStatus(QString, int)), ui->statusBar, SLOT(showMessage(QString, int)));
+
+    // 实时信息
+    QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
+
+    // 添加item
+    QObject::connect(ui->defectWidget, SIGNAL(addItemClicked()), scene, SLOT(saveLastItem()));
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -102,7 +108,6 @@ void MainWindow::on_actionSave_triggered()
 {
 
 }
-
 
 
 

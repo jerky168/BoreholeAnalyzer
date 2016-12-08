@@ -143,7 +143,7 @@ bool GraphicsAngleItem::sceneEvent(QEvent *event)
                 else if (polygonPoints.at(2) != QPointF())
                 {
                     GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-                    scene->itemInserted();
+                    scene->itemFinished(QString());
                 }
                 break;
             }

@@ -15,6 +15,8 @@ DbHandler::~DbHandler()
 }
 
 
+
+
 bool DbHandler::openDatabase(QString filepath)
 {
     if (database.isOpen())
@@ -100,6 +102,39 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
 
     return prjInfo;
 }
+
+
+
+DbHandler::DisplayData DbHandler::getDisplayData(quint16 index)
+{
+    QSqlQuery query(database);
+    query.prepare("select * from bigImages where id > ? and id <= ?");
+    query.bindValue(0, index * 10000);
+    query.bindValue(1, (index + 1) * 10000);
+    query.exec();
+    query.first();
+
+    DisplayData displayData;
+    displayData.bigImage.start = index*10000;
+    displayData.bigImage.end = query.value(0).toInt();
+    QByteArray imgData = query.value(1).toByteArray();
+    displayData.bigImage.pixmap.loadFromData(imgData);
+
+    query.exec("select * from items");
+    while(!query.next())
+    {
+//        QUuid uuid(query.value(0).toString());
+//        ItemType type = query.value(1).toInt();
+//        QString data = query.value(2).toString();
+//        switch(type)
+//        {
+//            default:
+//                break;
+//        }
+    }
+    return displayData;
+}
+
 
 
 DbHandler::BigImage DbHandler::getBigImage(quint16 index)
@@ -334,5 +369,9 @@ QVector<QString> DbHandler::getItem(QGraphicsItem *item)
     query.finish();
     return stringVector;
 }
+
+
+
+
 
 

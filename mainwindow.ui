@@ -589,7 +589,7 @@
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/res/images/方位偏移.png</normaloff>:/res/images/方位偏移.png</iconset>
+     <normaloff>:/res/images/shift.png</normaloff>:/res/images/shift.png</iconset>
    </property>
    <property name="text">
     <string>方位偏移</string>
@@ -637,7 +637,7 @@
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/res/images/产状.png</normaloff>:/res/images/产状.png</iconset>
+     <normaloff>:/res/images/occurance.png</normaloff>:/res/images/occurance.png</iconset>
    </property>
    <property name="text">
     <string>产状</string>

@@ -31,6 +31,7 @@ public:
         return Angle;
     }
     Data getData();
+    QString getContent() {return content;}
 
 protected:
     bool sceneEvent(QEvent *event);
@@ -38,5 +39,7 @@ protected:
 private:
     QVector<QPointF> polygonPoints;
     bool secondPointFinished;
+
+    QString content;
 };
 

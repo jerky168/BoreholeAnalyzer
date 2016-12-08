@@ -30,6 +30,7 @@ public:
     }
     Data getData();
 
+    QString getContent() {return content;}
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -39,5 +40,7 @@ protected:
 private:
     bool hasDrawed;
     QPointF origPos;
+
+    QString content;
 
 };

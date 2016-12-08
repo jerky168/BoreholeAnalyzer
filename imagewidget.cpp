@@ -26,7 +26,7 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     ui->endHeightEdit->setText(QString::number(prjInfo.endHeight / 10000.0));
     ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
     ui->currentPartEdit->setText(QString::number(index+1));
-    ui->partLengthEdit->setText(QString::number(1).append("m"));
+    //ui->partLengthEdit->setText(QString::number(1).append("m"));
     ui->totalLengthEdit->setText(QString::number((prjInfo.endHeight - prjInfo.startHeight) / 10000.0).append("m"));
     ui->totalPartEdit->setText(QString::number(maxIndex+1));
 }
@@ -38,7 +38,7 @@ void ImageWidget::clear()
     ui->endHeightEdit->clear();
     ui->currentDepthEdit->clear();
     ui->currentPartEdit->clear();
-    ui->partLengthEdit->clear();
+    //ui->partLengthEdit->clear();
     ui->totalLengthEdit->clear();
     ui->totalPartEdit->clear();
 }

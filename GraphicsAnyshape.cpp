@@ -2,7 +2,8 @@
 
 GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     QGraphicsPolygonItem(parent),
-    hasDrawed(false)
+    hasDrawed(false),
+    content(QString())
 {
     addPoint(pos);
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
@@ -38,16 +39,15 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if (event->buttons() & Qt::RightButton)
     {
-        hasDrawed = true;
-        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-        scene->itemInserted();
-
         if (polygon().count() <= 2)
             return;
 
-        QGraphicsSimpleTextItem *textItem = scene->addSimpleText(QString::number(calcArea(), 'f', 2).append("cm2"), QFont("Times", 40, QFont::Bold));
-        textItem->setParentItem(this);
-        textItem->setPos(polygon().last().x()+20, polygon().last().y()+20);
+        // 结束绘画
+        hasDrawed = true;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        content = QString::number(calcArea(), 'f', 2).append("cm2");
+        scene->itemFinished(content);
+
 
         return;
     }
@@ -127,4 +127,10 @@ GraphicsAnyshape::Data GraphicsAnyshape::getData()
 {
     Data data = {this->polygon()};
     return data;
+}
+
+
+QString GraphicsAnyshape::getContent()
+{
+    return content;
 }

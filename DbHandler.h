@@ -14,13 +14,16 @@
 #include <QGraphicsObject>
 #include <QtScript>
 
+#include <QUuid>
+
+#include "type.h"
 #include "GraphicsAngleItem.h"
 #include "GraphicsAnyshape.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsRectItem.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsOccurance.h"
-#include "type.h"
+
 
 class DbHandler : public QObject
 {
@@ -49,6 +52,9 @@ public:
 
     }PrjInfo;
 
+
+
+
     typedef struct {
         quint32 start;
         quint32 end;
@@ -59,6 +65,13 @@ public:
         quint32 depth;
         QPixmap pixmap;
     }SmallImage;
+
+
+    typedef struct {
+        BigImage bigImage;
+        QVector<QGraphicsItem *> items;
+    }DisplayData;
+
 
     typedef struct {
         ItemType type;
@@ -95,6 +108,9 @@ public:
     QVector<QString> getItem(QGraphicsItem *item);
 
 
+    DisplayData getDisplayData(quint16 index);
+
+
 signals:
 
 public slots:
@@ -106,7 +122,6 @@ public slots:
 private:
     QSqlDatabase database;
     ErrorCode errorCode;
-
 
 };
 

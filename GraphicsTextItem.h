@@ -29,7 +29,6 @@ public:
     }
     Data getData();
 
-
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

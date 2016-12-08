@@ -25,14 +25,14 @@ SOURCES +=  main.cpp\
             GraphicsTextItem.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
-    TextDialog.cpp \
-    GraphicsLineItem.cpp \
-    GraphicsSettings.cpp \
-    GraphicsAngleItem.cpp \
-    GraphicsRectItem.cpp \
-    GraphicsAnyshape.cpp \
-    GraphicsOccurance.cpp \
-    DefectWidget.cpp
+            TextDialog.cpp \
+            GraphicsLineItem.cpp \
+            GraphicsSettings.cpp \
+            GraphicsAngleItem.cpp \
+            GraphicsRectItem.cpp \
+            GraphicsAnyshape.cpp \
+            GraphicsOccurance.cpp \
+    defectwidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -43,15 +43,15 @@ HEADERS  += mainwindow.h \
             GraphicsTextItem.h \
             DbHandler.h \
             GraphicsScene.h \
-    TextDialog.h \
-    GraphicsLineItem.h \
-    GraphicsSettings.h \
-    GraphicsAngleItem.h \
-    GraphicsRectItem.h \
-    GraphicsAnyshape.h \
-    GraphicsOccurance.h \
-    type.h \
-    DefectWidget.h
+            TextDialog.h \
+            GraphicsLineItem.h \
+            GraphicsSettings.h \
+            GraphicsAngleItem.h \
+            GraphicsRectItem.h \
+            GraphicsAnyshape.h \
+            GraphicsOccurance.h \
+            type.h \
+    defectwidget.h
 
 
 FORMS    += mainwindow.ui \

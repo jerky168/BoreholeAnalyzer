@@ -48,7 +48,7 @@ void GraphicsOccurance::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void GraphicsOccurance::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    scene->itemInserted();
+    scene->itemFinished(QString());
 }
 
 

@@ -33,10 +33,18 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="4">
-    <widget class="QLineEdit" name="endHeightEdit"/>
+    <widget class="QLineEdit" name="endHeightEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="currentDepthEdit"/>
+    <widget class="QLineEdit" name="currentDepthEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="7" column="2" colspan="3">
     <widget class="QPushButton" name="nextButton">
@@ -53,7 +61,11 @@
     </widget>
    </item>
    <item row="2" column="4">
-    <widget class="QLineEdit" name="totalPartEdit"/>
+    <widget class="QLineEdit" name="totalPartEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="3" column="2">
     <widget class="QLabel" name="label_9">
@@ -82,7 +94,11 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="startHeightEdit"/>
+    <widget class="QLineEdit" name="startHeightEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_4">
@@ -111,10 +127,18 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="totalLengthEdit"/>
+    <widget class="QLineEdit" name="totalLengthEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="3" column="4">
-    <widget class="QLineEdit" name="currentPartEdit"/>
+    <widget class="QLineEdit" name="currentPartEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="4" column="4">
     <widget class="QPushButton" name="pushButton">

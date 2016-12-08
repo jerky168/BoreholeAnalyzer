@@ -1,5 +1,4 @@
-#ifndef IMAGEWIDGET_H
-#define IMAGEWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include "DbHandler.h"
@@ -36,4 +35,3 @@ signals:
 
 };
 
-#endif // IMAGEWIDGET_H

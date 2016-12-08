@@ -1,7 +1,7 @@
-#ifndef DEFECTWIDGET_H
-#define DEFECTWIDGET_H
+#pragma once
 
 #include <QWidget>
+#include <QDebug>
 
 namespace Ui {
 class DefectWidget;
@@ -15,8 +15,20 @@ public:
     explicit DefectWidget(QWidget *parent = 0);
     ~DefectWidget();
 
+public slots:
+    void showRealInfo(QString info);
+
+
+private slots:
+    void on_clearButton_clicked();
+
+    void on_addButton_clicked();
+
 private:
     Ui::DefectWidget *ui;
+
+signals:
+    void addItemClicked();
+
 };
 
-#endif // DEFECTWIDGET_H

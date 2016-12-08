@@ -15,7 +15,9 @@ GraphicsScene::GraphicsScene(QObject *parent) :
     item(Q_NULLPTR),
     pixmapRect(QRectF()),
     pixmap_start(0.0),
-    pixmap_end(0.0)
+    pixmap_end(0.0),
+    showInfo(true),
+    hasSaved(false)
 {
 
 }
@@ -30,6 +32,12 @@ void GraphicsScene::setCurMode(Mode mode)
 {
     curMode = mode;
     emit modeChanged(curMode);
+
+    if (mode != MoveItem && item != Q_NULLPTR && !hasSaved)
+    {
+        deleteLastItem();
+    }
+
 }
 
 
@@ -55,19 +63,54 @@ void GraphicsScene::updatePixmap(QPixmap pixmap, qreal start, qreal end)
     pixmap_end = end;
 }
 
-void GraphicsScene::itemInserted()
+
+// 绘制完item
+void GraphicsScene::itemFinished(QString content)
 {
+    showInfo = false;
+    emit showRealInfo(content);
+
     item->ungrabMouse();
-    item = Q_NULLPTR;
     curMode = MoveItem;
     emit modeChanged(curMode);
 }
 
 
+void GraphicsScene::saveLastItem()
+{
+    hasSaved = false;
+    showInfo = true;
+    emit itemSaved(item);
+    item = Q_NULLPTR;
+}
+
+
+void GraphicsScene::deleteLastItem()
+{
+    hasSaved = false;
+    showInfo = true;
+    delete item;
+    item = Q_NULLPTR;
+}
+
+
+void GraphicsScene::getSavedItem(QVector<QGraphicsItem *>items)
+{
+
+}
+
+
+
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    if (curMode == MoveItem && item != Q_NULLPTR && !hasSaved)
+    {
+        deleteLastItem();
+    }
+
     if (item != Q_NULLPTR)
     {
+
     }
     else if (curMode != MoveItem && (mouseEvent->buttons() & Qt::RightButton))
     {
@@ -108,9 +151,11 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 item->grabMouse();
                 break;
             }
+
             case InsertAnyShape :
             {
-                item = new GraphicsAnyshape(mouseEvent->scenePos());
+                GraphicsAnyshape *realItem = new GraphicsAnyshape(mouseEvent->scenePos());
+                item = realItem;
                 addItem(item);
                 item->grabMouse();
                 break;
@@ -141,10 +186,13 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     qreal x = mouseEvent->scenePos().x();
     qreal y = mouseEvent->scenePos().y();
 
-    qreal height = (pixmap_start + y / ratio) * 100;
+    qreal height = pixmap_start + y / ratio;
     qreal degreed = 0;
 
-    QString message = QString("height: ") + QString::number(height, 'f', 2) + "cm\t";
+    QString message = QString("height: ") + QString::number(height, 'f', 3) + "m\t";
+
+    if (showInfo)
+        emit showRealInfo(message);
     emit showStatus(message, 0);
 
     QGraphicsScene::mouseMoveEvent(mouseEvent);
