@@ -587,6 +587,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/方位偏移.png</normaloff>:/res/images/方位偏移.png</iconset>
+   </property>
    <property name="text">
     <string>方位偏移</string>
    </property>
@@ -594,6 +598,10 @@
   <action name="actionSlitWidth">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/width.png</normaloff>:/res/images/width.png</iconset>
    </property>
    <property name="text">
     <string>缝宽</string>
@@ -603,6 +611,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/rectangle.PNG</normaloff>:/res/images/rectangle.PNG</iconset>
+   </property>
    <property name="text">
     <string>矩形</string>
    </property>
@@ -611,6 +623,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/anyshape.PNG</normaloff>:/res/images/anyshape.PNG</iconset>
+   </property>
    <property name="text">
     <string>任意形状</string>
    </property>
@@ -618,6 +634,10 @@
   <action name="actionOccurrence">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/产状.png</normaloff>:/res/images/产状.png</iconset>
    </property>
    <property name="text">
     <string>产状</string>
