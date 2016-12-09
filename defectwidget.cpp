@@ -6,6 +6,13 @@ DefectWidget::DefectWidget(QWidget *parent) :
     ui(new Ui::DefectWidget)
 {
     ui->setupUi(this);
+
+//     QSqlQueryModel *model = new QSqlQueryModel();
+//     model->setQuery("SELECT uuid, type, data FROM items");
+//     model->setHeaderData(0, Qt::Horizontal, tr("uuid"));
+//     model->setHeaderData(1, Qt::Horizontal, tr("type"));
+//     model->setHeaderData(2, Qt::Horizontal, tr("data"));
+//     ui->tableView->setModel(model);
 }
 
 DefectWidget::~DefectWidget()

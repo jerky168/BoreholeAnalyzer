@@ -28,6 +28,7 @@ public:
         return Text;
     }
     Data getData();
+    QString getDataString();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

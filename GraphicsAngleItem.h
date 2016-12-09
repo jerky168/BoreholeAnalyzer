@@ -31,7 +31,8 @@ public:
         return Angle;
     }
     Data getData();
-    QString getContent() {return content;}
+    QString getContent() {return content;} 
+
 
 protected:
     bool sceneEvent(QEvent *event);

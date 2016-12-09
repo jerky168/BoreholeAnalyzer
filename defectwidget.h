@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QDebug>
+#include <QSqlQueryModel>
 
 namespace Ui {
 class DefectWidget;

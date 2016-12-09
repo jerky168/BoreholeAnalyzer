@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include "DbHandler.h"
+#include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsAngleItem.h"
@@ -15,6 +16,10 @@
 #include "GraphicsAnyshape.h"
 #include "GraphicsOccurance.h"
 
+
+#define Border          100
+#define Interval        10
+#define Segment         25
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -51,7 +56,7 @@ protected:
 
 private:
     static Mode curMode;
-    static double ratio;
+    static qreal ratio;
 
     QRectF pixmapRect;
     qreal pixmap_start, pixmap_end;
@@ -59,7 +64,6 @@ private:
     QGraphicsItem *item;
 
     bool hasSaved, showInfo;
-
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode); 

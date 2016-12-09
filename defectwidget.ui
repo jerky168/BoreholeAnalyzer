@@ -94,13 +94,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="addButton">
-       <property name="text">
-        <string>添加</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -134,23 +127,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableWidget" name="tableWidget">
-       <column>
-        <property name="text">
-         <string>item类型</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>数据</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>描述</string>
-        </property>
-       </column>
-      </widget>
+      <widget class="QTableView" name="tableView"/>
      </item>
     </layout>
    </item>

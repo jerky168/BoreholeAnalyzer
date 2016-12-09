@@ -2,7 +2,7 @@
 
 
 GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
-double GraphicsScene::ratio = 1.0;
+qreal GraphicsScene::ratio = 1.0;
 
 /* 本类负责item的管理和编辑模式的管理
  * item的管理：item的增删修改
@@ -19,6 +19,7 @@ GraphicsScene::GraphicsScene(QObject *parent) :
     showInfo(true),
     hasSaved(false)
 {
+
 
 }
 
@@ -55,16 +56,19 @@ void GraphicsScene::updatePixmap(QPixmap pixmap, qreal start, qreal end)
 {
     clearScene();
 
-    this->setSceneRect(0, 0, pixmap.width(), pixmap.height());
-    this->addPixmap(pixmap);
-
     ratio = (qreal)(pixmap.height()) / (end - start);
     pixmap_start = start;
     pixmap_end = end;
+
+    qreal realHeight = (qreal)pixmap.height() / (end - start);
+
+    setSceneRect(0, 0, pixmap.width() + 2 * Border, realHeight + 2 * Border);
+    QGraphicsPixmapItem *pixmapItem = addPixmap(pixmap);
+    pixmapItem->setPos(Border, Border);
 }
 
 
-// 绘制完item
+
 void GraphicsScene::itemFinished(QString content)
 {
     showInfo = false;
@@ -180,11 +184,10 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 
 
-
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    qreal x = mouseEvent->scenePos().x();
-    qreal y = mouseEvent->scenePos().y();
+    qreal x = mouseEvent->scenePos().x() - Border;
+    qreal y = mouseEvent->scenePos().y() - Border;
 
     qreal height = pixmap_start + y / ratio;
     qreal degreed = 0;
@@ -199,9 +202,76 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 
 
-void GraphicsScene::drawBackground(QPainter * painter, const QRectF & rect)
+void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     painter->fillRect(rect, QBrush(Qt::lightGray));
     painter->setBrush(QBrush(Qt::white));
-    painter->fillRect(QRect(sceneRect().x(), sceneRect().y(), width(), height()), QBrush(Qt::white));
+
+
+    if (items().isEmpty())
+        return;
+
+
+    QPointF topLeft = QPointF(sceneRect().x() + Border, sceneRect().y() + Border);
+    QPointF bottomRight = QPointF(width() - Border, height() - Border);
+
+    painter->fillRect(QRectF(topLeft, bottomRight), QBrush(Qt::white));
+
+
+    QPen thisPen(Qt::black);
+    thisPen.setWidth(8);
+
+    painter->setPen(thisPen);
+    painter->setFont(GraphicsSettings::instance()->getFont());
+
+
+    QVector<QLineF> lines;
+    QLineF line;
+
+    line.setLine(sceneRect().x() + Interval, Border, sceneRect().x() + Interval, height() - Border);
+    lines << line;
+    line.setLine(Border, Interval, width() - Border, Interval);
+    lines << line;
+
+
+    for (int i = 0; i < 11; i++)
+    {
+        qreal x = sceneRect().x() + Interval;
+        qreal y = Border + (height() - 2 * Border) / 10 * i;
+        line.setLine(x, y , x + Segment, y);
+        lines << line;
+
+        painter->drawText(QPointF(x + Segment, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        qreal x = Border + (width() - 2 * Border) / 4 * i;
+        qreal y = sceneRect().y() + Interval;
+        line.setLine(x, y , x, y + Segment);
+        lines << line;
+
+        switch(i)
+        {
+            case 0:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                break;
+            case 1:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "E");
+                break;
+            case 2:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "S");
+                break;
+            case 3:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "W");
+                break;
+            case 4:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                break;
+            default:
+                break;
+        }
+    }
+    painter->drawLines(lines);
+
 }

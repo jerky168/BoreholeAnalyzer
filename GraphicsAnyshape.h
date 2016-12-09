@@ -28,6 +28,8 @@ public:
 
 
     QString getContent();
+    QString getDataString();
+    static GraphicsAnyshape *loadFromString(QString data);
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

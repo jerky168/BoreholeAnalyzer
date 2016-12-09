@@ -31,6 +31,7 @@ public:
     Data getData();
 
     QString getContent() {return content;}
+    QString getDataString();
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

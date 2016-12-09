@@ -25,6 +25,7 @@ public:
     }
     Data getData();
     QString getContent() {return content;}
+    QString getDataString();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

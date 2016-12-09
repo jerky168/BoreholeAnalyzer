@@ -168,3 +168,4 @@ GraphicsAngleItem::Data GraphicsAngleItem::getData()
 
     return data;
 }
+

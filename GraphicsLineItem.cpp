@@ -148,3 +148,22 @@ GraphicsLineItem::Data GraphicsLineItem::getData()
     return data;
 }
 
+
+QString GraphicsLineItem::getDataString()
+{
+    QString data;
+    data.append(QString::number(line().x1() - Border, 'f', 2));
+    data.append(",");
+    data.append(QString::number(line().y1() - Border, 'f', 2));
+    data.append(";");
+    data.append(QString::number(line().x2() - Border, 'f', 2));
+    data.append(",");
+    data.append(QString::number(line().y2() - Border, 'f', 2));
+    return data;
+}
+
+GraphicsLineItem * GraphicsLineItem::loadFromString(QString data)
+{
+
+}
+

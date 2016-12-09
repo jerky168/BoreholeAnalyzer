@@ -94,17 +94,14 @@ public:
 
     ErrorCode lastError() { return errorCode; }
 
-    // get project infomation
+
     PrjInfo getPrjInfo();
-
-    // get big images
     BigImage getBigImage(quint16 index);
-
-    // get small images
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
+    void saveItem(QGraphicsItem *item);
 
-    // get all items
+
     QVector<QString> getItem(QGraphicsItem *item);
 
 
@@ -114,10 +111,7 @@ public:
 signals:
 
 public slots:
-    void receiverAdd(const QString &id, QGraphicsItem *item)
-    {
 
-    }
 
 private:
     QSqlDatabase database;

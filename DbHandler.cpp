@@ -16,7 +16,6 @@ DbHandler::~DbHandler()
 
 
 
-
 bool DbHandler::openDatabase(QString filepath)
 {
     if (database.isOpen())
@@ -170,6 +169,10 @@ QVector<QPixmap> DbHandler::getSmallImage(quint32 start, quint32 end)
     }
     return QVector<QPixmap>();
 }
+
+
+
+
 
 
 QVector<QString> DbHandler::getItem(QGraphicsItem *item)
