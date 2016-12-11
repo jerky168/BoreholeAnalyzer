@@ -28,6 +28,7 @@ public:
 
 
     QString getContent();
+
     QString getDataString();
     static GraphicsAnyshape *loadFromString(QString data);
 

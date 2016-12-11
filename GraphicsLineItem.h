@@ -38,6 +38,7 @@ public:
 
     Data getData();
     QString getContent() {return content;}
+
     QString getDataString();
     static GraphicsLineItem *loadFromString(QString data);
 

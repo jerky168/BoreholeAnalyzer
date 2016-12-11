@@ -122,6 +122,9 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
                 GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
                 scene->itemFinished(content);
 
+                loadFromString(getDataString());
+
+
                 GraphicsSettings::instance()->setIsDrawing(false);
                 break;
             }
@@ -159,11 +162,23 @@ QString GraphicsLineItem::getDataString()
     data.append(QString::number(line().x2() - Border, 'f', 2));
     data.append(",");
     data.append(QString::number(line().y2() - Border, 'f', 2));
+
+    qDebug() << line();
     return data;
 }
 
-GraphicsLineItem * GraphicsLineItem::loadFromString(QString data)
+GraphicsLineItem *GraphicsLineItem::loadFromString(QString data)
 {
+    QString pos1_str = data.section(';', 0, 0);
+    QString pos2_str = data.section(';', 1, 1);
+    QPointF pos1, pos2;
+    pos1.setX(pos1_str.section(',', 0, 0).toDouble() + Border);
+    pos1.setY(pos1_str.section(',', 1, 1).toDouble() + Border);
+    pos2.setX(pos2_str.section(',', 0, 0).toDouble() + Border);
+    pos2.setY(pos2_str.section(',', 1, 1).toDouble() + Border);
 
+    GraphicsLineItem *item = new GraphicsLineItem(QLineF(pos1, pos2));
+    qDebug() << item->line();
+    return item;
 }
 

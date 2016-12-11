@@ -3,6 +3,7 @@
 #include <QPen>
 #include <QGraphicsSimpleTextItem>
 
+#include "GraphicsScene.h"
 #include "GraphicsSettings.h"
 #include "TextDialog.h"
 
@@ -28,7 +29,10 @@ public:
         return Text;
     }
     Data getData();
+
+
     QString getDataString();
+    static GraphicsTextItem *loadFromString(QString data);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

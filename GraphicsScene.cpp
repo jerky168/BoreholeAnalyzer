@@ -16,10 +16,8 @@ GraphicsScene::GraphicsScene(QObject *parent) :
     pixmapRect(QRectF()),
     pixmap_start(0.0),
     pixmap_end(0.0),
-    showInfo(true),
-    hasSaved(false)
+    showInfo(true)
 {
-
 
 }
 
@@ -34,13 +32,13 @@ void GraphicsScene::setCurMode(Mode mode)
     curMode = mode;
     emit modeChanged(curMode);
 
-    if (mode != MoveItem && item != Q_NULLPTR && !hasSaved)
+    if (mode != MoveItem && item != Q_NULLPTR)
     {
-        deleteLastItem();
+        showInfo = true;
+        item = Q_NULLPTR;
     }
 
 }
-
 
 void GraphicsScene::clearScene()
 {
@@ -65,6 +63,8 @@ void GraphicsScene::updatePixmap(QPixmap pixmap, qreal start, qreal end)
     setSceneRect(0, 0, pixmap.width() + 2 * Border, realHeight + 2 * Border);
     QGraphicsPixmapItem *pixmapItem = addPixmap(pixmap);
     pixmapItem->setPos(Border, Border);
+
+    this->update();
 }
 
 
@@ -77,39 +77,18 @@ void GraphicsScene::itemFinished(QString content)
     item->ungrabMouse();
     curMode = MoveItem;
     emit modeChanged(curMode);
-}
 
-
-void GraphicsScene::saveLastItem()
-{
-    hasSaved = false;
-    showInfo = true;
-    emit itemSaved(item);
-    item = Q_NULLPTR;
-}
-
-
-void GraphicsScene::deleteLastItem()
-{
-    hasSaved = false;
-    showInfo = true;
-    delete item;
-    item = Q_NULLPTR;
-}
-
-
-void GraphicsScene::getSavedItem(QVector<QGraphicsItem *>items)
-{
-
+    emit itemInserted(item, QUuid::createUuid());
 }
 
 
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (curMode == MoveItem && item != Q_NULLPTR && !hasSaved)
+    if (curMode == MoveItem && item != Q_NULLPTR)
     {
-        deleteLastItem();
+        showInfo = true;
+        item = Q_NULLPTR;
     }
 
     if (item != Q_NULLPTR)

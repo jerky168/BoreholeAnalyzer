@@ -144,6 +144,8 @@ bool GraphicsAngleItem::sceneEvent(QEvent *event)
                 {
                     GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
                     scene->itemFinished(QString());
+
+                    loadFromString(getDataString());
                 }
                 break;
             }
@@ -167,5 +169,42 @@ GraphicsAngleItem::Data GraphicsAngleItem::getData()
     data.points[2] = polygonPoints[2];
 
     return data;
+}
+
+QString GraphicsAngleItem::getDataString()
+{
+    QString data = QString::number(this->polygon().count());
+    for (int i = 0; i < polygon().count(); i++)
+    {
+        data.append(";");
+        QPointF point = polygon().at(i);
+        data.append(QString::number(point.x() - Border, 'f', 2));
+        data.append(",");
+        data.append(QString::number(point.y() - Border, 'f', 2));
+    }
+
+    qDebug() << polygon();
+    return data;
+}
+
+GraphicsAngleItem * GraphicsAngleItem::loadFromString(QString data)
+{
+    int count = data.section(';', 0, 0).toInt();
+    QPolygonF polygon;
+
+    for (int i = 1; i <= count; i++)
+    {
+        QString section = data.section(';', i, i);
+        qreal x = section.section(',', 0, 0).toDouble() + Border;
+        qreal y = section.section(',', 1, 1).toDouble() + Border;
+        QPointF point(x, y);
+        polygon << point;
+    }
+
+    GraphicsAngleItem *item = new GraphicsAngleItem (QPoint());
+    item->setPolygon(polygon);
+
+    qDebug() << item->polygon();
+    return item;
 }
 

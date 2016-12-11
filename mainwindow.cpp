@@ -76,8 +76,9 @@ void MainWindow::createConnections()
     // 实时信息
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
 
-    // 添加item
-    QObject::connect(ui->defectWidget, SIGNAL(addItemClicked()), scene, SLOT(saveLastItem()));
+    // 当item添加之后
+    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem*,QUuid)), ui->defectWidget, SLOT(itemInserted(QGraphicsItem*,QUuid)));
+
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -104,6 +105,7 @@ void MainWindow::on_actionClose_triggered()
 }
 
 
+
 void MainWindow::on_actionSave_triggered()
 {
 
@@ -128,6 +130,7 @@ void MainWindow::on_actionRedo_triggered()
 {
 
 }
+
 
 void MainWindow::on_actionShift_triggered()
 {

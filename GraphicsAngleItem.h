@@ -34,6 +34,10 @@ public:
     QString getContent() {return content;} 
 
 
+    QString getDataString();
+    static GraphicsAngleItem *loadFromString(QString data);
+
+
 protected:
     bool sceneEvent(QEvent *event);
 

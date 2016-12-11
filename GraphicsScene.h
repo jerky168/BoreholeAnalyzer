@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
+#include <QUuid>
 
 #include "DbHandler.h"
 #include "GraphicsSettings.h"
@@ -44,10 +45,6 @@ public slots:
     void clearScene();
     void updatePixmap(QPixmap pixmap, qreal start, qreal end);
 
-    void saveLastItem();
-    void deleteLastItem();
-
-    void getSavedItem(QVector<QGraphicsItem *>items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -63,7 +60,7 @@ private:
 
     QGraphicsItem *item;
 
-    bool hasSaved, showInfo;
+    bool showInfo;
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode); 
@@ -71,7 +68,6 @@ signals:
 
     void showRealInfo(QString info);
 
-    void itemSaved(QGraphicsItem *item);
 
-
+    void itemInserted(QGraphicsItem *item, QUuid uuid);
 };

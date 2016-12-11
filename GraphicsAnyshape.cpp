@@ -48,7 +48,7 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         content = QString::number(calcArea(), 'f', 2).append("cm2");
         scene->itemFinished(content);
 
-        //loadFromString(getDataString());
+        loadFromString(getDataString());
 
         return;
     }
@@ -139,22 +139,22 @@ QString GraphicsAnyshape::getContent()
 QString GraphicsAnyshape::getDataString()
 {
     QString data = QString::number(this->polygon().count());
-    data.append(";");
     for (int i = 0; i < polygon().count(); i++)
     {
+        data.append(";");
         QPointF point = polygon().at(i);
         data.append(QString::number(point.x() - Border, 'f', 2));
         data.append(",");
         data.append(QString::number(point.y() - Border, 'f', 2));
-        data.append(";");
     }
+
+    qDebug() << polygon();
     return data;
 }
 
 GraphicsAnyshape * GraphicsAnyshape::loadFromString(QString data)
 {
     int count = data.section(';', 0, 0).toInt();
-
     QPolygonF polygon;
 
     for (int i = 1; i <= count; i++)
@@ -168,5 +168,7 @@ GraphicsAnyshape * GraphicsAnyshape::loadFromString(QString data)
 
     GraphicsAnyshape *item = new GraphicsAnyshape(QPoint());
     item->setPolygon(polygon);
+
+    qDebug() << item->polygon();
     return item;
 }

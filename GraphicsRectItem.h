@@ -31,7 +31,11 @@ public:
     Data getData();
 
     QString getContent() {return content;}
+
+
     QString getDataString();
+    static GraphicsRectItem *loadFromString(QString data);
+
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
