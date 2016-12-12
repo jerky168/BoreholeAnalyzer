@@ -62,10 +62,10 @@ RESOURCES += \
     res.qrc
 
 win32 {
-#    QT += axcontainer
+    QT += axcontainer
 
-#    HEADERS += qword.h  qexcel.h
-#    SOURCES += qword.cpp qexcel.cpp
+    HEADERS += qword.h  qexcel.h
+    SOURCES += qword.cpp qexcel.cpp
 }
 
 DISTFILES += \
