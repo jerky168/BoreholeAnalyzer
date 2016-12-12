@@ -26,11 +26,13 @@ public:
     }
     Data getData();
 
-
     QString getContent();
 
     QString getDataString();
     static GraphicsAnyshape *loadFromString(QString data);
+
+
+    void setFinished() {hasDrawed = true;}
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

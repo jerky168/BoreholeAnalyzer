@@ -42,12 +42,15 @@ public:
     QString getDataString();
     static GraphicsLineItem *loadFromString(QString data);
 
+    void setFinished() {hasDrawed = true;}
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
     bool sceneEvent(QEvent *event);
 
 private:
+    bool hasDrawed;
     QString content;
 
 };

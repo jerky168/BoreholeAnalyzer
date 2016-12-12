@@ -36,6 +36,7 @@ public:
     QString getDataString();
     static GraphicsRectItem *loadFromString(QString data);
 
+    void setFinished() {hasDrawed = true;}
 
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

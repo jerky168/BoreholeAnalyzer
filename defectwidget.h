@@ -21,28 +21,32 @@ public:
     explicit DefectWidget(QWidget *parent = 0);
     ~DefectWidget();
 
-    void saveAllItems();
-
 
     typedef struct {
-        bool hasSaved;
         QUuid uuid;
         QGraphicsItem *item;
-    }itemData;
+    }ItemData;
+
+    bool hasAddedItem();
+    QVector<ItemData> getAddedItems();
+    void clearAddedItems();
 
 
 public slots:
     void showRealInfo(QString info);
-
+    void itemInserted(QGraphicsItem *item, QUuid uuid);
+    void updateItems(QVector<ItemData> items);
 
 private slots:
     void on_clearButton_clicked();
-    void itemInserted(QGraphicsItem *item, QUuid uuid);
+
+
 
 private:
     Ui::DefectWidget *ui;
 
-    QVector<itemData> items;
+    QVector<ItemData> addedItems;
+    QVector<ItemData> saveItems;
 
 signals:
 

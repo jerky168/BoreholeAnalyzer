@@ -50,7 +50,8 @@ void GraphicsScene::clearScene()
 }
 
 
-void GraphicsScene::updatePixmap(QPixmap pixmap, qreal start, qreal end)
+
+void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items)
 {
     clearScene();
 
@@ -64,8 +65,16 @@ void GraphicsScene::updatePixmap(QPixmap pixmap, qreal start, qreal end)
     QGraphicsPixmapItem *pixmapItem = addPixmap(pixmap);
     pixmapItem->setPos(Border, Border);
 
+
+    for (int i = 0; i < items.count(); i++)
+    {
+        addItem(items.at(i).item);
+    }
+
+
     this->update();
 }
+
 
 
 
@@ -108,9 +117,7 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             {
                 item = new GraphicsTextItem(mouseEvent->scenePos());
                 addItem(item);
-                item = Q_NULLPTR;
-                curMode = MoveItem;
-                emit modeChanged(curMode);
+                item->grabMouse();
                 break;
             }
             case InsertLine :
@@ -137,8 +144,7 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
             case InsertAnyShape :
             {
-                GraphicsAnyshape *realItem = new GraphicsAnyshape(mouseEvent->scenePos());
-                item = realItem;
+                item = new GraphicsAnyshape(mouseEvent->scenePos());
                 addItem(item);
                 item->grabMouse();
                 break;
@@ -201,7 +207,9 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
     thisPen.setWidth(8);
 
     painter->setPen(thisPen);
-    painter->setFont(GraphicsSettings::instance()->getFont());
+    QFont font = GraphicsSettings::instance()->getFont();
+    font.setPointSize(36);
+    painter->setFont(font);
 
 
     QVector<QLineF> lines;
@@ -220,7 +228,7 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         line.setLine(x, y , x + Segment, y);
         lines << line;
 
-        painter->drawText(QPointF(x + Segment, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+        painter->drawText(QPointF(x + Interval, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
     }
 
     for (int i = 0; i < 5; i++)

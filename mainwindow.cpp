@@ -63,7 +63,6 @@ void MainWindow::createConnections()
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
     // 更新照片
-    QObject::connect(this, SIGNAL(updatePixmap(QPixmap, qreal, qreal)), scene, SLOT(updatePixmap(QPixmap, qreal, qreal)));
     QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
 
     // 编辑模式改变
@@ -89,6 +88,9 @@ void MainWindow::on_actionOpen_triggered()
     if (!handler->openDatabase(filename))
         return;
 
+    ui->actionSave->setEnabled(true);
+    ui->actionSaveAs->setEnabled(true);
+
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
     ui->actionClose->setEnabled(true);
@@ -108,15 +110,34 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-
+    if (ui->defectWidget->hasAddedItem())
+    {
+        QVector<DefectWidget::ItemData> items = ui->defectWidget->getAddedItems();
+        for (int i = 0; i < items.count(); i++)
+        {
+            handler->saveItem(ui->imageWidget->getIndex(), items.at(i).uuid, items.at(i).item);
+        }
+        ui->defectWidget->clearAddedItems();
+    }
 }
-
-
 
 void MainWindow::switchImage(quint16 index)
 {
-    DbHandler::BigImage bigImage = handler->getBigImage(index);
-    emit updatePixmap(bigImage.pixmap, (qreal)(bigImage.start) / 10000, (qreal)(bigImage.end) / 10000);
+    if (ui->defectWidget->hasAddedItem())
+    {
+        QMessageBox::StandardButton button;
+        button = QMessageBox::question(this, tr("Unsave items"), tr("You have unsaved items, switching index will discard theses changes!"), QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
+        if (button == QMessageBox::Cancel)
+        {
+
+            return;
+        }
+
+    }
+
+    DbHandler::IndexData indexData = handler->getIndexData(index);
+    ui->defectWidget->updateItems(indexData.items);
+    scene->updateIndexData(indexData.image.pixmap, (qreal)(indexData.image.start) / 10000, (qreal)(indexData.image.end) / 10000, indexData.items);
 }
 
 

@@ -8,7 +8,9 @@
 #include <QVector>
 #include <QUuid>
 
-#include "DbHandler.h"
+
+#include "DefectWidget.h"
+
 #include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
@@ -18,7 +20,8 @@
 #include "GraphicsOccurance.h"
 
 
-#define Border          100
+
+#define Border          120
 #define Interval        10
 #define Segment         25
 
@@ -43,8 +46,7 @@ public:
 
 public slots:
     void clearScene();
-    void updatePixmap(QPixmap pixmap, qreal start, qreal end);
-
+    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);

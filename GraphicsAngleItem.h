@@ -37,6 +37,7 @@ public:
     QString getDataString();
     static GraphicsAngleItem *loadFromString(QString data);
 
+    void setFinished() {secondPointFinished = true;}
 
 protected:
     bool sceneEvent(QEvent *event);

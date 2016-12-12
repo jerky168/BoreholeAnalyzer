@@ -1,7 +1,8 @@
 #include "GraphicsLineItem.h"
 
 GraphicsLineItem::GraphicsLineItem(const QLineF &line, QGraphicsItem *parent) :
-    QGraphicsLineItem(line, parent)
+    QGraphicsLineItem(line, parent),
+    hasDrawed(false)
 {
     setLine(line);
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
@@ -98,12 +99,18 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
         {
             case QEvent::GraphicsSceneMousePress:
             {
+                if (hasDrawed)
+                    return true;
+
                 GraphicsSettings::instance()->setIsDrawing(true);
                 break;
             }
 
             case QEvent::GraphicsSceneMouseMove:
             {
+                if (hasDrawed)
+                    return true;
+
                 QLineF newLine(this->line().p1(), e->scenePos());
                 setLine(newLine);
                 break;
@@ -111,6 +118,9 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
 
             case QEvent::GraphicsSceneMouseRelease:
             {
+                if (hasDrawed)
+                    return true;
+
                 double x1 = line().p1().x();
                 double x2 = line().p2().x();
                 double y1 = line().p1().y();

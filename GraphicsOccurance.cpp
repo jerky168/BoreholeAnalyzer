@@ -12,12 +12,6 @@ GraphicsOccurance::~GraphicsOccurance()
 }
 
 
-QString GraphicsOccurance::getItemText()
-{
-    return QString("Occurance");
-}
-
-
 void GraphicsOccurance::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     widget = Q_NULLPTR;
@@ -34,23 +28,24 @@ void GraphicsOccurance::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 }
 
 
-void GraphicsOccurance::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
 
 void GraphicsOccurance::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (hasDrawed)
+        return;
+
     QLineF newLine(line().p1(), event->scenePos());
     setLine(newLine);
 }
 
 void GraphicsOccurance::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (hasDrawed)
+        return;
+
     GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
     scene->itemFinished(QString());
-
-    loadFromString(getDataString());
+    hasDrawed = true;
 }
 
 

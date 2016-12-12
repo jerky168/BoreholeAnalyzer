@@ -11,8 +11,6 @@
 #include <QPixmap>
 #include <QDateTime>
 #include <QVector>
-#include <QGraphicsObject>
-#include <QtScript>
 
 #include <QUuid>
 
@@ -23,6 +21,8 @@
 #include "GraphicsRectItem.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsOccurance.h"
+
+#include "DefectWidget.h"
 
 
 class DbHandler : public QObject
@@ -53,8 +53,6 @@ public:
     }PrjInfo;
 
 
-
-
     typedef struct {
         quint32 start;
         quint32 end;
@@ -68,15 +66,10 @@ public:
 
 
     typedef struct {
-        BigImage bigImage;
-        QVector<QGraphicsItem *> items;
-    }DisplayData;
+        BigImage image;
+        QVector<DefectWidget::ItemData> items;
+    }IndexData;
 
-
-    typedef struct {
-        ItemType type;
-        QString  String;
-    }AggregateData;
 
     typedef enum {
         NoError,
@@ -99,18 +92,10 @@ public:
     BigImage getBigImage(quint16 index);
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
-    void saveItem(QGraphicsItem *item);
 
+    void saveItem(quint16 index, QUuid uuid, QGraphicsItem *item);
+    IndexData getIndexData(quint16 index);
 
-    QVector<QString> getItem(QGraphicsItem *item);
-
-
-    DisplayData getDisplayData(quint16 index);
-
-
-signals:
-
-public slots:
 
 
 private:

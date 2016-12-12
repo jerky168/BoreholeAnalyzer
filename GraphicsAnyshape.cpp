@@ -42,7 +42,6 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (polygon().count() <= 2)
             return;
 
-        // 结束绘画
         hasDrawed = true;
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
         content = QString::number(calcArea(), 'f', 2).append("cm2");

@@ -18,29 +18,32 @@ public:
 
     bool getTextDialogCloseFlag();
 
-    typedef struct
-    {
-        QPointF point;
-        QString content;
-    }Data;
 
     int type() const
     {
         return Text;
     }
+
+    typedef struct
+    {
+        QPointF point;
+        QString content;
+    }Data;
     Data getData();
 
 
     QString getDataString();
     static GraphicsTextItem *loadFromString(QString data);
 
+    void setFinished() {hasDrawed = true;}
+
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    //bool sceneEvent(QEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
-    bool sceneEvent(QEvent *event);
 
 private:
+    bool hasDrawed;
+
     void showTextDialog(QFont font);
     bool textDialogCloseFlag;
 };

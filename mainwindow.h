@@ -8,6 +8,7 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 #include <QActionGroup>
+#include <QMessageBox>
 
 #include "GraphicsScene.h"
 
@@ -67,7 +68,6 @@ private:
 
 
 signals:
-    void updatePixmap(QPixmap pixmap, qreal start, qreal end);
     void clearScene();
 
 
