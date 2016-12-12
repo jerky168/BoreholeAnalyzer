@@ -12,6 +12,13 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 
+#include <QMouseEvent>
+#include <QOpenGLShaderProgram>
+#include <QCoreApplication>
+
+#include <QtMath>
+#include <QVector>
+#include <QVector3D>
 
 class OpenGLWidget : public QOpenGLWidget
 {

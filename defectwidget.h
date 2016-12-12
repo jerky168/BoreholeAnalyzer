@@ -1,11 +1,17 @@
-#ifndef DEFECTWIDGET_H
-#define DEFECTWIDGET_H
+#pragma once
 
 #include <QWidget>
+#include <QDebug>
+#include <QSqlQueryModel>
+
+#include <QGraphicsItem>
+#include <QUuid>
+#include <QVector>
 
 namespace Ui {
 class DefectWidget;
 }
+
 
 class DefectWidget : public QWidget
 {
@@ -15,8 +21,34 @@ public:
     explicit DefectWidget(QWidget *parent = 0);
     ~DefectWidget();
 
+
+    typedef struct {
+        QUuid uuid;
+        QGraphicsItem *item;
+    }ItemData;
+
+    bool hasAddedItem();
+    QVector<ItemData> getAddedItems();
+    void clearAddedItems();
+
+
+public slots:
+    void showRealInfo(QString info);
+    void itemInserted(QGraphicsItem *item, QUuid uuid);
+    void updateItems(QVector<ItemData> items);
+
+private slots:
+    void on_clearButton_clicked();
+
+
+
 private:
     Ui::DefectWidget *ui;
+
+    QVector<ItemData> addedItems;
+    QVector<ItemData> saveItems;
+
+signals:
+
 };
 
-#endif // DEFECTWIDGET_H

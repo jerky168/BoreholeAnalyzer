@@ -1,8 +1,8 @@
 #include "GraphicsScene.h"
 
 
-double GraphicsScene::ratio = 1.0;
 GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
+qreal GraphicsScene::ratio = 1.0;
 
 /* 本类负责item的管理和编辑模式的管理
  * item的管理：item的增删修改
@@ -10,11 +10,15 @@ GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
  * */
 
 /******************************** public functions **************************************/
-GraphicsScene::GraphicsScene(DbHandler *dbHandler, QObject *parent) :
+GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent),
-    item(Q_NULLPTR)
+    item(Q_NULLPTR),
+    pixmapRect(QRectF()),
+    pixmap_start(0.0),
+    pixmap_end(0.0),
+    showInfo(true)
 {
-    handler = dbHandler;
+
 }
 
 GraphicsScene::~GraphicsScene()
@@ -23,90 +27,141 @@ GraphicsScene::~GraphicsScene()
 }
 
 
-// 更改模式
 void GraphicsScene::setCurMode(Mode mode)
 {
     curMode = mode;
     emit modeChanged(curMode);
+
+    if (mode != MoveItem && item != Q_NULLPTR)
+    {
+        showInfo = true;
+        item = Q_NULLPTR;
+    }
+
 }
 
-/******************************** public slots **************************************/
-void GraphicsScene::updatePixmap(QPixmap pixmap)
+void GraphicsScene::clearScene()
 {
     clear();
-    this->setSceneRect(0, 0, pixmap.width(), pixmap.height());
-    this->addPixmap(pixmap);
-    ratio = (double)pixmap.height();
+    ratio = 0.0;
+    pixmapRect = QRectF();
+    pixmap_start = 0.0;
+    pixmap_end = 0.0;
 }
 
-void GraphicsScene::itemInserted()
+
+
+void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items)
 {
+    clearScene();
+
+    ratio = (qreal)(pixmap.height()) / (end - start);
+    pixmap_start = start;
+    pixmap_end = end;
+
+    qreal realHeight = (qreal)pixmap.height() / (end - start);
+
+    setSceneRect(0, 0, pixmap.width() + 2 * Border, realHeight + 2 * Border);
+    QGraphicsPixmapItem *pixmapItem = addPixmap(pixmap);
+    pixmapItem->setPos(Border, Border);
+
+
+    for (int i = 0; i < items.count(); i++)
+    {
+        addItem(items.at(i).item);
+    }
+
+
+    this->update();
+}
+
+
+
+
+void GraphicsScene::itemFinished(QString content)
+{
+    showInfo = false;
+    emit showRealInfo(content);
+
     item->ungrabMouse();
-    item = Q_NULLPTR;
     curMode = MoveItem;
     emit modeChanged(curMode);
+
+    emit itemInserted(item, QUuid::createUuid());
 }
+
 
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (curMode == MoveItem || item != Q_NULLPTR)
+    if (curMode == MoveItem && item != Q_NULLPTR)
     {
-        QGraphicsScene::mousePressEvent(mouseEvent);
-        return;
+        showInfo = true;
+        item = Q_NULLPTR;
     }
 
-    switch (curMode)
+    if (item != Q_NULLPTR)
     {
-        case InsertTextBox :
-        {
-            item = new GraphicsTextItem(mouseEvent->scenePos());
-            addItem(item);
-            item = Q_NULLPTR;
-            curMode = MoveItem;
-            emit modeChanged(curMode);
-            break;
-        }
-        case InsertLine :
-        {
-            item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertShift :
-        {
-            item = new GraphicsAngleItem(mouseEvent->scenePos());
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertRectangle :
-        {
-            item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
-        case InsertAnyShape :
-        {
-            item = new GraphicsAnyshape(mouseEvent->scenePos());
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
 
-        case InsertOccurance :
+    }
+    else if (curMode != MoveItem && (mouseEvent->buttons() & Qt::RightButton))
+    {
+        curMode = MoveItem;
+        emit modeChanged(curMode);
+    }
+    else if (curMode != MoveItem && (mouseEvent->buttons() & Qt::LeftButton))
+    {
+        switch (curMode)
         {
-            item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
-            addItem(item);
-            item->grabMouse();
-            break;
-        }
+            case InsertTextBox :
+            {
+                item = new GraphicsTextItem(mouseEvent->scenePos());
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertLine :
+            {
+                item = new GraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertShift :
+            {
+                item = new GraphicsAngleItem(mouseEvent->scenePos());
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+            case InsertRectangle :
+            {
+                item = new GraphicsRectItem(QRectF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
 
-        default:
-        {
-            break;
+            case InsertAnyShape :
+            {
+                item = new GraphicsAnyshape(mouseEvent->scenePos());
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+
+            case InsertOccurance :
+            {
+                item = new GraphicsOccurance(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
+                addItem(item);
+                item->grabMouse();
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
         }
     }
 
@@ -114,10 +169,96 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 
 
+void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    qreal x = mouseEvent->scenePos().x() - Border;
+    qreal y = mouseEvent->scenePos().y() - Border;
 
-void GraphicsScene::drawBackground(QPainter * painter, const QRectF & rect)
+    qreal height = pixmap_start + y / ratio;
+    qreal degreed = 0;
+
+    QString message = QString("height: ") + QString::number(height, 'f', 3) + "m\t";
+
+    if (showInfo)
+        emit showRealInfo(message);
+    emit showStatus(message, 0);
+
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+
+void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     painter->fillRect(rect, QBrush(Qt::lightGray));
     painter->setBrush(QBrush(Qt::white));
-    painter->fillRect(QRect(sceneRect().x(), sceneRect().y(), width(), height()), QBrush(Qt::white));
+
+
+    if (items().isEmpty())
+        return;
+
+
+    QPointF topLeft = QPointF(sceneRect().x() + Border, sceneRect().y() + Border);
+    QPointF bottomRight = QPointF(width() - Border, height() - Border);
+
+    painter->fillRect(QRectF(topLeft, bottomRight), QBrush(Qt::white));
+
+
+    QPen thisPen(Qt::black);
+    thisPen.setWidth(8);
+
+    painter->setPen(thisPen);
+    QFont font = GraphicsSettings::instance()->getFont();
+    font.setPointSize(36);
+    painter->setFont(font);
+
+
+    QVector<QLineF> lines;
+    QLineF line;
+
+    line.setLine(sceneRect().x() + Interval, Border, sceneRect().x() + Interval, height() - Border);
+    lines << line;
+    line.setLine(Border, Interval, width() - Border, Interval);
+    lines << line;
+
+
+    for (int i = 0; i < 11; i++)
+    {
+        qreal x = sceneRect().x() + Interval;
+        qreal y = Border + (height() - 2 * Border) / 10 * i;
+        line.setLine(x, y , x + Segment, y);
+        lines << line;
+
+        painter->drawText(QPointF(x + Interval, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        qreal x = Border + (width() - 2 * Border) / 4 * i;
+        qreal y = sceneRect().y() + Interval;
+        line.setLine(x, y , x, y + Segment);
+        lines << line;
+
+        switch(i)
+        {
+            case 0:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                break;
+            case 1:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "E");
+                break;
+            case 2:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "S");
+                break;
+            case 3:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "W");
+                break;
+            case 4:
+                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                break;
+            default:
+                break;
+        }
+    }
+    painter->drawLines(lines);
+
 }

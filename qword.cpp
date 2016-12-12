@@ -275,7 +275,7 @@ void QWord::intsertTable(int row,int column)
     params.append(2);
     tables->querySubObject("Add(QAxObject*, int, int, QVariant&, QVariant&)", params);
     QAxObject* table = selection->querySubObject("Tables(1)");
-    table->setProperty("Style","网格型");
+    //table->setProperty("Style","网格型");
 }
 void QWord::setColumnWidth(int column, int width)		//设置列宽
 {

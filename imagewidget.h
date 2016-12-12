@@ -1,5 +1,4 @@
-#ifndef IMAGEWIDGET_H
-#define IMAGEWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include "DbHandler.h"
@@ -19,14 +18,19 @@ public:
     void updatePrjInfo(DbHandler::PrjInfo prjInfo);
     void clear();
 
+    quint16 getIndex();
+    void cancelSwitch();
 
 private slots:
     void on_lastButton_clicked();
     void on_nextButton_clicked();
 
+    void on_switchButton_clicked();
+
 private:
     Ui::ImageWidget *ui;
 
+    quint16 lastIndex;
     quint16 index;
     quint16 maxIndex;
 
@@ -36,4 +40,3 @@ signals:
 
 };
 
-#endif // IMAGEWIDGET_H

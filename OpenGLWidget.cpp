@@ -83,7 +83,6 @@ void OpenGLWidget::cleanup()
 }
 
 
-// 设置范围
 void OpenGLWidget::setRollRange(int start, int end)
 {
     rollStart = start;
@@ -96,6 +95,7 @@ void OpenGLWidget::setRollRange(int start, int end)
 void OpenGLWidget::initializeGL()
 {
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &OpenGLWidget::cleanup);
+
 }
 
 // Renders the OpenGL scene. Gets called whenever the widget needs to be updated.

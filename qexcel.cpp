@@ -1,11 +1,9 @@
-
-#include <QFile>
-
 #include "qexcel.h"
 
 #include "qt_windows.h"
 
-QExcel::QExcel(QObject *parent) : QObject(parent)
+QExcel::QExcel(QObject *parent) :
+    QObject(parent)
 {
     pExcel     = NULL;
     pWorkbooks = NULL;
@@ -70,92 +68,95 @@ QExcel::~QExcel()
   *@return true : 打开成功
   *        false: 打开失败
   */
-bool QExcel::Open(UINT nSheet, bool visible)
+bool QExcel::Open(quint32 nSheet, bool visible)
 {
+//    if ( bIsOpen )
+//    {
+//        //return bIsOpen;
+//        Close();
+//    }
 
-    if ( bIsOpen )
-    {
-        //return bIsOpen;
-        Close();
-    }
+//    nCurrSheet = nSheet;
+//    bIsVisible = visible;
 
-    nCurrSheet = nSheet;
-    bIsVisible = visible;
+//    if ( NULL == pExcel )
+//    {
+//        pExcel = new QAxObject("Excel.Application");
+//        if ( pExcel )
+//        {
+//            bIsValid = true;
+//        }
+//        else
+//        {
+//            bIsValid = false;
+//            bIsOpen  = false;
+//            return bIsOpen;
+//        }
 
-    if ( NULL == pExcel )
-    {
-        pExcel = new QAxObject("Excel.Application");
-        if ( pExcel )
-        {
-            bIsValid = true;
-        }
-        else
-        {
-            bIsValid = false;
-            bIsOpen  = false;
-            return bIsOpen;
-        }
+//        pExcel->dynamicCall("SetVisible(bool)", bIsVisible);
+//    }
 
-        pExcel->dynamicCall("SetVisible(bool)", bIsVisible);
-    }
+//    if ( !bIsValid )
+//    {
+//        bIsOpen  = false;
+//        return bIsOpen;
+//    }
 
-    if ( !bIsValid )
-    {
-        bIsOpen  = false;
-        return bIsOpen;
-    }
+//    if ( sXlsFile.isEmpty() )
+//    {
+//        bIsOpen  = false;
+//        return bIsOpen;
+//    }
 
-    if ( sXlsFile.isEmpty() )
-    {
-        bIsOpen  = false;
-        return bIsOpen;
-    }
+//    /*如果指向的文件不存在，则需要新建一个*/
+//    QFile f(sXlsFile);
+//    if (!f.exists())
+//    {
+//        bIsANewFile = true;
+//    }
+//    else
+//    {
+//        bIsANewFile = false;
+//    }
 
-    /*如果指向的文件不存在，则需要新建一个*/
-    QFile f(sXlsFile);
-    if (!f.exists())
-    {
-        bIsANewFile = true;
-    }
-    else
-    {
-        bIsANewFile = false;
-    }
+//    if (!bIsANewFile)
+//    {
+//        pWorkbooks = pExcel->querySubObject("WorkBooks"); //获取工作簿
+//        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //打开xls对应的工作簿
+//    }
+//    else
+//    {
+//        pWorkbooks = pExcel->querySubObject("WorkBooks");     //获取工作簿
+//        pWorkbooks->dynamicCall("Add");                       //添加一个新的工作薄
+//        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //新建一个xls
+//    }
 
-    if (!bIsANewFile)
-    {
-        pWorkbooks = pExcel->querySubObject("WorkBooks"); //获取工作簿
-        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //打开xls对应的工作簿
-    }
-    else
-    {
-        pWorkbooks = pExcel->querySubObject("WorkBooks");     //获取工作簿
-        pWorkbooks->dynamicCall("Add");                       //添加一个新的工作薄
-        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //新建一个xls
-    }
+//    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//打开第一个sheet
 
-    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//打开第一个sheet
+//    //至此已打开，开始获取相应属性
+//    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//获取该sheet的使用范围对象
+//    QAxObject *rows = usedrange->querySubObject("Rows");
+//    QAxObject *columns = usedrange->querySubObject("Columns");
 
-    //至此已打开，开始获取相应属性
-    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//获取该sheet的使用范围对象
-    QAxObject *rows = usedrange->querySubObject("Rows");
-    QAxObject *columns = usedrange->querySubObject("Columns");
+//    //因为excel可以从任意行列填数据而不一定是从0,0开始，因此要获取首行列下标
+//    nStartRow    = usedrange->property("Row").toInt();    //第一行的起始位置
+//    nStartColumn = usedrange->property("Column").toInt(); //第一列的起始位置
 
-    //因为excel可以从任意行列填数据而不一定是从0,0开始，因此要获取首行列下标
-    nStartRow    = usedrange->property("Row").toInt();    //第一行的起始位置
-    nStartColumn = usedrange->property("Column").toInt(); //第一列的起始位置
+//    nRowCount    = rows->property("Count").toInt();       //获取行数
+//    nColumnCount = columns->property("Count").toInt();    //获取列数
 
-    nRowCount    = rows->property("Count").toInt();       //获取行数
-    nColumnCount = columns->property("Count").toInt();    //获取列数
-
-    bIsOpen  = true;
-    return bIsOpen;
+//    bIsOpen  = true;
+//    return bIsOpen;
+    return true;
 }
+
+
+
 
 /**
   *@brief Open()的重载函数
   */
-bool QExcel::Open(QString xlsFile, UINT nSheet, bool visible)
+bool QExcel::Open(QString xlsFile, quint32 nSheet, bool visible)
 {
     sXlsFile = xlsFile;
     nCurrSheet = nSheet;
@@ -173,7 +174,7 @@ void QExcel::Save()
     {
         if (bIsSaveAlready)
         {
-            return ;
+            return;
         }
 
         if (!bIsANewFile)

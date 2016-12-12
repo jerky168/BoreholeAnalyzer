@@ -33,8 +33,7 @@
         <file>res/images/angle.PNG</file>
         <file>res/images/width.png</file>
         <file>res/images/swift.png</file>
-        <file>res/images/occurance.PNG</file>
-        <file>res/images/产状.png</file>
-        <file>res/images/方位偏移.png</file>
+        <file>res/images/occurance.png</file>
+        <file>res/images/shift.png</file>
     </qresource>
 </RCC>

@@ -1,22 +1,21 @@
-#ifndef QEXCEL_H
-#define QEXCEL_H
+#pragma once
 
 #include <QObject>
 #include <QAxObject>
 
-typedef unsigned int UINT;
+#include <QFile>
 
 class QExcel : public QObject
 {
     Q_OBJECT
 public:
-    explicit QExcel(QObject *parent = 0);
+    explicit QExcel(QObject *parent = Q_NULLPTR);
     QExcel(QString xlsFile);
     ~QExcel();
 
 public:
-    bool Open(UINT nSheet = 1, bool visible = false);//打开xls文件
-    bool Open(QString xlsFile, UINT nSheet = 1, bool visible = false);
+    bool Open(quint32 nSheet = 1, bool visible = false);//打开xls文件
+    bool Open(QString xlsFile, quint32 nSheet = 1, bool visible = false);
     void Save();                //保存xls报表
     void Close();               //关闭xls报表
 
@@ -40,7 +39,7 @@ private:
     QAxObject *pWorksheet;  //指向工作簿中的某个sheet表单
 
     QString   sXlsFile;     //xls文件路径
-    UINT      nCurrSheet;   //当前打开的第几个sheet
+    quint32      nCurrSheet;   //当前打开的第几个sheet
     bool      bIsVisible;   //excel是否可见
     int       nRowCount;    //行数
     int       nColumnCount; //列数
@@ -51,10 +50,5 @@ private:
     bool      bIsValid;     //是否有效
     bool      bIsANewFile;  //是否是一个新建xls文件，用来区分打开的excel是已存在文件还是有本类新建的
     bool      bIsSaveAlready;//防止重复保存
-
-signals:
-
-public slots:
 };
 
-#endif // QEXCEL_H

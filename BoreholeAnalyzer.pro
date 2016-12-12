@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql script
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,39 +19,39 @@ PRECOMPILED_HEADER = stable.h
 SOURCES +=  main.cpp\
             mainwindow.cpp \
             imagewidget.cpp \
-            defectwidget.cpp \
             GraphicsView.cpp \
             MyCommand.cpp \
             OpenGLWidget.cpp \
             GraphicsTextItem.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
-    TextDialog.cpp \
-    GraphicsLineItem.cpp \
-    GraphicsSettings.cpp \
-    GraphicsAngleItem.cpp \
-    GraphicsRectItem.cpp \
-    GraphicsAnyshape.cpp \
-    GraphicsOccurance.cpp
+            TextDialog.cpp \
+            GraphicsLineItem.cpp \
+            GraphicsSettings.cpp \
+            GraphicsAngleItem.cpp \
+            GraphicsRectItem.cpp \
+            GraphicsAnyshape.cpp \
+            GraphicsOccurance.cpp \
+    defectwidget.cpp
 
 
 HEADERS  += mainwindow.h \
             imagewidget.h \
-            defectwidget.h \
             GraphicsView.h \
             MyCommand.h \
             OpenGLWidget.h \
             GraphicsTextItem.h \
             DbHandler.h \
             GraphicsScene.h \
-    TextDialog.h \
-    GraphicsLineItem.h \
-    GraphicsSettings.h \
-    GraphicsAngleItem.h \
-    GraphicsRectItem.h \
-    GraphicsAnyshape.h \
-    GraphicsOccurance.h \
-    type.h
+            TextDialog.h \
+            GraphicsLineItem.h \
+            GraphicsSettings.h \
+            GraphicsAngleItem.h \
+            GraphicsRectItem.h \
+            GraphicsAnyshape.h \
+            GraphicsOccurance.h \
+            type.h \
+    defectwidget.h
 
 
 FORMS    += mainwindow.ui \
@@ -62,10 +62,10 @@ RESOURCES += \
     res.qrc
 
 win32 {
-#    QT += axcontainer
+    QT += axcontainer
 
-#    HEADERS += qword.h  qexcel.h
-#    SOURCES += qword.cpp qexcel.cpp
+    HEADERS += qword.h  qexcel.h
+    SOURCES += qword.cpp qexcel.cpp
 }
 
 DISTFILES += \

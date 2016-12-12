@@ -8,6 +8,7 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 #include <QActionGroup>
+#include <QMessageBox>
 
 #include "GraphicsScene.h"
 
@@ -33,6 +34,8 @@ public slots:
 private slots:
     void on_actionOpen_triggered();
     void on_actionClose_triggered();
+    void on_actionSave_triggered();
+
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
 
@@ -65,7 +68,6 @@ private:
 
 
 signals:
-    void updatePixmap(QPixmap pixmap);
     void clearScene();
 
 

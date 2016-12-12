@@ -11,16 +11,19 @@
 #include <QPixmap>
 #include <QDateTime>
 #include <QVector>
-#include <QGraphicsObject>
-#include <QtScript>
 
+#include <QUuid>
+
+#include "type.h"
 #include "GraphicsAngleItem.h"
 #include "GraphicsAnyshape.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsRectItem.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsOccurance.h"
-#include "type.h"
+
+#include "DefectWidget.h"
+
 
 class DbHandler : public QObject
 {
@@ -49,6 +52,7 @@ public:
 
     }PrjInfo;
 
+
     typedef struct {
         quint32 start;
         quint32 end;
@@ -60,10 +64,12 @@ public:
         QPixmap pixmap;
     }SmallImage;
 
+
     typedef struct {
-        ItemType type;
-        QString  String;
-    }AggregateData;
+        BigImage image;
+        QVector<DefectWidget::ItemData> items;
+    }IndexData;
+
 
     typedef enum {
         NoError,
@@ -81,32 +87,20 @@ public:
 
     ErrorCode lastError() { return errorCode; }
 
-    // get project infomation
+
     PrjInfo getPrjInfo();
-
-    // get big images
     BigImage getBigImage(quint16 index);
-
-    // get small images
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
 
-    // get all items
-    QVector<QString> getItem(QGraphicsItem *item);
+    void saveItem(quint16 index, QUuid uuid, QGraphicsItem *item);
+    IndexData getIndexData(quint16 index);
 
 
-signals:
-
-public slots:
-    void receiverAdd(const QString &id, QGraphicsItem *item)
-    {
-
-    }
 
 private:
     QSqlDatabase database;
     ErrorCode errorCode;
-
 
 };
 
