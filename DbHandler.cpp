@@ -29,16 +29,15 @@ bool DbHandler::openDatabase(QString filepath)
         return false;
     }
 
-    // sql语句
     QSqlQuery query(database);
-    // 查询是否有工程信息
+
     if (!query.exec("select * from ProjectInfo") || !query.first())
     {
         qDebug() << query.lastError().text();
         errorCode = NoProjectInfo;
         return false;
     }
-    // 查询是否有大图
+
     if (!query.exec("select * from bigImages") || !query.first())
     {
         qDebug() << query.lastError().text();
@@ -76,12 +75,12 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
 
     query.exec("select * from ProjectInfo");
     query.first();
-    prjInfo.startHeight = query.value(1).toInt();
+    prjInfo.startHeight = (qreal)query.value(1).toInt() / 10000;
 
 
     query.exec("select * from bigImages");
     query.last();
-    prjInfo.endHeight = query.value(0).toInt();
+    prjInfo.endHeight = (qreal)query.value(0).toInt() / 10000;
 
     return prjInfo;
 }
@@ -187,7 +186,6 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
 {
     IndexData indexData;
     indexData.image = getBigImage(index);
-
 
     QSqlQuery query(database);
     query.prepare("SELECT uuid, type, data FROM items WHERE number = :number");

@@ -2,11 +2,14 @@
 
 #include <QWidget>
 #include <QDebug>
-#include <QSqlQueryModel>
 
 #include <QGraphicsItem>
 #include <QUuid>
 #include <QVector>
+
+//#include "TreeModel.h"
+
+
 
 namespace Ui {
 class DefectWidget;
@@ -38,12 +41,13 @@ public slots:
     void updateItems(QVector<ItemData> items);
 
 private slots:
-    void on_clearButton_clicked();
 
 
 
 private:
     Ui::DefectWidget *ui;
+
+
 
     QVector<ItemData> addedItems;
     QVector<ItemData> saveItems;

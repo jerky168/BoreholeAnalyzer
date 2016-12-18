@@ -19,6 +19,7 @@ public:
     void clear();
 
     quint16 getIndex();
+    quint16 getMaxIndex();
     void cancelSwitch();
 
 private slots:

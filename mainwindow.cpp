@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     handler(new DbHandler(this)),
     undosStack(new QUndoStack(this)),
     scene(new GraphicsScene(this)),
+    infoDialog(new PrjInfoDialog(this)),
     actionGroup(new QActionGroup(this)),
     editActionGroup(new QActionGroup(this))
 {
@@ -20,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete handler;
+    delete scene;
+    delete infoDialog;
 }
 
 // create action group
@@ -94,6 +98,7 @@ void MainWindow::on_actionOpen_triggered()
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
     ui->actionClose->setEnabled(true);
+    infoDialog->updatePrjInfo(prjInfo);
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -101,6 +106,7 @@ void MainWindow::on_actionClose_triggered()
     emit clearScene();
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
+    infoDialog->clearPrjInfo();
 
     if (handler->isOpened())
         handler->closeDatabase();
@@ -121,6 +127,32 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
+
+void MainWindow::on_actionExportForm_triggered()
+{
+    my_word.createNewWord();
+
+
+
+
+
+    my_word.save();
+}
+
+
+
+void MainWindow::on_actionProjectInfo_triggered()
+{
+    infoDialog->exec();
+}
+
+
+
+
+
+
+
+
 void MainWindow::switchImage(quint16 index)
 {
     if (ui->defectWidget->hasAddedItem())
@@ -129,7 +161,7 @@ void MainWindow::switchImage(quint16 index)
         button = QMessageBox::question(this, tr("Unsave items"), tr("You have unsaved items, switching index will discard theses changes!"), QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
         if (button == QMessageBox::Cancel)
         {
-
+            ui->imageWidget->cancelSwitch();
             return;
         }
 
@@ -204,3 +236,6 @@ void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
         resetActions();
     }
 }
+
+
+

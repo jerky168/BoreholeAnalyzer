@@ -73,13 +73,14 @@
     </widget>
     <widget class="QMenu" name="menuExport">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>导出</string>
      </property>
      <addaction name="actionExportImage"/>
      <addaction name="actionExportForm"/>
+     <addaction name="actionExportExcel"/>
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
@@ -177,6 +178,7 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionExportForm"/>
+   <addaction name="actionExportExcel"/>
    <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="actionUndo"/>
@@ -665,6 +667,11 @@
    </property>
    <property name="text">
     <string>十字光标</string>
+   </property>
+  </action>
+  <action name="actionExportExcel">
+   <property name="text">
+    <string>导出表格</string>
    </property>
   </action>
  </widget>

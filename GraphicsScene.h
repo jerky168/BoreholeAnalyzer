@@ -20,10 +20,9 @@
 #include "GraphicsOccurance.h"
 
 
-
-#define Border          120
-#define Interval        10
-#define Segment         25
+#define Border          150
+#define Interval        30
+#define Segment         30
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -43,6 +42,8 @@ public:
 
     void itemFinished(QString content);
 
+    QPixmap getCurPixmap();
+
 
 public slots:
     void clearScene();
@@ -57,19 +58,17 @@ private:
     static Mode curMode;
     static qreal ratio;
 
+    bool showInfo;
     QRectF pixmapRect;
     qreal pixmap_start, pixmap_end;
 
     QGraphicsItem *item;
 
-    bool showInfo;
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode); 
     void showStatus(QString message, int timeout);
-
     void showRealInfo(QString info);
-
 
     void itemInserted(QGraphicsItem *item, QUuid uuid);
 };

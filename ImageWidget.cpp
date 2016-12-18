@@ -1,4 +1,4 @@
-#include "imagewidget.h"
+#include "ImageWidget.h"
 #include "ui_imagewidget.h"
 
 ImageWidget::ImageWidget(QWidget *parent) :
@@ -19,18 +19,17 @@ ImageWidget::~ImageWidget()
 
 void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
 {
-    maxIndex = prjInfo.endHeight / 10000;
+    maxIndex = prjInfo.endHeight;
     index = 0;
     emit sigSwitchImage(index);
 
-    ui->startHeightEdit->setText(QString::number(prjInfo.startHeight / 10000.0).append("m"));
-    ui->endHeightEdit->setText(QString::number(prjInfo.endHeight / 10000.0).append("m"));
+    ui->startHeightEdit->setText(QString::number(prjInfo.startHeight, 'f', 3).append("m"));
+    ui->endHeightEdit->setText(QString::number(prjInfo.endHeight, 'f', 3).append("m"));
     ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
     ui->currentPartEdit->setText(QString::number(index+1));
-    ui->totalLengthEdit->setText(QString::number((prjInfo.endHeight - prjInfo.startHeight) / 10000.0).append("m"));
+    ui->totalLengthEdit->setText(QString::number(prjInfo.endHeight - prjInfo.startHeight, 'f', 3).append("m"));
     ui->totalPartEdit->setText(QString::number(maxIndex+1));
 }
-
 
 void ImageWidget::clear()
 {
@@ -49,6 +48,14 @@ quint16 ImageWidget::getIndex()
 {
     return index;
 }
+
+
+
+quint16 ImageWidget::getMaxIndex()
+{
+    return maxIndex;
+}
+
 
 void ImageWidget::cancelSwitch()
 {
@@ -87,7 +94,7 @@ void ImageWidget::on_switchButton_clicked()
 
     lastIndex = index;
     index = ui->switchEdit->text().toInt(&ok) - 1;
-    if (ok)
+    if (ok && index > 0 && index <= maxIndex)
     {
         emit sigSwitchImage(index);
         ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
