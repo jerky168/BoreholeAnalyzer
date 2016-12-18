@@ -16,7 +16,7 @@ GraphicsScene::GraphicsScene(QObject *parent) :
     pixmapRect(QRectF()),
     pixmap_start(0.0),
     pixmap_end(0.0),
-    showInfo(true)
+    showInfo(false)
 {
 
 }
@@ -53,6 +53,8 @@ void GraphicsScene::clearScene()
 
 void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items)
 {
+    showInfo = true;
+
     clearScene();
 
     ratio = (qreal)(pixmap.height()) / (end - start);
@@ -89,6 +91,14 @@ void GraphicsScene::itemFinished(QString content)
 
     emit itemInserted(item, QUuid::createUuid());
 }
+
+
+QPixmap GraphicsScene::getCurPixmap()
+{
+    QPixmap pixmap;
+    return QPixmap();
+}
+
 
 
 
@@ -228,7 +238,7 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         line.setLine(x, y , x + Segment, y);
         lines << line;
 
-        painter->drawText(QPointF(x + Interval, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+        painter->drawText(QPointF(x + Interval / 2, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
     }
 
     for (int i = 0; i < 5; i++)
@@ -241,19 +251,19 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         switch(i)
         {
             case 0:
-                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "N");
                 break;
             case 1:
-                painter->drawText(QPointF(x+Segment, y + 2*Segment), "E");
+                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "E");
                 break;
             case 2:
-                painter->drawText(QPointF(x+Segment, y + 2*Segment), "S");
+                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "S");
                 break;
             case 3:
-                painter->drawText(QPointF(x+Segment, y + 2*Segment), "W");
+                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "W");
                 break;
             case 4:
-                painter->drawText(QPointF(x+Segment, y + 2*Segment), "N");
+                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "N");
                 break;
             default:
                 break;

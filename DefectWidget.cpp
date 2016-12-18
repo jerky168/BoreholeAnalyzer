@@ -1,4 +1,4 @@
-#include "defectwidget.h"
+#include "DefectWidget.h"
 #include "ui_defectwidget.h"
 
 DefectWidget::DefectWidget(QWidget *parent) :
@@ -6,6 +6,7 @@ DefectWidget::DefectWidget(QWidget *parent) :
     ui(new Ui::DefectWidget)
 {
     ui->setupUi(this);
+
 
     addedItems.clear();
     saveItems.clear();
@@ -15,7 +16,6 @@ DefectWidget::~DefectWidget()
 {
     delete ui;
 }
-
 
 
 bool DefectWidget::hasAddedItem()
@@ -40,11 +40,6 @@ void DefectWidget::showRealInfo(QString info)
     ui->realInfoEdit->setText(info);
 }
 
-
-void DefectWidget::on_clearButton_clicked()
-{
-    ui->descipEdit->clear();
-}
 
 void DefectWidget::itemInserted(QGraphicsItem *item, QUuid uuid)
 {
