@@ -80,7 +80,7 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
 
     // 当item添加之后
-    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem*,QUuid)), ui->defectWidget, SLOT(itemInserted(QGraphicsItem*,QUuid)));
+    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem *, QUuid)), ui->defectWidget, SLOT(itemInserted(QGraphicsItem *, QUuid)));
 
 }
 
@@ -165,14 +165,60 @@ void MainWindow::on_actionExportWord_triggered()
 }
 
 
+void MainWindow::on_actionExportExcel_triggered()
+
+{
+    QString xlsFile = "/";                            //默认路径
+    bool isExcelOpen = my_excel.Open(xlsFile, 1, true);
+
+    QVector<DefectWidget::ItemData>     currItemsData;//当前页面数据
+
+    quint16                             currIndex = 0;//当前页面位置
+    quint16                               currdataNum;//当前页第几个数据
+    quint16                          aggregateNum = 1;//数据总数
+    quint16                                   dataNum;//当前数据个数
+    quint16                                    rowNum;//当前写入数据行数
+    QString                                  intToStr;//转换int为QString
+    if ( isExcelOpen )
+    {
+        //初始化表头和显示数据
+        my_excel.setCellString(1,1,"当前所有数据的Excel报表");
+        my_excel.mergeCells(1,1,4,4);
+
+        my_excel.setCellString(5, 1, "页数");
+        my_excel.setCellString(5, 2, "类型");
+        my_excel.setCellString(5, 3, "数据");
+        my_excel.setCellString(5, 4, "uuid");
+
+        while( currIndex < ImageWidget::maxIndex )
+        {
+            currItemsData = handler->getIndexData(currIndex).items;
+            for (dataNum = 0, currdataNum = 0; dataNum < currItemsData.count(); dataNum++,currdataNum++ )
+            {
+                rowNum = 5 + aggregateNum + currdataNum;
+
+                my_excel.setCellString(rowNum, 1, intToStr.setNum(currIndex + 1));
+                my_excel.setCellString(rowNum, 2, intToStr.setNum(currItemsData.at(dataNum).item->type()));
+                my_excel.setCellString(rowNum, 3, my_excel.GetExcelData(currItemsData.at(dataNum).item));
+                my_excel.setCellString(rowNum, 4, currItemsData.at(dataNum).uuid.toString());
+            }
+            aggregateNum += currdataNum;
+            currIndex++;
+        }
+        my_excel.setRowColumnAuto();
+        my_excel.Close();
+    }
+    else
+    {
+        qDebug("open failed\n");
+    }
+
+}
+
 void MainWindow::on_actionProjectInfo_triggered()
 {
     infoDialog->exec();
 }
-
-
-
-
 
 
 void MainWindow::switchImage(quint16 index)
@@ -191,7 +237,7 @@ void MainWindow::switchImage(quint16 index)
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
     ui->defectWidget->updateItems(indexData.items);
-    scene->updateIndexData(indexData.image.pixmap, (qreal)(indexData.image.start) / 10000, (qreal)(indexData.image.end) / 10000, indexData.items);
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.items);
 }
 
 

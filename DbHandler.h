@@ -54,8 +54,8 @@ public:
 
 
     typedef struct {
-        quint32 start;
-        quint32 end;
+        qreal start;
+        qreal end;
         QPixmap pixmap;
     }BigImage;
 
