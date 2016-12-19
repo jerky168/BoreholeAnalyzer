@@ -1,9 +1,13 @@
 #include "qexcel.h"
-
+#include "qword.h"
+#include "DbHandler.h"
 #include "qt_windows.h"
-
+#include "mainwindow.h"
+#include "QFileDialog.h"
+#include "ImageWidget.h"
 QExcel::QExcel(QObject *parent) :
     QObject(parent)
+
 {
     pExcel     = NULL;
     pWorkbooks = NULL;
@@ -70,84 +74,93 @@ QExcel::~QExcel()
   */
 bool QExcel::Open(quint32 nSheet, bool visible)
 {
-//    if ( bIsOpen )
-//    {
-//        //return bIsOpen;
-//        Close();
-//    }
+    if ( bIsOpen )
+    {
+        //return bIsOpen;
 
-//    nCurrSheet = nSheet;
-//    bIsVisible = visible;
+        Close();
+    }
 
-//    if ( NULL == pExcel )
-//    {
-//        pExcel = new QAxObject("Excel.Application");
-//        if ( pExcel )
-//        {
-//            bIsValid = true;
-//        }
-//        else
-//        {
-//            bIsValid = false;
-//            bIsOpen  = false;
-//            return bIsOpen;
-//        }
+    nCurrSheet = nSheet;
+    bIsVisible = visible;
 
-//        pExcel->dynamicCall("SetVisible(bool)", bIsVisible);
-//    }
+    if ( NULL == pExcel)
+    {
 
-//    if ( !bIsValid )
-//    {
-//        bIsOpen  = false;
-//        return bIsOpen;
-//    }
+        pExcel = new QAxObject("Excel.Application");
+        if ( pExcel )
+        {
+            bIsValid = true;
 
-//    if ( sXlsFile.isEmpty() )
-//    {
-//        bIsOpen  = false;
-//        return bIsOpen;
-//    }
+        }
+        else
+        {
+            bIsValid = false;
+            bIsOpen  = false;
+            return bIsOpen;
+        }
 
-//    /*如果指向的文件不存在，则需要新建一个*/
-//    QFile f(sXlsFile);
-//    if (!f.exists())
-//    {
-//        bIsANewFile = true;
-//    }
-//    else
-//    {
-//        bIsANewFile = false;
-//    }
+        pExcel->dynamicCall("SetVisible(bool)", bIsVisible);
+    }
 
-//    if (!bIsANewFile)
-//    {
-//        pWorkbooks = pExcel->querySubObject("WorkBooks"); //获取工作簿
-//        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //打开xls对应的工作簿
-//    }
-//    else
-//    {
-//        pWorkbooks = pExcel->querySubObject("WorkBooks");     //获取工作簿
-//        pWorkbooks->dynamicCall("Add");                       //添加一个新的工作薄
-//        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //新建一个xls
-//    }
 
-//    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//打开第一个sheet
+    if ( !bIsValid )
+    {
 
-//    //至此已打开，开始获取相应属性
-//    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//获取该sheet的使用范围对象
-//    QAxObject *rows = usedrange->querySubObject("Rows");
-//    QAxObject *columns = usedrange->querySubObject("Columns");
+        bIsOpen = false;
+        return bIsOpen;
+    }
 
-//    //因为excel可以从任意行列填数据而不一定是从0,0开始，因此要获取首行列下标
-//    nStartRow    = usedrange->property("Row").toInt();    //第一行的起始位置
-//    nStartColumn = usedrange->property("Column").toInt(); //第一列的起始位置
+    if ( sXlsFile.isEmpty() )
+    {
 
-//    nRowCount    = rows->property("Count").toInt();       //获取行数
-//    nColumnCount = columns->property("Count").toInt();    //获取列数
+        bIsOpen = false;
+        return bIsOpen;
+    }
 
-//    bIsOpen  = true;
-//    return bIsOpen;
-    return true;
+    //    如果指向的文件不存在，则需要新建一个
+    QFile f( sXlsFile + " " );
+
+    if ( !f.exists() )
+    {
+        bIsANewFile = true;
+    }
+    else
+    {
+        qDebug("bug");
+        bIsANewFile = false;
+    }
+
+    if ( !bIsANewFile )
+    {
+        qDebug("old");
+        pWorkbooks = pExcel->querySubObject("WorkBooks"); //获取工作簿
+        pWorkbook = pWorkbooks->querySubObject("Open(QString, QVariant)",sXlsFile,QVariant(0)); //打开xls对应的工作簿
+    }
+    else
+    {
+        pWorkbooks = pExcel->querySubObject("WorkBooks");     //获取工作簿
+        pWorkbooks->dynamicCall("Add");                       //添加一个新的工作薄
+        pWorkbook  = pExcel->querySubObject("ActiveWorkBook"); //新建一个xls
+    }
+
+    pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//打开第一个sheet
+
+    //至此已打开，开始获取相应属性
+    QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//获取该sheet的使用范围对象
+    QAxObject *rows = usedrange->querySubObject("Rows");
+    QAxObject *columns = usedrange->querySubObject("Columns");
+
+    //因为excel可以从任意行列填数据而不一定是从0,0开始，因此要获取首行列下标
+    nStartRow    = usedrange->property("Row").toInt();    //第一行的起始位置
+    nStartColumn = usedrange->property("Column").toInt(); //第一列的起始位置
+
+    nRowCount    = rows->property("Count").toInt();       //获取行数
+    nColumnCount = columns->property("Count").toInt();    //获取列数
+
+    bIsOpen  = true;
+    return bIsOpen;
+
 }
 
 
@@ -184,7 +197,7 @@ void QExcel::Save()
         else /*如果该文档是新建出来的，则使用另存为COM接口*/
         {
             pWorkbook->dynamicCall("SaveAs (const QString&,int,const QString&,const QString&,bool,bool)",
-                sXlsFile,56,QString(""),QString(""),false,false);
+                                   sXlsFile,56,QString(""),QString(""),false,false);
 
         }
 
@@ -279,6 +292,16 @@ void QExcel::setRowHeight(int row, int height)
     r->setProperty("RowHeight", height);
 }
 
+void QExcel::setRowColumnAuto()
+{
+    QAxObject *range = pWorksheet->querySubObject("UsedRange");
+    QAxObject *cells = range->querySubObject("Columns");
+    cells->dynamicCall("AutoFit");
+
+//    range->setProperty("VerticalAlignment", -4108);//垂直居中
+//    range->setProperty("HorizontalAlignment", -4108);//水平居中
+}
+
 /**
   *@brief 清空除报表之外的数据
   */
@@ -310,3 +333,63 @@ bool QExcel::IsValid()
 {
     return bIsValid;
 }
+/**
+  *@brief 为了不修改dbhandler在此添加一个获得data的函数
+  *@return 数据：dataStr
+  *
+  */
+QString QExcel::GetExcelData(QGraphicsItem *item){
+    QString dataStr;
+    switch (item->type())
+    {
+    case Angle:
+    {
+        GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+
+    case AnyShape:
+    {
+        GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+    case Ruler:
+    {
+        GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+    case Occurance:
+    {
+        GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+    case Rect:
+    {
+        GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+
+    case Text:
+    {
+        GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+        dataStr = i->getDataString();
+        break;
+    }
+
+    default:
+    {
+        break;
+    }
+    }
+    return dataStr;
+}
+
+
+
+
+

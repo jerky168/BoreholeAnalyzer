@@ -13,6 +13,7 @@
 #include "GraphicsScene.h"
 #include "DbHandler.h"
 #include "qword.h"
+#include "qexcel.h"
 #include "PrjInfoDialog.h"
 
 namespace Ui {
@@ -49,7 +50,7 @@ private slots:
     void on_actionCross_triggered();
 
     void on_actionExportForm_triggered();
-
+    void on_actionExportExcel_triggered();
     void on_actionProjectInfo_triggered();
 
 private:
@@ -60,8 +61,8 @@ private:
 
     PrjInfoDialog *infoDialog;
 
-    QWord my_word;
-
+    QWord   my_word;
+    QExcel my_excel;
     QActionGroup *actionGroup;
     QActionGroup *editActionGroup;
 
