@@ -97,8 +97,8 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
     query.first();
 
     BigImage bigImage;
-    bigImage.start = index*10000;
-    bigImage.end = query.value(0).toInt();
+    bigImage.start = index;
+    bigImage.end = (qreal)query.value(0).toInt() / 10000.0;
     QByteArray imgData = query.value(1).toByteArray();
     bigImage.pixmap.loadFromData(imgData);
 
@@ -186,6 +186,8 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
 {
     IndexData indexData;
     indexData.image = getBigImage(index);
+
+
 
     QSqlQuery query(database);
     query.prepare("SELECT uuid, type, data FROM items WHERE number = :number");

@@ -93,13 +93,19 @@ void GraphicsScene::itemFinished(QString content)
 }
 
 
-QPixmap GraphicsScene::getCurPixmap()
+QImage GraphicsScene::getSceneImage()
 {
-    QPixmap pixmap;
-    return QPixmap();
+    int width = this->sceneRect().width();
+    int height = this->sceneRect().height();
+
+
+    QImage image(width, height, QImage::Format_RGB32);
+    QPainter painter(&image);
+    this->render(&painter);
+
+
+    return image;
 }
-
-
 
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -272,3 +278,16 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawLines(lines);
 
 }
+
+
+
+QImage GraphicsScene::getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items)
+{
+    GraphicsScene *scene = new GraphicsScene;
+    scene->updateIndexData(pixmap, start, end, items);
+    QImage image = scene->getSceneImage();
+    delete scene;
+    return image;
+}
+
+

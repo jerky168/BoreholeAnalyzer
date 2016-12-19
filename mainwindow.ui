@@ -79,7 +79,7 @@
       <string>导出</string>
      </property>
      <addaction name="actionExportImage"/>
-     <addaction name="actionExportForm"/>
+     <addaction name="actionExportWord"/>
      <addaction name="actionExportExcel"/>
     </widget>
     <addaction name="actionOpen"/>
@@ -177,7 +177,8 @@
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
-   <addaction name="actionExportForm"/>
+   <addaction name="actionExportImage"/>
+   <addaction name="actionExportWord"/>
    <addaction name="actionExportExcel"/>
    <addaction name="actionPrint"/>
    <addaction name="separator"/>
@@ -576,13 +577,13 @@
     <string>导出图片</string>
    </property>
   </action>
-  <action name="actionExportForm">
+  <action name="actionExportWord">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/save-report.png</normaloff>:/res/images/save-report.png</iconset>
    </property>
    <property name="text">
-    <string>导出报表</string>
+    <string>导出报告</string>
    </property>
   </action>
   <action name="actionShift">

@@ -1,12 +1,16 @@
 #include "ImageWidget.h"
 #include "ui_imagewidget.h"
 
+
+quint16 ImageWidget::lastIndex = 0;
+quint16 ImageWidget::index = 0;
+quint16 ImageWidget::maxIndex = 0;
+
+
+
 ImageWidget::ImageWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ImageWidget),
-    lastIndex(0),
-    index(0),
-    maxIndex(0)
+    ui(new Ui::ImageWidget)
 {
     ui->setupUi(this);
 }
@@ -41,20 +45,6 @@ void ImageWidget::clear()
     ui->totalPartEdit->clear();
 }
 
-
-
-
-quint16 ImageWidget::getIndex()
-{
-    return index;
-}
-
-
-
-quint16 ImageWidget::getMaxIndex()
-{
-    return maxIndex;
-}
 
 
 void ImageWidget::cancelSwitch()

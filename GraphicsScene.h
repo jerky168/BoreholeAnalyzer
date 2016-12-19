@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
+#include <QImage>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
@@ -42,12 +43,15 @@ public:
 
     void itemFinished(QString content);
 
-    QPixmap getCurPixmap();
+    QImage getSceneImage();
+
+
+    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
 
 
 public slots:
     void clearScene();
-    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items);
+    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);

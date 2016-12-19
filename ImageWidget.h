@@ -18,9 +18,11 @@ public:
     void updatePrjInfo(DbHandler::PrjInfo prjInfo);
     void clear();
 
-    quint16 getIndex();
-    quint16 getMaxIndex();
+
     void cancelSwitch();
+
+
+    static quint16 lastIndex, index, maxIndex;
 
 private slots:
     void on_lastButton_clicked();
@@ -31,9 +33,6 @@ private slots:
 private:
     Ui::ImageWidget *ui;
 
-    quint16 lastIndex;
-    quint16 index;
-    quint16 maxIndex;
 
 
 signals:

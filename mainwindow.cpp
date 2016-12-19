@@ -113,7 +113,6 @@ void MainWindow::on_actionClose_triggered()
 }
 
 
-
 void MainWindow::on_actionSave_triggered()
 {
     if (ui->defectWidget->hasAddedItem())
@@ -121,32 +120,55 @@ void MainWindow::on_actionSave_triggered()
         QVector<DefectWidget::ItemData> items = ui->defectWidget->getAddedItems();
         for (int i = 0; i < items.count(); i++)
         {
-            handler->saveItem(ui->imageWidget->getIndex(), items.at(i).uuid, items.at(i).item);
+            handler->saveItem(ImageWidget::index, items.at(i).uuid, items.at(i).item);
         }
         ui->defectWidget->clearAddedItems();
     }
 }
 
 
-void MainWindow::on_actionExportForm_triggered()
+void MainWindow::on_actionExportImage_triggered()
 {
-    my_word.createNewWord();
+    QString filename = QFileDialog::getSaveFileName(this, "get save file", QDir::homePath(), tr("Images (*.jpg)"));
+    DbHandler::IndexData data = handler->getIndexData(0);
+    QImage image = GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
+    image.save(filename, "JPG");
+}
 
 
+QImage MainWindow::getSceneImage(quint16 index)
+{
+    DbHandler::IndexData data = handler->getIndexData(index);
+    return GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
+}
 
 
+void MainWindow::on_actionExportWord_triggered()
+{
+    if (!my_word.createNewWord())
+    {
+        QMessageBox::warning(this, "erorr", "error");
+        return;
+    }
+
+    QImage image;
+    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+    {
+        image = getSceneImage(i);
+        QString filename = QDir::temp().filePath("temp.jpg");
+        image.save(filename, "JPG");
+        my_word.insertPic(filename);
+        my_word.insertMoveDown();
+    }
 
     my_word.save();
 }
-
 
 
 void MainWindow::on_actionProjectInfo_triggered()
 {
     infoDialog->exec();
 }
-
-
 
 
 
@@ -236,6 +258,7 @@ void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
         resetActions();
     }
 }
+
 
 
 

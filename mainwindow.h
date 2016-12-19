@@ -48,9 +48,11 @@ private slots:
     void on_actionTextbox_triggered();
     void on_actionCross_triggered();
 
-    void on_actionExportForm_triggered();
+    void on_actionExportWord_triggered();
 
     void on_actionProjectInfo_triggered();
+
+    void on_actionExportImage_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -75,6 +77,8 @@ private:
     void createConnections();
     void resetActions();
 
+
+    QImage getSceneImage(quint16 index);
 
 signals:
     void clearScene();
