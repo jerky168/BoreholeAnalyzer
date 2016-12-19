@@ -25,9 +25,10 @@ public:
     void mergeCells(int topLeftRow, int topLeftColumn, int bottomRightRow, int bottomRightColumn);
     void setColumnWidth(int column, int width);
     void setRowHeight(int row, int height);
-
+    void setRowColumnAuto();
     bool IsOpen();
     bool IsValid();
+    QString GetExcelData(QGraphicsItem *item);
 
 protected:
     void Clear();
