@@ -7,9 +7,6 @@
 #include <QUuid>
 #include <QVector>
 
-//#include "TreeModel.h"
-
-
 
 namespace Ui {
 class DefectWidget;

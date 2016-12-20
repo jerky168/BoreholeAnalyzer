@@ -165,8 +165,8 @@ void MainWindow::on_actionExportWord_triggered()
 }
 
 
-void MainWindow::on_actionExportExcel_triggered()
 
+void MainWindow::on_actionExportExcel_triggered()
 {
     QString xlsFile = "/";                            //默认路径
     bool isExcelOpen = my_excel.Open(xlsFile, 1, true);

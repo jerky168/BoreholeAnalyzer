@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT  += core gui sql opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,8 @@ SOURCES +=  main.cpp\
             GraphicsOccurance.cpp \
     DefectWidget.cpp \
     ImageWidget.cpp \
-    PrjInfoDialog.cpp
+    PrjInfoDialog.cpp \
+    logo.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
             type.h \
     DefectWidget.h \
     ImageWidget.h \
-    PrjInfoDialog.h
+    PrjInfoDialog.h \
+    logo.h
 
 
 FORMS    += mainwindow.ui \

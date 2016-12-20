@@ -13,9 +13,10 @@ qreal GraphicsScene::ratio = 1.0;
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent),
     item(Q_NULLPTR),
-    pixmapRect(QRectF()),
     pixmap_start(0.0),
     pixmap_end(0.0),
+    pixmap_width(0.0),
+    pixmap_height(0.0),
     showInfo(false)
 {
 
@@ -44,11 +45,11 @@ void GraphicsScene::clearScene()
 {
     clear();
     ratio = 0.0;
-    pixmapRect = QRectF();
     pixmap_start = 0.0;
     pixmap_end = 0.0;
+    pixmap_width = 0.0;
+    pixmap_height = 0.0;
 }
-
 
 
 void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData>items)
@@ -60,6 +61,8 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVec
     ratio = (qreal)(pixmap.height()) / (end - start);
     pixmap_start = start;
     pixmap_end = end;
+    pixmap_width = pixmap.width();
+    pixmap_height = pixmap.height();
 
     qreal realHeight = (qreal)pixmap.height() / (end - start);
 
@@ -72,7 +75,6 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVec
     {
         addItem(items.at(i).item);
     }
-
 
     this->update();
 }
@@ -98,11 +100,9 @@ QImage GraphicsScene::getSceneImage()
     int width = this->sceneRect().width();
     int height = this->sceneRect().height();
 
-
     QImage image(width, height, QImage::Format_RGB32);
     QPainter painter(&image);
     this->render(&painter);
-
 
     return image;
 }
@@ -191,9 +191,43 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     qreal y = mouseEvent->scenePos().y() - Border;
 
     qreal height = pixmap_start + y / ratio;
-    qreal degreed = 0;
+    qreal degree = 360 * x / pixmap_width;
 
-    QString message = QString("height: ") + QString::number(height, 'f', 3) + "m\t";
+    QString degree_str;
+    if (degree == 0)
+    {
+        degree_str = tr("North");
+    }
+    else if (degree > 0 && degree < 90)
+    {
+        degree_str = QString("North-northeast ") + QString::number(degree, 'f', 1) + " degrees";
+    }
+    else if (degree == 90)
+    {
+        degree_str = QString("East");
+    }
+    else if (degree > 90 && degree < 180)
+    {
+        degree_str = QString("South-southeast ") + QString::number(180 - degree, 'f', 1) + " degrees";
+    }
+    else if (degree == 180)
+    {
+        degree_str = QString("South");
+    }
+    else if (degree > 180 && degree < 270)
+    {
+        degree_str = QString("South-southwest ") + QString::number(degree - 180, 'f', 1) + " degrees";
+    }
+    else if (degree == 270)
+    {
+        degree_str = QString("West");
+    }
+    else if (degree > 270 && degree < 360)
+    {
+        degree_str = QString("North-northwest ") + QString::number(360 - degree, 'f', 1) + " degrees";
+    }
+
+    QString message = QString("Depth: ") + QString::number(height, 'f', 3) + "m\n" + degree_str;
 
     if (showInfo)
         emit showRealInfo(message);
@@ -278,7 +312,6 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawLines(lines);
 
 }
-
 
 
 QImage GraphicsScene::getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items)

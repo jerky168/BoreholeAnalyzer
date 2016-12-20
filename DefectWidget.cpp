@@ -8,6 +8,11 @@ DefectWidget::DefectWidget(QWidget *parent) :
     ui->setupUi(this);
 
 
+
+
+
+
+
     addedItems.clear();
     saveItems.clear();
 }

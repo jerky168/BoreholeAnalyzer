@@ -63,8 +63,8 @@ private:
     static qreal ratio;
 
     bool showInfo;
-    QRectF pixmapRect;
     qreal pixmap_start, pixmap_end;
+    qreal pixmap_width, pixmap_height;
 
     QGraphicsItem *item;
 

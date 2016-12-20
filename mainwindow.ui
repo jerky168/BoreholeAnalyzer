@@ -580,7 +580,7 @@
   <action name="actionExportWord">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/res/images/save-report.png</normaloff>:/res/images/save-report.png</iconset>
+     <normaloff>:/res/images/save-document.png</normaloff>:/res/images/save-document.png</iconset>
    </property>
    <property name="text">
     <string>导出报告</string>
@@ -671,6 +671,10 @@
    </property>
   </action>
   <action name="actionExportExcel">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-table.png</normaloff>:/res/images/save-table.png</iconset>
+   </property>
    <property name="text">
     <string>导出表格</string>
    </property>
