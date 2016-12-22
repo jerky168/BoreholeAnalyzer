@@ -7,6 +7,7 @@
 #include <QUuid>
 #include <QVector>
 
+#include <QStandardItemModel>
 
 namespace Ui {
 class DefectWidget;
@@ -40,14 +41,14 @@ public slots:
 private slots:
 
 
-
 private:
     Ui::DefectWidget *ui;
-
-
-
     QVector<ItemData> addedItems;
     QVector<ItemData> saveItems;
+
+    void initModel();
+    QStandardItemModel *model;
+
 
 signals:
 
