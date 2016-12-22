@@ -103,6 +103,33 @@ QImage GraphicsScene::getSceneImageFor3D()
     QImage image(pixmap_width, pixmap_height, QImage::Format_RGB32);
     QPainter painter(&image);
     render(&painter, image.rect(), QRectF(Border, Border, pixmap_width, pixmap_height));
+
+    QPen thisPen(Qt::yellow);
+    thisPen.setWidth(8);
+
+    painter.setPen(thisPen);
+    QFont font = GraphicsSettings::instance()->getFont();
+    font.setPointSize(40);
+    painter.setFont(font);
+
+    QVector<QLineF> lines;
+    QLineF line;
+
+    line.setLine(sceneRect().x() + Interval, 0, sceneRect().x() + Interval, pixmap_height);
+    lines << line;
+
+    for (int i = 0; i < 11; i++)
+    {
+        qreal x = sceneRect().x() + Interval;
+        qreal y = pixmap_height / 10 * i;
+        line.setLine(x, y , x + Segment, y);
+        lines << line;
+
+        painter.drawText(QPointF(x + Interval / 2, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+    }
+
+    painter.drawLines(lines);
+
     return image;
 }
 
