@@ -19,7 +19,6 @@ PRECOMPILED_HEADER = precompiled.h
 SOURCES +=  main.cpp\
             mainwindow.cpp \
             GraphicsView.cpp \
-            MyCommand.cpp \
             OpenGLWidget.cpp \
             GraphicsTextItem.cpp \
             DbHandler.cpp \
@@ -39,7 +38,6 @@ SOURCES +=  main.cpp\
 
 HEADERS  += mainwindow.h \
             GraphicsView.h \
-            MyCommand.h \
             OpenGLWidget.h \
             GraphicsTextItem.h \
             DbHandler.h \
