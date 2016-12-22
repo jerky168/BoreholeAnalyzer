@@ -84,8 +84,8 @@ RESOURCES += \
 win32 {
     QT += axcontainer
 
-    HEADERS += 3rd/QWord.h  3rd/QExcel.h
-    SOURCES += 3rd/QWord.cpp 3rd/QExcel.cpp
+    HEADERS += 3rd/qword.h  3rd/qexcel.h
+    SOURCES += 3rd/qword.cpp 3rd/qexcel.cpp
     INCLUDEPATH += 3rd
 
     LIBS += -lopengl32 -lglu32
@@ -93,7 +93,7 @@ win32 {
 }
 
 DISTFILES += \
-    doc/README.MD
+    ../doc/README.MD
 
 unix{
     LIBS += -lglut -lGLU
