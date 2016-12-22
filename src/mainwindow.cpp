@@ -7,16 +7,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
-    undosStack(new QUndoStack(this)),
     scene(new GraphicsScene(this)),
     actionGroup(new QActionGroup(this)),
     editActionGroup(new QActionGroup(this))
 {
     ui->setupUi(this);
 
+    createUI();
     createActionGroups();
     createSceneAndView();
     createConnections();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +27,13 @@ MainWindow::~MainWindow()
     delete handler;
     delete scene;
 }
+
+void MainWindow::createUI()
+{
+    ToolBar *toolbar = new ToolBar();
+    addToolBar(Qt::TopToolBarArea, toolbar);
+}
+
 
 // create action group
 void MainWindow::createActionGroups()
@@ -66,29 +75,29 @@ void MainWindow::createConnections()
     // 切换照片
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
-    // 更新照片
     QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
-
-    // 编辑模式改变
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), ui->graphicsView, SLOT(handleModeChanged(GraphicsScene::Mode)));
-
-    // 状态栏
     QObject::connect(scene, SIGNAL(showStatus(QString, int)), ui->statusBar, SLOT(showMessage(QString, int)));
-
-    // 实时信息
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
-
-    // 当item添加之后
     QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem *, QUuid)), ui->defectWidget, SLOT(itemInserted(QGraphicsItem *, QUuid)));
 
+
+    QObject::connect(this, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    on_actionClose_triggered();
+    QString filename = QFileDialog::getOpenFileName(this, "Open project file", QDir::homePath(), "Project file (*.ylink)");
+    if (filename.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        on_actionClose_triggered();
+    }
 
-    QString filename = QFileDialog::getOpenFileName(this, "打开工程文件", QDir::homePath(), "工程文件 (*.ylink)");
     if (!handler->openDatabase(filename))
         return;
 
@@ -134,12 +143,6 @@ void MainWindow::on_actionExportImage_triggered()
 }
 
 
-QImage MainWindow::getSceneImage(quint16 index)
-{
-    DbHandler::IndexData data = handler->getIndexData(index);
-    return GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
-}
-
 
 void MainWindow::on_actionExportWord_triggered()
 {
@@ -152,7 +155,7 @@ void MainWindow::on_actionExportWord_triggered()
     QImage image;
     for (int i = 0; i <= ImageWidget::maxIndex; i++)
     {
-        image = getSceneImage(i);
+        image = handler->getSceneImage(i);
         QString filename = QDir::temp().filePath("temp.jpg");
         image.save(filename, "JPG");
         my_word.insertPic(filename);
@@ -241,6 +244,7 @@ void MainWindow::switchImage(quint16 index)
     DbHandler::IndexData indexData = handler->getIndexData(index);
     ui->defectWidget->updateItems(indexData.items);
     scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.items);
+    emit update3DImage(scene->getSceneImageFor3D(), indexData.image.start, indexData.image.end);
 }
 
 
@@ -292,6 +296,27 @@ void MainWindow::on_actionCross_triggered()
 }
 
 
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutDialog *dialog = new AboutDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+void MainWindow::on_actionManual_triggered()
+{
+    ManualDialog *dialog = new ManualDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+void MainWindow::on_actionContact_triggered()
+{
+    ContactDialog *dialog = new ContactDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
 
 void MainWindow::resetActions()
 {
@@ -307,7 +332,5 @@ void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
         resetActions();
     }
 }
-
-
 
 

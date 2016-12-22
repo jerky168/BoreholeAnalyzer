@@ -106,21 +106,6 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
 }
 
 
-QVector<QPixmap> DbHandler::getSmallImage(quint32 start, quint32 end)
-{
-    QSqlQuery query(database);
-    query.prepare("select * from bigImages where id > ? and id <= ?");
-    query.bindValue(0, start);
-    query.bindValue(1, end);
-    query.exec();
-
-    while (!query.next())
-    {
-
-    }
-    return QVector<QPixmap>();
-}
-
 
 void DbHandler::saveItem(quint16 index, QUuid uuid, QGraphicsItem *item)
 {
@@ -187,8 +172,6 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
     IndexData indexData;
     indexData.image = getBigImage(index);
 
-
-
     QSqlQuery query(database);
     query.prepare("SELECT uuid, type, data FROM items WHERE number = :number");
     query.bindValue(":number", index);
@@ -253,7 +236,11 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
 }
 
 
-
+QImage DbHandler::getSceneImage(quint16 index)
+{
+    IndexData data = getIndexData(index);
+    return GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
+}
 
 
 

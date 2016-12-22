@@ -4,10 +4,6 @@
 GraphicsScene::Mode GraphicsScene::curMode = GraphicsScene::MoveItem;
 qreal GraphicsScene::ratio = 1.0;
 
-/* 本类负责item的管理和编辑模式的管理
- * item的管理：item的增删修改
- * 编辑模式的管理：根据鼠标在scene中的动作以及工具栏的action的动作 来决定模式的改变。
- * */
 
 /******************************** public functions **************************************/
 GraphicsScene::GraphicsScene(QObject *parent) :
@@ -70,15 +66,13 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QVec
     QGraphicsPixmapItem *pixmapItem = addPixmap(pixmap);
     pixmapItem->setPos(Border, Border);
 
-
     for (int i = 0; i < items.count(); i++)
     {
         addItem(items.at(i).item);
     }
 
-    this->update();
+    update();
 }
-
 
 
 
@@ -95,15 +89,20 @@ void GraphicsScene::itemFinished(QString content)
 }
 
 
+
 QImage GraphicsScene::getSceneImage()
 {
-    int width = this->sceneRect().width();
-    int height = this->sceneRect().height();
-
-    QImage image(width, height, QImage::Format_RGB32);
+    QImage image(sceneRect().width(), sceneRect().height(), QImage::Format_RGB32);
     QPainter painter(&image);
-    this->render(&painter);
+    render(&painter);
+    return image;
+}
 
+QImage GraphicsScene::getSceneImageFor3D()
+{
+    QImage image(pixmap_width, pixmap_height, QImage::Format_RGB32);
+    QPainter painter(&image);
+    render(&painter, image.rect(), QRectF(Border, Border, pixmap_width, pixmap_height));
     return image;
 }
 
@@ -190,7 +189,8 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     qreal x = mouseEvent->scenePos().x() - Border;
     qreal y = mouseEvent->scenePos().y() - Border;
 
-    qreal height = pixmap_start + y / ratio;
+    qreal width = x / ratio;
+    qreal depth = pixmap_start + y / ratio;
     qreal degree = 360 * x / pixmap_width;
 
     QString degree_str;
@@ -227,7 +227,9 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         degree_str = QString("North-northwest ") + QString::number(360 - degree, 'f', 1) + " degrees";
     }
 
-    QString message = QString("Depth: ") + QString::number(height, 'f', 3) + "m\n" + degree_str;
+    QString message = QString("Width: ") + QString::number(width, 'f', 3) + "m "
+                    + QString("Depth: ") + QString::number(depth, 'f', 3) + "m\n"
+                    + degree_str;
 
     if (showInfo)
         emit showRealInfo(message);
@@ -245,7 +247,6 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     if (items().isEmpty())
         return;
-
 
     QPointF topLeft = QPointF(sceneRect().x() + Border, sceneRect().y() + Border);
     QPointF bottomRight = QPointF(width() - Border, height() - Border);
@@ -281,6 +282,9 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         painter->drawText(QPointF(x + Interval / 2, y + 2 * Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
     }
 
+    font.setPointSize(60);
+    painter->setFont(font);
+
     for (int i = 0; i < 5; i++)
     {
         qreal x = Border + (width() - 2 * Border) / 4 * i;
@@ -291,19 +295,19 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         switch(i)
         {
             case 0:
-                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "N");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), "N");
                 break;
             case 1:
-                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "E");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), "E");
                 break;
             case 2:
-                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "S");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), "S");
                 break;
             case 3:
-                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "W");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), "W");
                 break;
             case 4:
-                painter->drawText(QPointF(x+Segment / 2, y + 2*Segment), "N");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), "N");
                 break;
             default:
                 break;

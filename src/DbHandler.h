@@ -9,12 +9,14 @@
 
 #include <QDebug>
 #include <QPixmap>
+#include <QImage>
 #include <QDateTime>
 #include <QVector>
 
 #include <QUuid>
 
 #include "type.h"
+#include "GraphicsScene.h"
 #include "GraphicsAngleItem.h"
 #include "GraphicsAnyshape.h"
 #include "GraphicsLineItem.h"
@@ -59,11 +61,6 @@ public:
         QPixmap pixmap;
     }BigImage;
 
-    typedef struct {
-        quint32 depth;
-        QPixmap pixmap;
-    }SmallImage;
-
 
     typedef struct {
         BigImage image;
@@ -87,15 +84,14 @@ public:
 
     ErrorCode lastError() { return errorCode; }
 
-
     PrjInfo getPrjInfo();
     BigImage getBigImage(quint16 index);
-    QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
 
     void saveItem(quint16 index, QUuid uuid, QGraphicsItem *item);
-    IndexData getIndexData(quint16 index);
 
+    IndexData getIndexData(quint16 index);
+    QImage getSceneImage(quint16 index);
 
 
 private:

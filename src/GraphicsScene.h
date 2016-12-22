@@ -44,7 +44,7 @@ public:
     void itemFinished(QString content);
 
     QImage getSceneImage();
-
+    QImage getSceneImageFor3D();
 
     static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
 
