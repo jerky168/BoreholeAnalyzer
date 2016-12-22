@@ -14,7 +14,6 @@
 #include "DbHandler.h"
 #include "qword.h"
 #include "qexcel.h"
-#include "PrjInfoDialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -61,8 +60,6 @@ private:
     DbHandler *handler;
     QUndoStack *undosStack;
     GraphicsScene *scene;
-
-    PrjInfoDialog *infoDialog;
 
     QWord   my_word;
     QExcel my_excel;

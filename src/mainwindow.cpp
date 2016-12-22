@@ -1,13 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "PrjInfoDialog.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     undosStack(new QUndoStack(this)),
     scene(new GraphicsScene(this)),
-    infoDialog(new PrjInfoDialog(this)),
     actionGroup(new QActionGroup(this)),
     editActionGroup(new QActionGroup(this))
 {
@@ -23,7 +24,6 @@ MainWindow::~MainWindow()
     delete ui;
     delete handler;
     delete scene;
-    delete infoDialog;
 }
 
 // create action group
@@ -98,7 +98,6 @@ void MainWindow::on_actionOpen_triggered()
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
     ui->actionClose->setEnabled(true);
-    infoDialog->updatePrjInfo(prjInfo);
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -106,7 +105,6 @@ void MainWindow::on_actionClose_triggered()
     emit clearScene();
     ui->imageWidget->clear();
     ui->actionClose->setEnabled(false);
-    infoDialog->clearPrjInfo();
 
     if (handler->isOpened())
         handler->closeDatabase();
@@ -217,7 +215,12 @@ void MainWindow::on_actionExportExcel_triggered()
 
 void MainWindow::on_actionProjectInfo_triggered()
 {
-    infoDialog->exec();
+    PrjInfoDialog infoDialog;
+
+    //TODO: initial the project info dialog
+//    infoDialog.updatePrjInfo(prjInfo);
+
+    infoDialog.exec();
 }
 
 
