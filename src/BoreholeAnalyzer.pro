@@ -49,7 +49,7 @@ HEADERS  += mainwindow.h \
             items/GraphicsRectItem.h \
             items/GraphicsAnyshape.h \
             items/GraphicsOccurance.h \
-            type.h \
+            items/type.h \
     DefectWidget.h \
     ImageWidget.h \
     PrjInfoDialog.h \
