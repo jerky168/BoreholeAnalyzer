@@ -20,16 +20,16 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             GraphicsView.cpp \
             OpenGLWidget.cpp \
-            GraphicsTextItem.cpp \
+            items/GraphicsTextItem.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
             TextDialog.cpp \
-            GraphicsLineItem.cpp \
+            items/GraphicsLineItem.cpp \
             GraphicsSettings.cpp \
-            GraphicsAngleItem.cpp \
-            GraphicsRectItem.cpp \
-            GraphicsAnyshape.cpp \
-            GraphicsOccurance.cpp \
+            items/GraphicsAngleItem.cpp \
+            items/GraphicsRectItem.cpp \
+            items/GraphicsAnyshape.cpp \
+            items/GraphicsOccurance.cpp \
     DefectWidget.cpp \
     ImageWidget.cpp \
     PrjInfoDialog.cpp \
@@ -39,22 +39,23 @@ SOURCES +=  main.cpp\
 HEADERS  += mainwindow.h \
             GraphicsView.h \
             OpenGLWidget.h \
-            GraphicsTextItem.h \
+            items/GraphicsTextItem.h \
             DbHandler.h \
             GraphicsScene.h \
             TextDialog.h \
-            GraphicsLineItem.h \
+            items/GraphicsLineItem.h \
             GraphicsSettings.h \
-            GraphicsAngleItem.h \
-            GraphicsRectItem.h \
-            GraphicsAnyshape.h \
-            GraphicsOccurance.h \
+            items/GraphicsAngleItem.h \
+            items/GraphicsRectItem.h \
+            items/GraphicsAnyshape.h \
+            items/GraphicsOccurance.h \
             type.h \
     DefectWidget.h \
     ImageWidget.h \
     PrjInfoDialog.h \
     logo.h
 
+INCLUDEPATH += items
 
 FORMS    += mainwindow.ui \
             imagewidget.ui \
