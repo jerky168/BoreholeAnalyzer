@@ -67,8 +67,9 @@ RESOURCES += \
 win32 {
     QT += axcontainer
 
-    HEADERS += qword.h  qexcel.h
-    SOURCES += qword.cpp qexcel.cpp
+    HEADERS += 3rd/qword.h  3rd/qexcel.h
+    SOURCES += 3rd/qword.cpp 3rd/qexcel.cpp
+    INCLUDEPATH += 3rd
 }
 
 DISTFILES += \
