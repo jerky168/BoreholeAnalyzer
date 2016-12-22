@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>944</width>
-    <height>556</height>
+    <width>1144</width>
+    <height>735</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,9 +42,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page3d">
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout" name="layout3D">
         <item>
-         <widget class="OpenGLWidget" name="openGLWidget"/>
+         <widget class="RollWidget" name="widget3D" native="true"/>
         </item>
        </layout>
       </widget>
@@ -57,7 +57,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>944</width>
+     <width>1144</width>
      <height>23</height>
     </rect>
    </property>
@@ -160,8 +160,14 @@
    <property name="windowTitle">
     <string>工具栏</string>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
    <property name="movable">
     <bool>false</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="iconSize">
     <size>
@@ -199,7 +205,6 @@
    <addaction name="actionRightSpin"/>
    <addaction name="actionAutoLeftSpin"/>
    <addaction name="actionAutoRightSpin"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetImage">
@@ -700,9 +705,10 @@
    <header>GraphicsView.h</header>
   </customwidget>
   <customwidget>
-   <class>OpenGLWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header>OpenGLWidget.h</header>
+   <class>RollWidget</class>
+   <extends>QWidget</extends>
+   <header>RollWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

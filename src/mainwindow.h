@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QFileDialog>
@@ -10,10 +9,18 @@
 #include <QActionGroup>
 #include <QMessageBox>
 
+#include "ToolBar.h"
+
 #include "GraphicsScene.h"
 #include "DbHandler.h"
-#include "qword.h"
-#include "qexcel.h"
+#include "QWord.h"
+#include "QExcel.h"
+#include "PrjInfoDialog.h"
+#include "AboutDialog.h"
+#include "ManualDialog.h"
+#include "ContactDialog.h"
+
+#include "RollWidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,9 +30,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = Q_NULLPTR);
     ~MainWindow();
 
 public slots:
@@ -53,37 +59,39 @@ private slots:
     void on_actionExportExcel_triggered();
     void on_actionProjectInfo_triggered();
 
+    void on_actionAbout_triggered();
 
+    void on_actionManual_triggered();
+
+    void on_actionContact_triggered();
 
 private:
     Ui::MainWindow *ui;
     DbHandler *handler;
-    QUndoStack *undosStack;
     GraphicsScene *scene;
 
-    QWord   my_word;
-    QExcel my_excel;
+    ToolBar *toolbar;
+    PrjInfoDialog *infoDialog;
+
     QActionGroup *actionGroup;
     QActionGroup *editActionGroup;
 
-    typedef enum{
-        IDLE,
-        Opened
-    }AppStatus;
+    QWord my_word;
+    QExcel my_excel;
 
+
+
+    void createUI();
     void createActionGroups();
     void createSceneAndView();
     void createConnections();
     void resetActions();
 
-
-    QImage getSceneImage(quint16 index);
-
 signals:
     void clearScene();
 
+    void update3DImage(QImage image, qreal start, qreal end);
 
 
 };
 
-#endif // MAINWINDOW_H

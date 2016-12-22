@@ -24,7 +24,7 @@ echo -- Added %QT_DIR%\bin;%QT_INSTALLER_DIR%\bin; to PATH
 
 call %VS_DIR%\VC\vcvarsall.bat x86
 
-set SRC=%cd%\..
+set SRC=%cd%\..\src
 echo --SRC set to %SRC%
 
 set CURRENT_TIME="%date:~0,4%-%date:~5,2%-%date:~8,2% %time:~0,2%.%time:~3,2%.%time:~6,2%"
@@ -32,7 +32,7 @@ echo --CURRENT_TIME set to %CURRENT_TIME%
 mkdir BoreHoleAnalyzer_%CURRENT_TIME%
 cd BoreHoleAnalyzer_%CURRENT_TIME%
 
-xcopy %SRC%\dist .\dist /e /i
+xcopy %SRC%\..\dist .\dist /e /i
 
 
 qmake %SRC%\BoreholeAnalyzer.pro
