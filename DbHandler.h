@@ -12,6 +12,19 @@
 #include <QDateTime>
 #include <QVector>
 
+#include <QUuid>
+
+#include "type.h"
+#include "GraphicsAngleItem.h"
+#include "GraphicsAnyshape.h"
+#include "GraphicsLineItem.h"
+#include "GraphicsRectItem.h"
+#include "GraphicsTextItem.h"
+#include "GraphicsOccurance.h"
+
+#include "DefectWidget.h"
+
+
 class DbHandler : public QObject
 {
     Q_OBJECT
@@ -22,8 +35,8 @@ public:
 
     typedef struct PrjInfo{
         bool isUp2Down;
-        quint32 startHeight;
-        quint32 endHeight;
+        qreal startHeight;
+        qreal endHeight;
         quint32 diameter;
         QString projectName;
         QDateTime projectTime;
@@ -32,16 +45,17 @@ public:
         PrjInfo()
         {
             isUp2Down = false;
-            startHeight = 0;
-            endHeight = 0;
+            startHeight = 0.0;
+            endHeight = 0.0;
             diameter = 0;
         }
 
     }PrjInfo;
 
+
     typedef struct {
-        quint32 start;
-        quint32 end;
+        qreal start;
+        qreal end;
         QPixmap pixmap;
     }BigImage;
 
@@ -49,6 +63,13 @@ public:
         quint32 depth;
         QPixmap pixmap;
     }SmallImage;
+
+
+    typedef struct {
+        BigImage image;
+        QVector<DefectWidget::ItemData> items;
+    }IndexData;
+
 
     typedef enum {
         NoError,
@@ -59,7 +80,6 @@ public:
     }ErrorCode;
 
 
-
     bool openDatabase(QString filepath);
     void closeDatabase();
     bool isOpened();
@@ -67,24 +87,21 @@ public:
 
     ErrorCode lastError() { return errorCode; }
 
-    // get project infomation
+
     PrjInfo getPrjInfo();
-
-    // get big images
     BigImage getBigImage(quint16 index);
-
-    // get small images
     QVector<QPixmap> getSmallImage(quint32 start, quint32 end);
 
 
+    void saveItem(quint16 index, QUuid uuid, QGraphicsItem *item);
+    IndexData getIndexData(quint16 index);
 
-signals:
 
-public slots:
 
 private:
     QSqlDatabase database;
     ErrorCode errorCode;
+
 };
 
 #endif // DBHANDLER_H

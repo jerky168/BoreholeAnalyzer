@@ -1,7 +1,8 @@
 #include "GraphicsLineItem.h"
 
 GraphicsLineItem::GraphicsLineItem(const QLineF &line, QGraphicsItem *parent) :
-    QGraphicsLineItem(line, parent)
+    QGraphicsLineItem(line, parent),
+    hasDrawed(false)
 {
     setLine(line);
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
@@ -98,12 +99,18 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
         {
             case QEvent::GraphicsSceneMousePress:
             {
+                if (hasDrawed)
+                    return true;
+
                 GraphicsSettings::instance()->setIsDrawing(true);
                 break;
             }
 
             case QEvent::GraphicsSceneMouseMove:
             {
+                if (hasDrawed)
+                    return true;
+
                 QLineF newLine(this->line().p1(), e->scenePos());
                 setLine(newLine);
                 break;
@@ -111,18 +118,22 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
 
             case QEvent::GraphicsSceneMouseRelease:
             {
+                if (hasDrawed)
+                    return true;
+
                 double x1 = line().p1().x();
                 double x2 = line().p2().x();
                 double y1 = line().p1().y();
                 double y2 = line().p2().y();
                 double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
 
-                QGraphicsSimpleTextItem *textItem = scene()->addSimpleText(QString::number(dis*100/GraphicsScene::getRatio(), 'f', 2).append("cm"), QFont("Times", 40, QFont::Bold));
-                textItem->setParentItem(this);
-                textItem->setPos(x2+20, y2+20);
+                content = QString::number(dis*100/GraphicsScene::getRatio(), 'f', 2).append("cm");
 
                 GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-                scene->itemInserted();
+                scene->itemFinished(content);
+
+                loadFromString(getDataString());
+
 
                 GraphicsSettings::instance()->setIsDrawing(false);
                 break;
@@ -148,5 +159,36 @@ GraphicsLineItem::Data GraphicsLineItem::getData()
     data.points[0] = this->line().p1();
     data.points[1] = this->line().p2();
     return data;
+}
+
+
+QString GraphicsLineItem::getDataString()
+{
+    QString data;
+    data.append(QString::number(line().x1() - Border, 'f', 2));
+    data.append(",");
+    data.append(QString::number(line().y1() - Border, 'f', 2));
+    data.append(";");
+    data.append(QString::number(line().x2() - Border, 'f', 2));
+    data.append(",");
+    data.append(QString::number(line().y2() - Border, 'f', 2));
+
+    qDebug() << line();
+    return data;
+}
+
+GraphicsLineItem *GraphicsLineItem::loadFromString(QString data)
+{
+    QString pos1_str = data.section(';', 0, 0);
+    QString pos2_str = data.section(';', 1, 1);
+    QPointF pos1, pos2;
+    pos1.setX(pos1_str.section(',', 0, 0).toDouble() + Border);
+    pos1.setY(pos1_str.section(',', 1, 1).toDouble() + Border);
+    pos2.setX(pos2_str.section(',', 0, 0).toDouble() + Border);
+    pos2.setY(pos2_str.section(',', 1, 1).toDouble() + Border);
+
+    GraphicsLineItem *item = new GraphicsLineItem(QLineF(pos1, pos2));
+    qDebug() << item->line();
+    return item;
 }
 

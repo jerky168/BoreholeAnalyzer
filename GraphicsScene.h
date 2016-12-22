@@ -3,11 +3,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
+#include <QImage>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
+#include <QUuid>
 
-#include "DbHandler.h"
+
+#include "DefectWidget.h"
+
+#include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsAngleItem.h"
@@ -15,6 +20,10 @@
 #include "GraphicsAnyshape.h"
 #include "GraphicsOccurance.h"
 
+
+#define Border          150
+#define Interval        30
+#define Segment         30
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -32,12 +41,17 @@ public:
     static Mode getCurMode() {return curMode;}
     static double getRatio() {return ratio;}
 
-    void itemInserted();
+    void itemFinished(QString content);
+
+    QImage getSceneImage();
+
+
+    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
 
 
 public slots:
     void clearScene();
-    void updatePixmap(QPixmap pixmap, qreal start, qreal end);
+    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -46,18 +60,19 @@ protected:
 
 private:
     static Mode curMode;
-    static double ratio;
+    static qreal ratio;
 
-    QRectF pixmapRect;
+    bool showInfo;
     qreal pixmap_start, pixmap_end;
-
+    qreal pixmap_width, pixmap_height;
 
     QGraphicsItem *item;
-
 
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode); 
     void showStatus(QString message, int timeout);
+    void showRealInfo(QString info);
 
+    void itemInserted(QGraphicsItem *item, QUuid uuid);
 };

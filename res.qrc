@@ -8,7 +8,6 @@
         <file>res/images/corss-cursor.png</file>
         <file>res/images/2D.png</file>
         <file>res/images/3D.png</file>
-        <file>res/images/save-report.png</file>
         <file>res/images/left-spin.png</file>
         <file>res/images/right-spin.png</file>
         <file>res/images/zoom-in.png</file>
@@ -28,8 +27,14 @@
         <file>res/images/open.png</file>
         <file>res/images/save.png</file>
         <file>res/images/save-img.png</file>
-        <file>res/images/width.png</file>
-        <file>res/images/rectangle.PNG</file>
         <file>res/images/anyshape.PNG</file>
+        <file>res/images/rectangle.PNG</file>
+        <file>res/images/angle.PNG</file>
+        <file>res/images/width.png</file>
+        <file>res/images/swift.png</file>
+        <file>res/images/occurance.png</file>
+        <file>res/images/shift.png</file>
+        <file>res/images/save-document.png</file>
+        <file>res/images/save-table.png</file>
     </qresource>
 </RCC>

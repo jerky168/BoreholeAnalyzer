@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT  += core gui sql opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,45 +18,50 @@ PRECOMPILED_HEADER = precompiled.h
 
 SOURCES +=  main.cpp\
             mainwindow.cpp \
-            imagewidget.cpp \
             GraphicsView.cpp \
             MyCommand.cpp \
             OpenGLWidget.cpp \
             GraphicsTextItem.cpp \
             DbHandler.cpp \
             GraphicsScene.cpp \
-    TextDialog.cpp \
-    GraphicsLineItem.cpp \
-    GraphicsSettings.cpp \
-    GraphicsAngleItem.cpp \
-    GraphicsRectItem.cpp \
-    GraphicsAnyshape.cpp \
-    GraphicsOccurance.cpp \
-    DefectWidget.cpp
+            TextDialog.cpp \
+            GraphicsLineItem.cpp \
+            GraphicsSettings.cpp \
+            GraphicsAngleItem.cpp \
+            GraphicsRectItem.cpp \
+            GraphicsAnyshape.cpp \
+            GraphicsOccurance.cpp \
+    DefectWidget.cpp \
+    ImageWidget.cpp \
+    PrjInfoDialog.cpp \
+    logo.cpp
 
 
 HEADERS  += mainwindow.h \
-            imagewidget.h \
             GraphicsView.h \
             MyCommand.h \
             OpenGLWidget.h \
             GraphicsTextItem.h \
             DbHandler.h \
             GraphicsScene.h \
-    TextDialog.h \
-    GraphicsLineItem.h \
-    GraphicsSettings.h \
-    GraphicsAngleItem.h \
-    GraphicsRectItem.h \
-    GraphicsAnyshape.h \
-    GraphicsOccurance.h \
-    type.h \
-    DefectWidget.h
+            TextDialog.h \
+            GraphicsLineItem.h \
+            GraphicsSettings.h \
+            GraphicsAngleItem.h \
+            GraphicsRectItem.h \
+            GraphicsAnyshape.h \
+            GraphicsOccurance.h \
+            type.h \
+    DefectWidget.h \
+    ImageWidget.h \
+    PrjInfoDialog.h \
+    logo.h
 
 
 FORMS    += mainwindow.ui \
             imagewidget.ui \
-            defectwidget.ui
+            defectwidget.ui \
+    PrjInfoDialog.ui
 
 RESOURCES += \
     res.qrc

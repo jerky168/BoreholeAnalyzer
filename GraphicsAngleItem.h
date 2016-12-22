@@ -31,6 +31,13 @@ public:
         return Angle;
     }
     Data getData();
+    QString getContent() {return content;} 
+
+
+    QString getDataString();
+    static GraphicsAngleItem *loadFromString(QString data);
+
+    void setFinished() {secondPointFinished = true;}
 
 protected:
     bool sceneEvent(QEvent *event);
@@ -38,5 +45,7 @@ protected:
 private:
     QVector<QPointF> polygonPoints;
     bool secondPointFinished;
+
+    QString content;
 };
 

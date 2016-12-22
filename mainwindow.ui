@@ -73,13 +73,14 @@
     </widget>
     <widget class="QMenu" name="menuExport">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>导出</string>
      </property>
      <addaction name="actionExportImage"/>
-     <addaction name="actionExportForm"/>
+     <addaction name="actionExportWord"/>
+     <addaction name="actionExportExcel"/>
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
@@ -176,7 +177,9 @@
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
-   <addaction name="actionExportForm"/>
+   <addaction name="actionExportImage"/>
+   <addaction name="actionExportWord"/>
+   <addaction name="actionExportExcel"/>
    <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="actionUndo"/>
@@ -574,18 +577,22 @@
     <string>导出图片</string>
    </property>
   </action>
-  <action name="actionExportForm">
+  <action name="actionExportWord">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/res/images/save-report.png</normaloff>:/res/images/save-report.png</iconset>
+     <normaloff>:/res/images/save-document.png</normaloff>:/res/images/save-document.png</iconset>
    </property>
    <property name="text">
-    <string>导出报表</string>
+    <string>导出报告</string>
    </property>
   </action>
   <action name="actionShift">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/shift.png</normaloff>:/res/images/shift.png</iconset>
    </property>
    <property name="text">
     <string>方位偏移</string>
@@ -631,6 +638,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/occurance.png</normaloff>:/res/images/occurance.png</iconset>
+   </property>
    <property name="text">
     <string>产状</string>
    </property>
@@ -657,6 +668,15 @@
    </property>
    <property name="text">
     <string>十字光标</string>
+   </property>
+  </action>
+  <action name="actionExportExcel">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-table.png</normaloff>:/res/images/save-table.png</iconset>
+   </property>
+   <property name="text">
+    <string>导出表格</string>
    </property>
   </action>
  </widget>

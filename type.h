@@ -1,6 +1,6 @@
 #pragma once
 
-enum ItemType
+typedef enum
 {
     Angle,
     AnyShape,
@@ -8,4 +8,4 @@ enum ItemType
     Occurance,
     Rect,
     Text
-};
+}ItemType;

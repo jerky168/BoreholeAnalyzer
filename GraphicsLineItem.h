@@ -34,8 +34,14 @@ public:
     {
         return Ruler;
     }
-    Data getData();
 
+    Data getData();
+    QString getContent() {return content;}
+
+    QString getDataString();
+    static GraphicsLineItem *loadFromString(QString data);
+
+    void setFinished() {hasDrawed = true;}
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -43,6 +49,7 @@ protected:
     bool sceneEvent(QEvent *event);
 
 private:
-
+    bool hasDrawed;
+    QString content;
 
 };
