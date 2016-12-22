@@ -29,8 +29,6 @@ SOURCES +=  main.cpp\
             logo.cpp \
             ToolBar.cpp \
             AboutDialog.cpp \
-            ManualDialog.cpp \
-            ContactDialog.cpp \
             RollWidget.cpp \
             TextDialog.cpp \
             GraphicsScene.cpp \ 
@@ -53,8 +51,6 @@ HEADERS  += mainwindow.h \
             logo.h \
             ToolBar.h \
             AboutDialog.h \
-            ManualDialog.h \
-            ContactDialog.h \
             RollWidget.h \
             TextDialog.h \
             GraphicsScene.h \
@@ -74,9 +70,7 @@ FORMS    += mainwindow.ui \
             PrjInfoDialog.ui \
             DefectWidget.ui \
             ImageWidget.ui \
-            AboutDialog.ui \
-            ManualDialog.ui \
-            ContactDialog.ui
+            AboutDialog.ui
 
 RESOURCES += \
     res.qrc

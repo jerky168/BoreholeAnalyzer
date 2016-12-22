@@ -305,16 +305,11 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionManual_triggered()
 {
-    ManualDialog *dialog = new ManualDialog(this);
-    dialog->exec();
-    delete dialog;
 }
 
 void MainWindow::on_actionContact_triggered()
 {
-    ContactDialog *dialog = new ContactDialog(this);
-    dialog->exec();
-    delete dialog;
+
 }
 
 

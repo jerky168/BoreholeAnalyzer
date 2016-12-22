@@ -17,8 +17,6 @@
 #include "QExcel.h"
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
-#include "ManualDialog.h"
-#include "ContactDialog.h"
 
 #include "RollWidget.h"
 
