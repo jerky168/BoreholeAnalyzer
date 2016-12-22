@@ -71,8 +71,9 @@ private:
     ToolBar *toolbar;
     PrjInfoDialog *infoDialog;
 
-    QActionGroup *actionGroup;
-    QActionGroup *editActionGroup;
+    QActionGroup *actionGroupMode;  //2D, 3D模式切换
+    QActionGroup *actionGroup2D;    //2D模式下的操作
+    QActionGroup *actionGroup3D;    //3D模式下的操作
 
     QWord my_word;
     QExcel my_excel;

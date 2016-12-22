@@ -8,8 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
-    actionGroup(new QActionGroup(this)),
-    editActionGroup(new QActionGroup(this))
+    actionGroupMode(new QActionGroup(this)),
+    actionGroup2D(new QActionGroup(this)),
+    actionGroup3D(new QActionGroup(this))
 {
     ui->setupUi(this);
 
@@ -44,17 +45,24 @@ void MainWindow::createActionGroups()
     ui->menuView->addAction(ui->dockWidgetDefect->toggleViewAction());
 
     // make the 2D view and 3D view exclusive
-    actionGroup->addAction(ui->action2DView);
-    actionGroup->addAction(ui->action3DView);
+    actionGroupMode->addAction(ui->action2DView);
+    actionGroupMode->addAction(ui->action3DView);
 
     // make edit action exlusive
-    editActionGroup->addAction(ui->actionShift);
-    editActionGroup->addAction(ui->actionSlitWidth);
-    editActionGroup->addAction(ui->actionRectangle);
-    editActionGroup->addAction(ui->actionAnyShape);
-    editActionGroup->addAction(ui->actionOccurrence);
-    editActionGroup->addAction(ui->actionTextbox);
-    editActionGroup->addAction(ui->actionCross);
+    actionGroup2D->addAction(ui->actionShift);
+    actionGroup2D->addAction(ui->actionSlitWidth);
+    actionGroup2D->addAction(ui->actionRectangle);
+    actionGroup2D->addAction(ui->actionAnyShape);
+    actionGroup2D->addAction(ui->actionOccurrence);
+    actionGroup2D->addAction(ui->actionTextbox);
+    actionGroup2D->addAction(ui->actionCross);
+
+    // add all 3D action together
+    actionGroup3D->setExclusive(false);
+    actionGroup3D->addAction(ui->actionLeftSpin);
+    actionGroup3D->addAction(ui->actionRightSpin);
+    actionGroup3D->addAction(ui->actionAutoLeftSpin);
+    actionGroup3D->addAction(ui->actionAutoRightSpin);
 }
 
 
@@ -69,8 +77,14 @@ void MainWindow::createSceneAndView()
 void MainWindow::createConnections()
 {
     //switch 2D view and 3D view
-    QObject::connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
-    QObject::connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->action2DView, &QAction::triggered, actionGroup2D, &QActionGroup::setEnabled);
+    connect(ui->action2DView, &QAction::triggered, actionGroup3D, &QActionGroup::setDisabled);
+
+    connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->action3DView, &QAction::triggered, actionGroup2D, &QActionGroup::setDisabled);
+    connect(ui->action3DView, &QAction::triggered, actionGroup3D, &QActionGroup::setEnabled);
+
 
     // 切换照片
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
@@ -312,11 +326,10 @@ void MainWindow::on_actionContact_triggered()
 
 }
 
-
 void MainWindow::resetActions()
 {
-    for (quint8 i = 0; i < editActionGroup->actions().count(); i++)
-        editActionGroup->actions()[i]->setChecked(false);
+    for (quint8 i = 0; i < actionGroup2D->actions().count(); i++)
+        actionGroup2D->actions()[i]->setChecked(false);
 }
 
 
