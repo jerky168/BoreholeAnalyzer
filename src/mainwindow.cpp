@@ -63,6 +63,9 @@ void MainWindow::createActionGroups()
     actionGroup3D->addAction(ui->actionRightSpin);
     actionGroup3D->addAction(ui->actionAutoLeftSpin);
     actionGroup3D->addAction(ui->actionAutoRightSpin);
+
+    actionGroup2D->setEnabled(true);
+    actionGroup3D->setEnabled(false);
 }
 
 
