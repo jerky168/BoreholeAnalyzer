@@ -1,7 +1,8 @@
 #include "GraphicsOccurance.h"
 
 GraphicsOccurance::GraphicsOccurance(const QLineF &line, QGraphicsItem *parent) :
-    QGraphicsLineItem(line, parent)
+    QGraphicsLineItem(line, parent),
+    hasDrawed(false)
 {
     setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
 }
@@ -31,21 +32,25 @@ void GraphicsOccurance::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
 void GraphicsOccurance::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (hasDrawed)
-        return;
+    if (!hasDrawed)
+    {
+    	QLineF newLine(line().p1(), event->scenePos());
+	    setLine(newLine);
+	    return;
+    }
 
-    QLineF newLine(line().p1(), event->scenePos());
-    setLine(newLine);
+	    
 }
 
 void GraphicsOccurance::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (hasDrawed)
+    if (!hasDrawed)
+    {
+    	GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+	    scene->itemFinished(QString());
+	    hasDrawed = true;
         return;
-
-    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    scene->itemFinished(QString());
-    hasDrawed = true;
+    }
 }
 
 
@@ -70,7 +75,6 @@ QString GraphicsOccurance::getDataString()
     data.append(",");
     data.append(QString::number(line().y2() - Border, 'f', 2));
 
-    qDebug() << line();
     return data;
 }
 
@@ -85,7 +89,5 @@ GraphicsOccurance * GraphicsOccurance::loadFromString(QString data)
     pos2.setY(pos2_str.section(',', 1, 1).toDouble() + Border);
 
     GraphicsOccurance *item = new GraphicsOccurance(QLineF(pos1, pos2));
-    qDebug() << item->line();
     return item;
 }
-

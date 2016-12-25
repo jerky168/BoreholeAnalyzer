@@ -38,4 +38,3 @@ private:
     bool hasDrawed;
     QString content;
 };
-

@@ -11,7 +11,6 @@ GraphicsSettings* GraphicsSettings::instance()
     return GraphicsSettingInstance;
 }
 
-
 GraphicsSettings::~GraphicsSettings()
 {
     if (GraphicsSettingInstance != Q_NULLPTR)
@@ -21,12 +20,12 @@ GraphicsSettings::~GraphicsSettings()
     }
 }
 
-
 GraphicsSettings::GraphicsSettings() :
     penWidth(8),
     isDrawingFlag(false),
     penFont(QApplication::font()),
-    penColor(Qt::black)
+    penColor(Qt::black),
+    imageRatio(1.0)
 {
     penFont.setPointSize(30);
 }
@@ -50,3 +49,9 @@ void GraphicsSettings::setColor(QColor color)
 {
     penColor = color;
 }
+
+void GraphicsSettings::setRatio(qreal ratio)
+{
+    imageRatio = ratio;
+}
+

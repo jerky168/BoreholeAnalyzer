@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include <QStandardItemModel>
+#include "GraphicsScene.h"
 
 namespace Ui {
 class DefectWidget;
@@ -23,28 +24,13 @@ public:
     ~DefectWidget();
 
 
-    typedef struct {
-        QUuid uuid;
-        QGraphicsItem *item;
-    }ItemData;
-
-    bool hasAddedItem();
-    QVector<ItemData> getAddedItems();
-    void clearAddedItems();
-
-
 public slots:
     void showRealInfo(QString info);
-    void itemInserted(QGraphicsItem *item, QUuid uuid);
-    void updateItems(QVector<ItemData> items);
-
-private slots:
+    void updateTableData(QVector<GraphicsScene::TableData> tableDatas);
 
 
 private:
     Ui::DefectWidget *ui;
-    QVector<ItemData> addedItems;
-    QVector<ItemData> saveItems;
 
     void initModel();
     QStandardItemModel *model;

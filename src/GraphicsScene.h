@@ -8,9 +8,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
 #include <QUuid>
+#include <qmath.h>
 
+#include "GraphicsSettings.h"
 
-#include "DefectWidget.h"
 
 #include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
@@ -19,6 +20,10 @@
 #include "GraphicsRectItem.h"
 #include "GraphicsAnyshape.h"
 #include "GraphicsOccurance.h"
+
+#include "type.h"
+
+#include <QMap>
 
 
 #define Border          150
@@ -33,25 +38,46 @@ public:
     GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
+
+    typedef struct
+    {
+        QUuid uuid;
+        QGraphicsItem *item;
+    }ItemData;
+
+    typedef struct
+    {
+        QString type;
+        QString isSaved;
+        QString data;
+    }TableData;
+
+
     enum Mode {MoveItem, InsertLine, InsertRuler, InsertShift, InsertRectangle, InsertAnyShape, InsertOccurance, InsertTextBox, InsertCross};
 
     void setCurMode(Mode mode);
+    static Mode getCurMode();
 
-
-    static Mode getCurMode() {return curMode;}
-    static double getRatio() {return ratio;}
 
     void itemFinished(QString content);
 
     QImage getSceneImage();
     QImage getSceneImageFor3D();
 
-    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
+    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
 
+
+    QPointF scene2Real(QPointF scenePos);
+    QPointF real2Scene(QPointF realPos);
+
+
+    bool hasNewItem();
+    QMap<QString, QGraphicsItem *> getNewItems();
+    void saveNewItems();
 
 public slots:
     void clearScene();
-    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QVector<DefectWidget::ItemData> items);
+    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -59,9 +85,6 @@ protected:
     void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
-    static Mode curMode;
-    static qreal ratio;
-
     bool showInfo;
     qreal pixmap_start, pixmap_end;
     qreal pixmap_width, pixmap_height;
@@ -69,10 +92,23 @@ private:
     QGraphicsItem *item;
 
 
+    static Mode curMode;
+
+    QString getShowString(QGraphicsItem *item);
+    QString getAngleString(qreal angle);
+
+
+    QMap<QString, QGraphicsItem *> newItems, savedItems;
+    void addItemData(QUuid uuid, QGraphicsItem *item, bool saved = false);
+    void deleteItemData(QUuid uuid);
+    void clearItemData();
+
+    void updateTable();
+
 signals:
-    void modeChanged(GraphicsScene::Mode curMode); 
-    void showStatus(QString message, int timeout);
+    void modeChanged(GraphicsScene::Mode curMode);
+    void showStatus(QString message);
     void showRealInfo(QString info);
 
-    void itemInserted(QGraphicsItem *item, QUuid uuid);
+    void emitTableData(QVector<GraphicsScene::TableData> tableData);
 };

@@ -183,11 +183,10 @@ QString GraphicsAngleItem::getDataString()
         data.append(QString::number(point.y() - Border, 'f', 2));
     }
 
-    qDebug() << polygon();
     return data;
 }
 
-GraphicsAngleItem * GraphicsAngleItem::loadFromString(QString data)
+GraphicsAngleItem *GraphicsAngleItem::loadFromString(QString data)
 {
     int count = data.section(';', 0, 0).toInt();
     QPolygonF polygon;
@@ -204,7 +203,6 @@ GraphicsAngleItem * GraphicsAngleItem::loadFromString(QString data)
     GraphicsAngleItem *item = new GraphicsAngleItem (QPoint());
     item->setPolygon(polygon);
 
-    qDebug() << item->polygon();
     return item;
 }
 

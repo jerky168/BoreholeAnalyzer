@@ -127,13 +127,10 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
                 double y2 = line().p2().y();
                 double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
 
-                content = QString::number(dis*100/GraphicsScene::getRatio(), 'f', 2).append("cm");
+                content = QString::number(dis*100/GraphicsSettings::instance()->getRatio(), 'f', 2).append("cm");
 
                 GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
                 scene->itemFinished(content);
-
-                loadFromString(getDataString());
-
 
                 GraphicsSettings::instance()->setIsDrawing(false);
                 break;
@@ -173,7 +170,6 @@ QString GraphicsLineItem::getDataString()
     data.append(",");
     data.append(QString::number(line().y2() - Border, 'f', 2));
 
-    qDebug() << line();
     return data;
 }
 
@@ -188,7 +184,6 @@ GraphicsLineItem *GraphicsLineItem::loadFromString(QString data)
     pos2.setY(pos2_str.section(',', 1, 1).toDouble() + Border);
 
     GraphicsLineItem *item = new GraphicsLineItem(QLineF(pos1, pos2));
-    qDebug() << item->line();
     return item;
 }
 

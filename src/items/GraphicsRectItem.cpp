@@ -51,6 +51,7 @@ void GraphicsRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         QRectF newRect(x, y, w, h);
         setRect(newRect);
+        return;
     }
 }
 
@@ -60,18 +61,17 @@ void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     {
         qreal x = rect().x() + rect().width() / 2;
         qreal y = rect().y() + rect().height() / 2;
-        qreal area = rect().width() * rect().height() / qPow(GraphicsScene::getRatio(), 2) * 10000;
+        qreal area = rect().width() * rect().height() / qPow(GraphicsSettings::instance()->getRatio(), 2) * 10000;
 
         content = QString::number(area, 'f', 2).append("cm2");
 
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
         scene->itemFinished(content);
 
-        loadFromString(getDataString());
-
+        hasDrawed = true;
+        return;
     }
 
-    hasDrawed = true;
 }
 
 GraphicsRectItem::Data GraphicsRectItem::getData()
@@ -81,7 +81,6 @@ GraphicsRectItem::Data GraphicsRectItem::getData()
     data.points[1] = this->rect().bottomRight();
     return data;
 }
-
 
 QString GraphicsRectItem::getDataString()
 {
@@ -93,9 +92,9 @@ QString GraphicsRectItem::getDataString()
     data.append(QString::number(rect().right() - Border, 'f', 2));
     data.append(",");
     data.append(QString::number(rect().bottom() - Border, 'f', 2));
-    qDebug() << rect();
     return data;
 }
+
 
 GraphicsRectItem * GraphicsRectItem::loadFromString(QString data)
 {
@@ -108,8 +107,6 @@ GraphicsRectItem * GraphicsRectItem::loadFromString(QString data)
     pos2.setY(pos2_str.section(',', 1, 1).toDouble() + Border);
 
     GraphicsRectItem *item = new GraphicsRectItem(QRectF(pos1, pos2));
-    qDebug() << item->rect();
-
     return item;
 }
 
