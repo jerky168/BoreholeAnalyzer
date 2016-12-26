@@ -76,6 +76,7 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QMap
         addItemData(items.keys().at(i), items.values().at(i), true);
     }
     updateTable();
+    emit update3DImage(getSceneImageFor3D(), pixmap_start, pixmap_end);
     update();
 }
 
@@ -90,6 +91,7 @@ void GraphicsScene::itemFinished(QString content)
     setCurMode(MoveItem);
 
     addItemData(QUuid::createUuid(), item, false);
+    emit update3DImage(getSceneImageFor3D(), pixmap_start, pixmap_end);
     updateTable();
 }
 
@@ -225,9 +227,10 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     QString degree_str = getAngleString(degree);
 
 
-    QString message = QString("Width: ") + QString::number(width, 'f', 3) + "m "
-                    + QString("Depth: ") + QString::number(depth, 'f', 3) + "m\n"
-                    + degree_str;
+    QString message;
+    message +=  tr("Width: ") + QString::number(width, 'f', 3) + "m "
+                + tr("Depth: ") + QString::number(depth, 'f', 3) + "m\n"
+                + degree_str;
 
     if (showInfo)
         emit showRealInfo(message);
@@ -364,10 +367,9 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             QPointF pos2 = scene2Real(i->rect().bottomRight());
 
             qreal area = i->rect().width() * i->rect().height() / qPow(GraphicsSettings::instance()->getRatio(), 2) * 10000;
-            str += "Area:  " + QString::number(area, 'f', 2) + "cm2\n";
-            str += "Top-left:  " + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "°\n";
-            str += "Bottom-right:  " + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "°";
-
+            str += tr("Area:  ") + QString::number(area, 'f', 2) + "cm2\n";
+            str += tr("Top-left:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
+            str += tr("Bottom-right:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
             break;
         }
 
@@ -394,13 +396,13 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             area /= 2 * qPow(GraphicsSettings::instance()->getRatio(), 2);
             area *= 10000;
 
-            str += "Area:  " + QString::number(area, 'f', 2) + "cm2\n";
+            str += tr("Area:  ") + QString::number(area, 'f', 2) + "cm2\n";
 
             polygon.removeLast();
             for (int i = 0; i < polygon.count(); i++)
             {
                 QPointF pos = scene2Real(polygon.at(i));
-                str += "Point " + QString::number(i+1) + ":  " + QString::number(pos.y(), 'f', 3) + "m  " + getAngleString(pos.x()) + "°\n";
+                str += tr("Point ") + QString::number(i+1) + ":  " + QString::number(pos.y(), 'f', 3) + "m  " + getAngleString(pos.x()) + "\n";
             }
 
             break;
@@ -413,9 +415,9 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             QPointF pos2 = scene2Real(i->line().p2());
 
             qreal length = i->line().length() / GraphicsSettings::instance()->getRatio() * 100;
-            str += "Length:  " + QString::number(length, 'f', 2) + "cm\n";
-            str += "Start:  " + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "°\n";
-            str += "End:  " + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "°";
+            str += tr("Length:  ") + QString::number(length, 'f', 2) + "cm\n";
+            str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
+            str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
 
             break;
         }
@@ -427,9 +429,9 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             QPointF pos2 = scene2Real(i->line().p2());
 
             qreal length = i->line().length() / GraphicsSettings::instance()->getRatio() * 100;
-            str += "Length:  " + QString::number(length, 'f', 2) + "cm\n";
-            str += "Start:  " + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "°\n";
-            str += "End:  " + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "°";
+            str += tr("Length:  ") + QString::number(length, 'f', 2) + "cm\n";
+            str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
+            str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
 
             break;
         }
@@ -437,7 +439,7 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
         case Text:
         {
             GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
-            str += "Text:  " + i->text();
+            str += tr("Text:  ") + i->text();
             break;
         }
 
@@ -458,10 +460,10 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             qreal angle = qAcos((pow(lineALength, 2) + qPow(lineBLength, 2) - qPow(lineCLength, 2))/(2*lineALength*lineBLength));
             angle = angle * 180 / M_PI;
 
-            str += "Angle:  " + QString::number(angle, 'f', 2) + "°\n";
-            str += "Vertex A:  " + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "°\n";
-            str += "Vertex B:  " + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "°\n";
-            str += "Vertex C:  " + QString::number(pos3.y(), 'f', 3) + "m  " + getAngleString(pos3.x()) + "°";
+            str += tr("Angle:  ") + QString::number(angle, 'f', 2) + "°\n";
+            str += tr("Vertex A:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
+            str += tr("Vertex B:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "\n";
+            str += tr("Vertex C:  ") + QString::number(pos3.y(), 'f', 3) + "m  " + getAngleString(pos3.x());
             break;
         }
 
@@ -480,22 +482,22 @@ QString GraphicsScene::getAngleString(qreal angle)
 
     if (angle >= 0 && angle < 90)
     {
-        angle_str = QString("North-northeast ") + QString::number(angle, 'f', 1);
+        angle_str += tr("North-northeast ") + QString::number(angle, 'f', 1) + "°";
     }
 
     else if (angle >= 90 && angle < 180)
     {
-        angle_str = QString("South-southeast ") + QString::number(180 - angle, 'f', 1);
+        angle_str += tr("South-southeast ") + QString::number(180 - angle, 'f', 1) + "°";
     }
 
     else if (angle >= 180 && angle < 270)
     {
-        angle_str = QString("South-southwest ") + QString::number(angle - 180, 'f', 1);
+        angle_str += tr("South-southwest ") + QString::number(angle - 180, 'f', 1) + "°";
     }
 
     else if (angle >= 270 && angle < 360)
     {
-        angle_str = QString("North-northwest ") + QString::number(360 - angle, 'f', 1);
+        angle_str += tr("North-northwest ") + QString::number(360 - angle, 'f', 1) + "°";
     }
 
     return angle_str;
@@ -573,42 +575,42 @@ void GraphicsScene::updateTable()
         QGraphicsItem *newItem = newItems.values().at(i);
         tableData.depth = QString::number(scene2Real(newItem->pos()).y(), 'f', 3) + "m";
         tableData.data = getShowString(newItem).section('\n', 0, 0);
-        tableData.isSaved = "No";
+        tableData.isSaved = tr("No");
         switch(newItem->type())
         {
             case Rect:
             {
-                tableData.type = "Rectangle";
+                tableData.type = tr("Rectangle");
                 break;
             }
 
             case AnyShape:
             {
-                tableData.type = "AnyShape";
+                tableData.type = tr("AnyShape");
                 break;
             }
 
             case Ruler:
             {
-                tableData.type = "Width";
+                tableData.type = tr("Width");
                 break;
             }
 
             case Occurance:
             {
-                tableData.type = "Occurance";
+                tableData.type = tr("Occurance");
                 break;
             }
 
             case Text:
             {
-                tableData.type = "Text";
+                tableData.type = tr("Text");
                 break;
             }
 
             case Angle:
             {
-                tableData.type = "Angle";
+                tableData.type = tr("Angle");
                 break;
             }
 
@@ -624,42 +626,42 @@ void GraphicsScene::updateTable()
         QGraphicsItem *savedItem = savedItems.values().at(i);
         tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
         tableData.data = getShowString(savedItem).section('\n', 0, 0);
-        tableData.isSaved = "Yes";
+        tableData.isSaved = tr("Yes");
         switch(savedItem->type())
         {
             case Rect:
             {
-                tableData.type = "Rectangle";
+                tableData.type = tr("Rectangle");
                 break;
             }
 
             case AnyShape:
             {
-                tableData.type = "AnyShape";
+                tableData.type = tr("AnyShape");
                 break;
             }
 
             case Ruler:
             {
-                tableData.type = "Width";
+                tableData.type = tr("Width");
                 break;
             }
 
             case Occurance:
             {
-                tableData.type = "Occurance";
+                tableData.type = tr("Occurance");
                 break;
             }
 
             case Text:
             {
-                tableData.type = "Text";
+                tableData.type = tr("Text");
                 break;
             }
 
             case Angle:
             {
-                tableData.type = "Angle";
+                tableData.type = tr("Angle");
                 break;
             }
 

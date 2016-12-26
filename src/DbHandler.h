@@ -78,7 +78,6 @@ public:
 
     typedef struct {
         QUuid uuid;
-        quint16 index;
         qint32 type;
         QString dataStr;
     }ItemData;

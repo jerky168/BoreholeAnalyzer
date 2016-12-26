@@ -19,6 +19,8 @@ CONFIG += precompile_header debug_and_release
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = precompiled.h
 
+TRANSLATIONS = BoreholeAnalyzer_zh_CN.ts
+
 SOURCES +=  main.cpp\
             mainwindow.cpp \          
             DbHandler.cpp \           
@@ -26,7 +28,6 @@ SOURCES +=  main.cpp\
             DefectWidget.cpp \
             ImageWidget.cpp \
             PrjInfoDialog.cpp \
-            logo.cpp \
             ToolBar.cpp \
             AboutDialog.cpp \
             ManualDialog.cpp \
@@ -50,7 +51,6 @@ HEADERS  += mainwindow.h \
             DefectWidget.h \
             ImageWidget.h \
             PrjInfoDialog.h \
-            logo.h \
             ToolBar.h \
             AboutDialog.h \
             ManualDialog.h \
@@ -77,6 +77,9 @@ FORMS    += mainwindow.ui \
             AboutDialog.ui \
             ManualDialog.ui \
             ContactDialog.ui
+
+
+
 
 RESOURCES += \
     res.qrc

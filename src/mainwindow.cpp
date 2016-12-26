@@ -79,6 +79,7 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
+    QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 
 }
 
@@ -196,7 +197,8 @@ void MainWindow::on_actionExportWord_triggered()
 {
     if (!my_word.createNewWord())
     {
-        QMessageBox::warning(this, "erorr", "error");
+        QMessageBox::critical(this, tr("Export report failed"),
+                              tr("Export report failed, please confirm if the computer has installed Microsoft Office Word!"));
         return;
     }
 
@@ -217,6 +219,15 @@ void MainWindow::on_actionExportWord_triggered()
 
 void MainWindow::on_actionExportExcel_triggered()
 {
+//    if (!my_excel.Open("/", 1, true))
+//    {
+//        QMessageBox::critical(this, tr("Export table failed"),
+//                              tr("Export table failed, please confirm if the computer has installed Microsoft Office Excel!"));
+//        return;
+//    }
+
+//    my_excel.Save();
+
 //    QString xlsFile = "/";                            //默认路径
 //    bool isExcelOpen = my_excel.Open(xlsFile, true);
 
@@ -279,9 +290,13 @@ void MainWindow::switchImage(quint16 index)
 {
     if (scene->hasNewItem())
     {
-        QMessageBox::StandardButton button;
-        button = QMessageBox::question(this, tr("Unsave items"), tr("You have unsaved items, switching index will discard theses changes!"), QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
-        if (button == QMessageBox::Cancel)
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, switching index will discard theses changes!"),
+                               QMessageBox::Discard | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Discard, tr("Discard"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        if (QMessageBox::Cancel == messageBox.exec())
         {
             ui->imageWidget->cancelSwitch();
             return;
@@ -291,7 +306,6 @@ void MainWindow::switchImage(quint16 index)
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
     scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-    ui->widget3D->setImage(scene->getSceneImageFor3D(), indexData.image.start, indexData.image.end);
 }
 
 

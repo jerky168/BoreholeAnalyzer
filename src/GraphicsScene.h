@@ -109,4 +109,5 @@ signals:
     void showRealInfo(QString info);
 
     void emitTableData(QVector<GraphicsScene::TableData> tableData);
+    void update3DImage(QImage image, qreal start, qreal end);
 };

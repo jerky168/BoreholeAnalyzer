@@ -133,7 +133,6 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
     while(query.next())
     {
         itemData.uuid = QUuid(query.value("uuid").toString());
-        itemData.index = query.value("number").toInt();
         itemData.type = query.value("type").toInt();
         itemData.dataStr = query.value("data").toString();
         indexData.itemDatas.append(itemData);
