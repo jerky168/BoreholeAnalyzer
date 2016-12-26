@@ -96,8 +96,6 @@ private:
 signals:
     void clearScene();
 
-    void update3DImage(QImage image, qreal start, qreal end);
-
 
 };
 

@@ -7,8 +7,11 @@
 #include <QUuid>
 #include <QVector>
 
+#include <QHeaderView>
 #include <QStandardItemModel>
+#include "ImageWidget.h"
 #include "GraphicsScene.h"
+
 
 namespace Ui {
 class DefectWidget;
@@ -32,8 +35,11 @@ public slots:
 private:
     Ui::DefectWidget *ui;
 
-    void initModel();
     QStandardItemModel *model;
+    QHeaderView *headerView;
+
+    void initModel();
+
 
 
 signals:

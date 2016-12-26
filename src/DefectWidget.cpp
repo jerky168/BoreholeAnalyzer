@@ -4,7 +4,8 @@
 DefectWidget::DefectWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DefectWidget),
-    model(Q_NULLPTR)
+    model(Q_NULLPTR),
+    headerView(Q_NULLPTR)
 {
     ui->setupUi(this);
 
@@ -20,13 +21,14 @@ DefectWidget::~DefectWidget()
 void DefectWidget::initModel()
 {
     model = new QStandardItemModel(0, 4, this);
-    model->setHeaderData(0, Qt::Horizontal, "页数");
-    model->setHeaderData(1, Qt::Horizontal, "类型");
-    model->setHeaderData(2, Qt::Horizontal, "是否保存");
-    model->setHeaderData(3, Qt::Horizontal, "数据");
+    headerView = new QHeaderView(Qt::Horizontal);
+
+
+    QStringList headers;
+    headers << "是否保存" << "页数" << "类型" << "数据";
+    model->setHorizontalHeaderLabels(headers);
     ui->tableView->setModel(model);
 }
-
 
 
 
@@ -35,25 +37,26 @@ void DefectWidget::showRealInfo(QString info)
     ui->realInfoEdit->setText(info);
 }
 
+
+
 void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
 {
-    model->clear();
+    model->removeRows(0, model->rowCount());
     for (int i = 0; i < tableDatas.count(); i++)
     {
         QList<QStandardItem *> items;
-        QStandardItem *item = new QStandardItem("N/A");
+        QStandardItem *item;
+        item = new QStandardItem(tableDatas.at(i).isSaved);
+        items.append(item);
+        item = new QStandardItem(QString::number(ImageWidget::index));
         items.append(item);
         item = new QStandardItem(tableDatas.at(i).type);
-        items.append(item);
-        item = new QStandardItem(tableDatas.at(i).isSaved);
         items.append(item);
         item = new QStandardItem(tableDatas.at(i).data);
         items.append(item);
         model->appendRow(items);
     }
-    this->update();
+    ui->tableView->resizeColumnsToContents();
+    update();
 }
-
-
-
 

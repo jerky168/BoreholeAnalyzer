@@ -80,10 +80,6 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
 
-    QObject::connect(this, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
-
-
-
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -295,7 +291,7 @@ void MainWindow::switchImage(quint16 index)
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
     scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-    emit update3DImage(scene->getSceneImageFor3D(), indexData.image.start, indexData.image.end);
+    ui->widget3D->setImage(scene->getSceneImageFor3D(), indexData.image.start, indexData.image.end);
 }
 
 

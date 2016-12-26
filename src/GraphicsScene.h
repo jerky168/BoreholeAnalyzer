@@ -38,7 +38,6 @@ public:
     GraphicsScene(QObject *parent = Q_NULLPTR);
     ~GraphicsScene();
 
-
     typedef struct
     {
         QUuid uuid;
@@ -47,6 +46,7 @@ public:
 
     typedef struct
     {
+        QString depth;
         QString type;
         QString isSaved;
         QString data;
@@ -85,20 +85,18 @@ protected:
     void drawBackground(QPainter * painter, const QRectF & rect);
 
 private:
-    bool showInfo;
-    qreal pixmap_start, pixmap_end;
-    qreal pixmap_width, pixmap_height;
+    bool showInfo;  // 实时信息栏是否显示鼠标当前位置
+    qreal pixmap_start, pixmap_end; // 照片的起始深度和终止神父
+    qreal pixmap_width, pixmap_height;  // 照片的宽度和高度
+    QGraphicsItem *item;    // 当前正在绘制的item
+    static Mode curMode;    // 当前的状态
 
-    QGraphicsItem *item;
-
-
-    static Mode curMode;
 
     QString getShowString(QGraphicsItem *item);
     QString getAngleString(qreal angle);
 
 
-    QMap<QString, QGraphicsItem *> newItems, savedItems;
+    QMap<QString, QGraphicsItem *> newItems, savedItems;    // 用于保存新添加的items和已经保存的items
     void addItemData(QUuid uuid, QGraphicsItem *item, bool saved = false);
     void deleteItemData(QUuid uuid);
     void clearItemData();

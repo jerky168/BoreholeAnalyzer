@@ -75,7 +75,7 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, QMap
         addItem(items.values().at(i));
         addItemData(items.keys().at(i), items.values().at(i), true);
     }
-
+    updateTable();
     update();
 }
 
@@ -90,7 +90,7 @@ void GraphicsScene::itemFinished(QString content)
     setCurMode(MoveItem);
 
     addItemData(QUuid::createUuid(), item, false);
-
+    updateTable();
 }
 
 
@@ -520,22 +520,20 @@ void GraphicsScene::saveNewItems()
         addItemData(QUuid(newItems.keys().at(i)), newItems.values().at(i), true);
     }
     newItems.clear();
+    updateTable();
 }
 
 
 void GraphicsScene::addItemData(QUuid uuid, QGraphicsItem *item, bool saved)
 {
-    // new items
     if (!saved)
     {
         newItems.insert(uuid.toString(), item);
     }
-    // saved items
     else
     {
         savedItems.insert(uuid.toString(), item);
     }
-    updateTable();
 }
 
 void GraphicsScene::deleteItemData(QUuid uuid)
@@ -572,10 +570,11 @@ void GraphicsScene::updateTable()
     for (int i = 0; i < newItems.count(); i++)
     {
         TableData tableData;
-        QGraphicsItem *item = newItems.values().at(i);
-        tableData.data = getShowString(item);
+        QGraphicsItem *newItem = newItems.values().at(i);
+        tableData.depth = QString::number(scene2Real(newItem->pos()).y(), 'f', 3) + "m";
+        tableData.data = getShowString(newItem).section('\n', 0, 0);
         tableData.isSaved = "No";
-        switch(item->type())
+        switch(newItem->type())
         {
             case Rect:
             {
@@ -622,10 +621,11 @@ void GraphicsScene::updateTable()
     for (int i = 0; i < savedItems.count(); i++)
     {
         TableData tableData;
-        QGraphicsItem *item = savedItems.values().at(i);
-        tableData.data = getShowString(item);
+        QGraphicsItem *savedItem = savedItems.values().at(i);
+        tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
+        tableData.data = getShowString(savedItem).section('\n', 0, 0);
         tableData.isSaved = "Yes";
-        switch(item->type())
+        switch(savedItem->type())
         {
             case Rect:
             {
