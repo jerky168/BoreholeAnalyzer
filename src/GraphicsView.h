@@ -26,8 +26,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *mouseEvent);
 
 private:
+    // 放大倍数
 	double factor;
-	double totalFactor;
+    //double totalFactor;
 
 signals:
     void mouseMoved(QMouseEvent *event);

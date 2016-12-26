@@ -49,4 +49,5 @@ private:
 
     QString content;
 
+
 };

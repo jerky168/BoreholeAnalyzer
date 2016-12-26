@@ -4,11 +4,11 @@
 
 typedef enum
 {
-    customType =  QGraphicsItem::UserType,
-    Angle,
+    Angle = 1,
     AnyShape,
     Ruler,
     Occurance,
     Rect,
-    Text
+    Text,
+    customType =  QGraphicsItem::UserType
 }ItemType;

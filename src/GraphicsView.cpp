@@ -5,7 +5,7 @@ GraphicsView::GraphicsView( QWidget * parent ) :
 {
     setDragMode(ScrollHandDrag);
 	setMouseTracking(true);
-	totalFactor = 1;
+    //totalFactor = 1;
 	scale(0.23, 0.23);
 }
 
@@ -32,7 +32,7 @@ void GraphicsView::wheelEvent(QWheelEvent *event)
 	double numSteps = numDegress / 15.0;
     factor = qPow(1.125, numSteps);
 
-	totalFactor *= factor;	
+    //totalFactor *= factor;
 	scale(factor, factor);
 }
 

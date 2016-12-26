@@ -15,16 +15,7 @@
 
 #include <QUuid>
 
-#include "type.h"
-#include "GraphicsScene.h"
-#include "GraphicsAngleItem.h"
-#include "GraphicsAnyshape.h"
-#include "GraphicsLineItem.h"
-#include "GraphicsRectItem.h"
-#include "GraphicsTextItem.h"
-#include "GraphicsOccurance.h"
 
-#include "DefectWidget.h"
 
 
 class DbHandler : public QObject
@@ -62,10 +53,7 @@ public:
     }BigImage;
 
 
-    typedef struct {
-        BigImage image;
-        QVector<DefectWidget::ItemData> items;
-    }IndexData;
+
 
 
     typedef enum {
@@ -88,10 +76,21 @@ public:
     BigImage getBigImage(quint16 index);
 
 
-    void saveItem(quint16 index, QUuid uuid, QGraphicsItem *item);
+    typedef struct {
+        QUuid uuid;
+        qint32 type;
+        QString dataStr;
+    }ItemData;
 
+    typedef struct {
+        BigImage image;
+        QVector<ItemData> itemDatas;
+    }IndexData;
+
+
+    void saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr);
     IndexData getIndexData(quint16 index);
-    QImage getSceneImage(quint16 index);
+
 
 
 private:

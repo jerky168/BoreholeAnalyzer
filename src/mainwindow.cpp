@@ -18,8 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     createActionGroups();
     createSceneAndView();
     createConnections();
-
-
 }
 
 MainWindow::~MainWindow()
@@ -31,8 +29,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::createUI()
 {
-    ToolBar *toolbar = new ToolBar();
-    addToolBar(Qt::TopToolBarArea, toolbar);
+//    ToolBar *toolbar = new ToolBar();
+//    addToolBar(Qt::TopToolBarArea, toolbar);
 }
 
 
@@ -95,12 +93,11 @@ void MainWindow::createConnections()
     QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), ui->graphicsView, SLOT(handleModeChanged(GraphicsScene::Mode)));
-    QObject::connect(scene, SIGNAL(showStatus(QString, int)), ui->statusBar, SLOT(showMessage(QString, int)));
+    QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
-    QObject::connect(scene, SIGNAL(itemInserted(QGraphicsItem *, QUuid)), ui->defectWidget, SLOT(itemInserted(QGraphicsItem *, QUuid)));
+    QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
+    QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 
-
-    QObject::connect(this, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -139,14 +136,66 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    if (ui->defectWidget->hasAddedItem())
+    if (scene->hasNewItem())
     {
-        QVector<DefectWidget::ItemData> items = ui->defectWidget->getAddedItems();
-        for (int i = 0; i < items.count(); i++)
+        QMap<QString, QGraphicsItem *> items = scene->getNewItems();
+        QStringList keys = items.keys();
+        for (int i = 0; i < keys.count(); i++)
         {
-            handler->saveItem(ImageWidget::index, items.at(i).uuid, items.at(i).item);
+            QUuid uuid = QUuid(keys.at(i));
+            quint16 index = ImageWidget::index;
+            QGraphicsItem *item = items.value(uuid.toString());
+            quint8 type = item->type();
+            QString dataStr;
+            switch (item->type())
+            {
+                case Angle:
+                {
+                    GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+
+                case AnyShape:
+                {
+                    GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+                case Ruler:
+                {
+                    GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+                case Occurance:
+                {
+                    GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+                case Rect:
+                {
+                    GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+
+                case Text:
+                {
+                    GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+                    dataStr = i->getDataString();
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
+            handler->saveItem(uuid, index, type, dataStr);
         }
-        ui->defectWidget->clearAddedItems();
+        scene->saveNewItems();
     }
 }
 
@@ -154,8 +203,8 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionExportImage_triggered()
 {
     QString filename = QFileDialog::getSaveFileName(this, "get save file", QDir::homePath(), tr("Images (*.jpg)"));
-    DbHandler::IndexData data = handler->getIndexData(0);
-    QImage image = GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
+    DbHandler::IndexData indexData = handler->getIndexData(0);
+    QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
     image.save(filename, "JPG");
 }
 
@@ -165,14 +214,15 @@ void MainWindow::on_actionExportWord_triggered()
 {
     if (!my_word.createNewWord())
     {
-        QMessageBox::warning(this, "erorr", "error");
+        QMessageBox::critical(this, tr("Export report failed"),
+                              tr("Export report failed, please confirm if the computer has installed Microsoft Office Word!"));
         return;
     }
 
     QImage image;
     for (int i = 0; i <= ImageWidget::maxIndex; i++)
     {
-        image = handler->getSceneImage(i);
+        image = getSceneImage(i);
         QString filename = QDir::temp().filePath("temp.jpg");
         image.save(filename, "JPG");
         my_word.insertPic(filename);
@@ -186,50 +236,59 @@ void MainWindow::on_actionExportWord_triggered()
 
 void MainWindow::on_actionExportExcel_triggered()
 {
-    QString xlsFile = "/";                            //默认路径
-    bool isExcelOpen = my_excel.Open(xlsFile, true);
+//    if (!my_excel.Open("/", 1, true))
+//    {
+//        QMessageBox::critical(this, tr("Export table failed"),
+//                              tr("Export table failed, please confirm if the computer has installed Microsoft Office Excel!"));
+//        return;
+//    }
 
-    QVector<DefectWidget::ItemData>     currItemsData;//当前页面数据
+//    my_excel.Save();
 
-    quint16                             currIndex = 0;//当前页面位置
-    quint16                               currdataNum;//当前页第几个数据
-    quint16                          aggregateNum = 1;//数据总数
-    quint16                                   dataNum;//当前数据个数
-    quint16                                    rowNum;//当前写入数据行数
-    QString                                  intToStr;//转换int为QString
-    if ( isExcelOpen )
-    {
-        //初始化表头和显示数据
-        my_excel.setCellString(1,1,"当前所有数据的Excel报表");
-        my_excel.mergeCells(1,1,4,4);
+//    QString xlsFile = "/";                            //默认路径
+//    bool isExcelOpen = my_excel.Open(xlsFile, true);
 
-        my_excel.setCellString(5, 1, "页数");
-        my_excel.setCellString(5, 2, "类型");
-        my_excel.setCellString(5, 3, "数据");
-        my_excel.setCellString(5, 4, "uuid");
+//    QVector<DefectWidget::ItemData>     currItemsData;//当前页面数据
 
-        while( currIndex < ImageWidget::maxIndex )
-        {
-            currItemsData = handler->getIndexData(currIndex).items;
-            for (dataNum = 0, currdataNum = 0; dataNum < currItemsData.count(); dataNum++,currdataNum++ )
-            {
-                rowNum = 5 + aggregateNum + currdataNum;
+//    quint16                             currIndex = 0;//当前页面位置
+//    quint16                               currdataNum;//当前页第几个数据
+//    quint16                          aggregateNum = 1;//数据总数
+//    quint16                                   dataNum;//当前数据个数
+//    quint16                                    rowNum;//当前写入数据行数
+//    QString                                  intToStr;//转换int为QString
+//    if ( isExcelOpen )
+//    {
+//        //初始化表头和显示数据
+//        my_excel.setCellString(1,1,"当前所有数据的Excel报表");
+//        my_excel.mergeCells(1,1,4,4);
 
-                my_excel.setCellString(rowNum, 1, intToStr.setNum(currIndex + 1));
-                my_excel.setCellString(rowNum, 2, intToStr.setNum(currItemsData.at(dataNum).item->type()));
-//                my_excel.setCellString(rowNum, 3, my_excel.GetExcelData(currItemsData.at(dataNum).item));
-                my_excel.setCellString(rowNum, 4, currItemsData.at(dataNum).uuid.toString());
-            }
-            aggregateNum += currdataNum;
-            currIndex++;
-        }
-//        my_excel.setRowColumnAuto();
-        my_excel.Close();
-    }
-    else
-    {
-        qDebug("open failed\n");
-    }
+//        my_excel.setCellString(5, 1, "页数");
+//        my_excel.setCellString(5, 2, "类型");
+//        my_excel.setCellString(5, 3, "数据");
+//        my_excel.setCellString(5, 4, "uuid");
+
+//        while( currIndex < ImageWidget::maxIndex )
+//        {
+//            currItemsData = handler->getIndexData(currIndex).items;
+//            for (dataNum = 0, currdataNum = 0; dataNum < currItemsData.count(); dataNum++,currdataNum++ )
+//            {
+//                rowNum = 5 + aggregateNum + currdataNum;
+
+//                my_excel.setCellString(rowNum, 1, intToStr.setNum(currIndex + 1));
+//                my_excel.setCellString(rowNum, 2, intToStr.setNum(currItemsData.at(dataNum).item->type()));
+////                my_excel.setCellString(rowNum, 3, my_excel.GetExcelData(currItemsData.at(dataNum).item));
+//                my_excel.setCellString(rowNum, 4, currItemsData.at(dataNum).uuid.toString());
+//            }
+//            aggregateNum += currdataNum;
+//            currIndex++;
+//        }
+////        my_excel.setRowColumnAuto();
+//        my_excel.Close();
+//    }
+//    else
+//    {
+//        qDebug("open failed\n");
+//    }
 
 }
 
@@ -246,11 +305,15 @@ void MainWindow::on_actionProjectInfo_triggered()
 
 void MainWindow::switchImage(quint16 index)
 {
-    if (ui->defectWidget->hasAddedItem())
+    if (scene->hasNewItem())
     {
-        QMessageBox::StandardButton button;
-        button = QMessageBox::question(this, tr("Unsave items"), tr("You have unsaved items, switching index will discard theses changes!"), QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
-        if (button == QMessageBox::Cancel)
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, switching index will discard theses changes!"),
+                               QMessageBox::Discard | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Discard, tr("Discard"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        if (QMessageBox::Cancel == messageBox.exec())
         {
             ui->imageWidget->cancelSwitch();
             return;
@@ -259,9 +322,7 @@ void MainWindow::switchImage(quint16 index)
     }
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    ui->defectWidget->updateItems(indexData.items);
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.items);
-    emit update3DImage(scene->getSceneImageFor3D(), indexData.image.start, indexData.image.end);
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
 }
 
 
@@ -329,6 +390,7 @@ void MainWindow::on_actionContact_triggered()
 
 }
 
+
 void MainWindow::resetActions()
 {
     for (quint8 i = 0; i < actionGroup2D->actions().count(); i++)
@@ -344,4 +406,75 @@ void MainWindow::handleModeChanged(GraphicsScene::Mode curMode)
     }
 }
 
+void MainWindow::showStatus(QString message)
+{
+    ui->statusBar->showMessage(message, 0);
+}
+
+
+
+QImage MainWindow::getSceneImage(quint16 index)
+{
+    DbHandler::IndexData indexData = handler->getIndexData(index);
+    return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+}
+
+QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData indexData)
+{
+    QMap<QString, QGraphicsItem *> items;
+    for (int i = 0; i < indexData.itemDatas.count(); i++)
+    {
+        QUuid uuid = indexData.itemDatas.at(i).uuid;
+        qint32 type = indexData.itemDatas.at(i).type;
+        QString dataStr = indexData.itemDatas.at(i).dataStr;
+        switch (type)
+        {
+            case Angle:
+            {
+                GraphicsAngleItem *item = GraphicsAngleItem::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            case AnyShape:
+            {
+                GraphicsAnyshape *item = GraphicsAnyshape::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            case Ruler:
+            {
+                GraphicsLineItem *item = GraphicsLineItem::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            case Occurance:
+            {
+                GraphicsOccurance *item = GraphicsOccurance::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            case Rect:
+            {
+                GraphicsRectItem *item = GraphicsRectItem::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            case Text:
+            {
+                GraphicsTextItem *item = GraphicsTextItem::loadFromString(dataStr);
+                item->setFinished();
+                items.insert(uuid.toString(), item);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    return items;
+}
 

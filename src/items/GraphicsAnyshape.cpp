@@ -47,8 +47,6 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
         content = QString::number(calcArea(), 'f', 2).append("cm2");
         scene->itemFinished(content);
 
-        loadFromString(getDataString());
-
         return;
     }
 
@@ -93,7 +91,7 @@ qreal GraphicsAnyshape::calcArea()
     }
 
     area = qFabs(area);
-    area /= 2 * qPow(GraphicsScene::getRatio(), 2);
+    area /= 2 * qPow(GraphicsSettings::instance()->getRatio(), 2);
     area *= 10000;
 
     return area;

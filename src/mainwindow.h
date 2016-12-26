@@ -20,6 +20,8 @@
 
 #include "RollWidget.h"
 
+#include "GraphicsSettings.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -35,6 +37,7 @@ public:
 public slots:
      void switchImage(quint16 index);
      void handleModeChanged(GraphicsScene::Mode curMode);
+     void showStatus(QString message);
 
 private slots:
     void on_actionOpen_triggered();
@@ -79,17 +82,18 @@ private:
     QExcel my_excel;
 
 
-
     void createUI();
     void createActionGroups();
     void createSceneAndView();
     void createConnections();
     void resetActions();
 
+
+    QImage getSceneImage(quint16 index);
+    QMap<QString, QGraphicsItem *> index2Item(DbHandler::IndexData indexData);
+
 signals:
     void clearScene();
-
-    void update3DImage(QImage image, qreal start, qreal end);
 
 
 };

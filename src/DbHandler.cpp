@@ -107,61 +107,13 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
 
 
 
-void DbHandler::saveItem(quint16 index, QUuid uuid, QGraphicsItem *item)
+void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr)
 {
-    QString dataStr;
-    switch (item->type())
-    {
-        case Angle:
-        {
-            GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-
-        case AnyShape:
-        {
-            GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-        case Ruler:
-        {
-            GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-        case Occurance:
-        {
-            GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-        case Rect:
-        {
-            GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-
-        case Text:
-        {
-            GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
-            dataStr = i->getDataString();
-            break;
-        }
-
-        default:
-        {
-            break;
-        }
-    }
-
     QSqlQuery query(database);
     query.prepare("INSERT INTO items (uuid, number, type, data) VALUES (:uuid, :number, :type, :data)");
     query.bindValue(":uuid", uuid.toString());
     query.bindValue(":number", index);
-    query.bindValue(":type", item->type());
+    query.bindValue(":type", type);
     query.bindValue(":data", dataStr);
     query.exec();
 }
@@ -177,70 +129,18 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
     query.bindValue(":number", index);
     query.exec();
 
-    DefectWidget::ItemData itemData;
+    ItemData itemData;
     while(query.next())
     {
-        itemData.uuid = QUuid(query.value(0).toString());
-        int type = query.value(1).toInt();
-        switch (type)
-        {
-            case Angle:
-            {
-                GraphicsAngleItem *i = GraphicsAngleItem::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            case AnyShape:
-            {
-                GraphicsAnyshape *i = GraphicsAnyshape::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            case Ruler:
-            {
-                GraphicsLineItem *i = GraphicsLineItem::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            case Occurance:
-            {
-                GraphicsOccurance *i = GraphicsOccurance::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            case Rect:
-            {
-                GraphicsRectItem *i = GraphicsRectItem::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            case Text:
-            {
-                GraphicsTextItem *i = GraphicsTextItem::loadFromString(query.value(2).toString());
-                itemData.item = i;
-                i->setFinished();
-                break;
-            }
-            default:
-                break;
-        }
-        indexData.items.append(itemData);
+        itemData.uuid = QUuid(query.value("uuid").toString());
+        itemData.type = query.value("type").toInt();
+        itemData.dataStr = query.value("data").toString();
+        indexData.itemDatas.append(itemData);
     }
 
     return indexData;
 }
 
-
-QImage DbHandler::getSceneImage(quint16 index)
-{
-    IndexData data = getIndexData(index);
-    return GraphicsScene::getImageFromData(data.image.pixmap, data.image.start, data.image.end, data.items);
-}
 
 
 
