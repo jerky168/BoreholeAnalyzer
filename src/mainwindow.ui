@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1144</width>
+    <height>735</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>钻孔电视分析软件</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/res/images/IDT.ico</normaloff>:/res/images/IDT.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page2d">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="GraphicsView" name="graphicsView">
+          <property name="dragMode">
+           <enum>QGraphicsView::ScrollHandDrag</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page3d">
+       <layout class="QHBoxLayout" name="layout3D">
+        <item>
+         <widget class="RollWidget" name="widget3D" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1144</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <widget class="QMenu" name="recentMenu">
+     <property name="title">
+      <string>最近的文件(&amp;R)</string>
+     </property>
+     <addaction name="actionClean"/>
+    </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>导出</string>
+     </property>
+     <addaction name="actionExportImage"/>
+     <addaction name="actionExportWord"/>
+     <addaction name="actionExportExcel"/>
+    </widget>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionClose"/>
+    <addaction name="recentMenu"/>
+    <addaction name="separator"/>
+    <addaction name="menuExport"/>
+    <addaction name="actionPrint"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
+   </widget>
+   <widget class="QMenu" name="menuTool">
+    <property name="title">
+     <string>工具(&amp;T)</string>
+    </property>
+    <addaction name="actionShift"/>
+    <addaction name="actionSlitWidth"/>
+    <addaction name="actionRectangle"/>
+    <addaction name="actionAnyShape"/>
+    <addaction name="actionOccurrence"/>
+    <addaction name="actionTextbox"/>
+    <addaction name="actionCross"/>
+   </widget>
+   <widget class="QMenu" name="menuImage">
+    <property name="title">
+     <string>图像(&amp;I)</string>
+    </property>
+    <addaction name="action2DView"/>
+    <addaction name="action3DView"/>
+    <addaction name="separator"/>
+    <addaction name="actionLeftSpin"/>
+    <addaction name="actionRightSpin"/>
+    <addaction name="actionAutoLeftSpin"/>
+    <addaction name="actionAutoRightSpin"/>
+    <addaction name="separator"/>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>视图(&amp;V)</string>
+    </property>
+    <addaction name="actionProjectInfo"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionManual"/>
+    <addaction name="actionContact"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuTool"/>
+   <addaction name="menuImage"/>
+   <addaction name="helpMenu"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>工具栏</string>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionExportImage"/>
+   <addaction name="actionExportWord"/>
+   <addaction name="actionExportExcel"/>
+   <addaction name="actionPrint"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionShift"/>
+   <addaction name="actionSlitWidth"/>
+   <addaction name="actionRectangle"/>
+   <addaction name="actionAnyShape"/>
+   <addaction name="actionOccurrence"/>
+   <addaction name="actionTextbox"/>
+   <addaction name="actionCross"/>
+   <addaction name="separator"/>
+   <addaction name="action2DView"/>
+   <addaction name="action3DView"/>
+   <addaction name="actionLeftSpin"/>
+   <addaction name="actionRightSpin"/>
+   <addaction name="actionAutoLeftSpin"/>
+   <addaction name="actionAutoRightSpin"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockWidgetImage">
+   <property name="windowTitle">
+    <string>图像管理</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="ImageWidget" name="imageWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidgetDefect">
+   <property name="windowTitle">
+    <string>岩芯描述</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="DefectWidget" name="defectWidget"/>
+  </widget>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/open.png</normaloff>:/res/images/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开(&amp;O)...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionClean">
+   <property name="text">
+    <string>清除菜单(C)</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save.png</normaloff>:/res/images/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存(&amp;S)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-as.png</normaloff>:/res/images/save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>另存为(&amp;A)...</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/close.png</normaloff>:/res/images/close.png</iconset>
+   </property>
+   <property name="text">
+    <string>关闭(&amp;C)</string>
+   </property>
+   <property name="toolTip">
+    <string>关闭</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/exit.png</normaloff>:/res/images/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>退出(&amp;X)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/undo.png</normaloff>:/res/images/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>撤销(&amp;U)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/redo.png</normaloff>:/res/images/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>重做(&amp;R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/cut.png</normaloff>:/res/images/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>剪切(&amp;T)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/copy.png</normaloff>:/res/images/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制(&amp;C)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/paste.png</normaloff>:/res/images/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>粘贴(&amp;P)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/delete.png</normaloff>:/res/images/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>删除(&amp;D)</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionSelectAll">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/select-all.png</normaloff>:/res/images/select-all.png</iconset>
+   </property>
+   <property name="text">
+    <string>全选(&amp;A)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/about.png</normaloff>:/res/images/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>使用手册</string>
+   </property>
+  </action>
+  <action name="actionContact">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/contect.png</normaloff>:/res/images/contect.png</iconset>
+   </property>
+   <property name="text">
+    <string>联系我们</string>
+   </property>
+  </action>
+  <action name="action2DView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/2D.png</normaloff>:/res/images/2D.png</iconset>
+   </property>
+   <property name="text">
+    <string>2D视图</string>
+   </property>
+  </action>
+  <action name="action3DView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/3D.png</normaloff>:/res/images/3D.png</iconset>
+   </property>
+   <property name="text">
+    <string>3D视图</string>
+   </property>
+  </action>
+  <action name="actionLeftSpin">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/left-spin.png</normaloff>:/res/images/left-spin.png</iconset>
+   </property>
+   <property name="text">
+    <string>左旋</string>
+   </property>
+  </action>
+  <action name="actionRightSpin">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/right-spin.png</normaloff>:/res/images/right-spin.png</iconset>
+   </property>
+   <property name="text">
+    <string>右旋</string>
+   </property>
+  </action>
+  <action name="actionAutoLeftSpin">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/auto-left-spin.png</normaloff>:/res/images/auto-left-spin.png</iconset>
+   </property>
+   <property name="text">
+    <string>自动左旋</string>
+   </property>
+  </action>
+  <action name="actionAutoRightSpin">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/auto-right-spin.png</normaloff>:/res/images/auto-right-spin.png</iconset>
+   </property>
+   <property name="text">
+    <string>自动右旋</string>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/zoom-in.png</normaloff>:/res/images/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>放大</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/zoom-out.png</normaloff>:/res/images/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>缩小</string>
+   </property>
+  </action>
+  <action name="actionProjectInfo">
+   <property name="text">
+    <string>工程属性</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionShortcutTool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>快捷工具栏</string>
+   </property>
+  </action>
+  <action name="actionDrillCoreView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>岩芯描述管理栏</string>
+   </property>
+  </action>
+  <action name="actionImageParamsView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>图像浏览参数栏</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/print.png</normaloff>:/res/images/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>打印预览</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionExportImage">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-img.png</normaloff>:/res/images/save-img.png</iconset>
+   </property>
+   <property name="text">
+    <string>导出图片</string>
+   </property>
+  </action>
+  <action name="actionExportWord">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-document.png</normaloff>:/res/images/save-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>导出报告</string>
+   </property>
+  </action>
+  <action name="actionShift">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/shift.png</normaloff>:/res/images/shift.png</iconset>
+   </property>
+   <property name="text">
+    <string>方位偏移</string>
+   </property>
+  </action>
+  <action name="actionSlitWidth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/width.png</normaloff>:/res/images/width.png</iconset>
+   </property>
+   <property name="text">
+    <string>缝宽</string>
+   </property>
+  </action>
+  <action name="actionRectangle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/rectangle.PNG</normaloff>:/res/images/rectangle.PNG</iconset>
+   </property>
+   <property name="text">
+    <string>矩形</string>
+   </property>
+  </action>
+  <action name="actionAnyShape">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/anyshape.PNG</normaloff>:/res/images/anyshape.PNG</iconset>
+   </property>
+   <property name="text">
+    <string>任意形状</string>
+   </property>
+  </action>
+  <action name="actionOccurrence">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/occurance.png</normaloff>:/res/images/occurance.png</iconset>
+   </property>
+   <property name="text">
+    <string>产状</string>
+   </property>
+  </action>
+  <action name="actionTextbox">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/text.png</normaloff>:/res/images/text.png</iconset>
+   </property>
+   <property name="text">
+    <string>文本框</string>
+   </property>
+  </action>
+  <action name="actionCross">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/corss-cursor.png</normaloff>:/res/images/corss-cursor.png</iconset>
+   </property>
+   <property name="text">
+    <string>十字光标</string>
+   </property>
+  </action>
+  <action name="actionExportExcel">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/save-table.png</normaloff>:/res/images/save-table.png</iconset>
+   </property>
+   <property name="text">
+    <string>导出表格</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ImageWidget</class>
+   <extends>QWidget</extends>
+   <header>imagewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DefectWidget</class>
+   <extends>QWidget</extends>
+   <header>defectwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>GraphicsView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>RollWidget</class>
+   <extends>QWidget</extends>
+   <header>RollWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>471</x>
+     <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
