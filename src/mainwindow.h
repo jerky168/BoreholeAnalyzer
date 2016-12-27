@@ -78,8 +78,6 @@ private:
     QActionGroup *actionGroup2D;    //2D模式下的操作
     QActionGroup *actionGroup3D;    //3D模式下的操作
 
-    QWord my_word;
-    QExcel my_excel;
 
 
     void createUI();

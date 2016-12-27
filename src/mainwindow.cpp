@@ -212,12 +212,48 @@ void MainWindow::on_actionExportImage_triggered()
 
 void MainWindow::on_actionExportWord_triggered()
 {
-    if (!my_word.createNewWord())
+    QWord word;
+
+    if (!word.createNewWord())
     {
         QMessageBox::critical(this, tr("Export report failed"),
                               tr("Export report failed, please confirm if the computer has installed Microsoft Office Word!"));
         return;
     }
+
+    word.setPageOrientation(0);
+    word.setWordPageView(3);
+    word.setMargin(72, 72, 54, 54);
+
+    //Header
+    word.intsertTable(1, 2);
+
+    word.setCellString(1, 1, tr("报告名称"));
+    word.setCellString(1, 2, tr("Test"));
+
+    word.moveForEnd();
+
+    word.intsertTable(2, 6);
+    word.setCellString(2, 1, tr("测孔编号"));
+    word.setCellString(2, 3, tr("测试地点"));
+    word.setCellString(2, 5, tr("测试时间"));
+
+    word.setCellString(3, 1, tr("测孔直径"));
+    word.setCellString(3, 3, tr("测试深度"));
+    word.setCellString(3, 5, tr("始测深度"));
+
+    word.moveForEnd();
+
+    word.intsertTable(1, 8);
+    word.setCellString(4, 1, tr("位置"));
+    word.setCellString(4, 2, tr("深度"));
+    word.setCellString(4, 3, tr("展开图"));
+    word.setCellString(4, 4, tr("备注"));
+    word.setCellString(4, 5, tr("位置"));
+    word.setCellString(4, 6, tr("深度"));
+    word.setCellString(4, 7, tr("展开图"));
+    word.setCellString(4, 8, tr("备注"));
+    word.moveForEnd();
 
     QImage image;
     for (int i = 0; i <= ImageWidget::maxIndex; i++)
@@ -225,17 +261,18 @@ void MainWindow::on_actionExportWord_triggered()
         image = getSceneImage(i);
         QString filename = QDir::temp().filePath("temp.jpg");
         image.save(filename, "JPG");
-        my_word.insertPic(filename);
-        my_word.insertMoveDown();
+        word.insertPic(filename);
+        word.insertMoveDown();
     }
 
-    my_word.save();
+    word.save();
 }
 
 
 
 void MainWindow::on_actionExportExcel_triggered()
 {
+     QExcel my_excel;
 //    if (!my_excel.Open("/", 1, true))
 //    {
 //        QMessageBox::critical(this, tr("Export table failed"),
