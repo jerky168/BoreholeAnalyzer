@@ -59,132 +59,139 @@
         <translation type="unfinished">深度：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="370"/>
-        <location filename="GraphicsScene.cpp" line="399"/>
+        <location filename="GraphicsScene.cpp" line="438"/>
+        <location filename="GraphicsScene.cpp" line="467"/>
         <source>Area:  </source>
         <translation type="unfinished">面积：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="371"/>
+        <location filename="GraphicsScene.cpp" line="439"/>
         <source>Top-left:  </source>
         <translation type="unfinished">左上角：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="372"/>
+        <location filename="GraphicsScene.cpp" line="440"/>
         <source>Bottom-right:  </source>
         <translation type="unfinished">右下角：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="405"/>
+        <location filename="GraphicsScene.cpp" line="473"/>
         <source>Point </source>
         <translation type="unfinished">点</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="418"/>
-        <location filename="GraphicsScene.cpp" line="432"/>
+        <location filename="GraphicsScene.cpp" line="486"/>
+        <location filename="GraphicsScene.cpp" line="500"/>
         <source>Length:  </source>
         <translation type="unfinished">长度：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="419"/>
-        <location filename="GraphicsScene.cpp" line="433"/>
+        <location filename="GraphicsScene.cpp" line="487"/>
+        <location filename="GraphicsScene.cpp" line="501"/>
         <source>Start:  </source>
         <translation type="unfinished">起点：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="420"/>
-        <location filename="GraphicsScene.cpp" line="434"/>
+        <location filename="GraphicsScene.cpp" line="488"/>
+        <location filename="GraphicsScene.cpp" line="502"/>
         <source>End:  </source>
         <translation type="unfinished">终点：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="442"/>
+        <location filename="GraphicsScene.cpp" line="510"/>
         <source>Text:  </source>
         <translation type="unfinished">文本：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="463"/>
+        <location filename="GraphicsScene.cpp" line="531"/>
         <source>Angle:  </source>
         <translation type="unfinished">角度：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="464"/>
+        <location filename="GraphicsScene.cpp" line="532"/>
         <source>Vertex A:  </source>
         <translation type="unfinished">顶点A：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="465"/>
+        <location filename="GraphicsScene.cpp" line="533"/>
         <source>Vertex B:  </source>
         <translation type="unfinished">顶点B：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="466"/>
+        <location filename="GraphicsScene.cpp" line="534"/>
         <source>Vertex C:  </source>
         <translation type="unfinished">顶点C：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="485"/>
+        <location filename="GraphicsScene.cpp" line="553"/>
         <source>North-northeast </source>
         <translation type="unfinished">北偏东 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="490"/>
+        <location filename="GraphicsScene.cpp" line="558"/>
         <source>South-southeast </source>
         <translation type="unfinished">南偏东 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="495"/>
+        <location filename="GraphicsScene.cpp" line="563"/>
         <source>South-southwest </source>
         <translation type="unfinished">南偏西 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="500"/>
+        <location filename="GraphicsScene.cpp" line="568"/>
         <source>North-northwest </source>
         <translation type="unfinished">北偏西 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="578"/>
+        <location filename="GraphicsScene.cpp" line="646"/>
         <source>No</source>
         <translation type="unfinished">否</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="583"/>
-        <location filename="GraphicsScene.cpp" line="634"/>
+        <location filename="GraphicsScene.cpp" line="346"/>
+        <location filename="GraphicsScene.cpp" line="651"/>
+        <location filename="GraphicsScene.cpp" line="702"/>
         <source>Rectangle</source>
         <translation type="unfinished">矩形</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="589"/>
-        <location filename="GraphicsScene.cpp" line="640"/>
+        <location filename="GraphicsScene.cpp" line="352"/>
+        <location filename="GraphicsScene.cpp" line="657"/>
+        <location filename="GraphicsScene.cpp" line="708"/>
         <source>AnyShape</source>
         <translation type="unfinished">任意形状</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="595"/>
-        <location filename="GraphicsScene.cpp" line="646"/>
+        <location filename="GraphicsScene.cpp" line="358"/>
+        <location filename="GraphicsScene.cpp" line="663"/>
+        <location filename="GraphicsScene.cpp" line="714"/>
         <source>Width</source>
         <translation type="unfinished">长度</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="601"/>
-        <location filename="GraphicsScene.cpp" line="652"/>
+        <location filename="GraphicsScene.cpp" line="364"/>
+        <location filename="GraphicsScene.cpp" line="669"/>
+        <location filename="GraphicsScene.cpp" line="720"/>
         <source>Occurance</source>
         <translation type="unfinished">产状</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="607"/>
-        <location filename="GraphicsScene.cpp" line="658"/>
+        <location filename="GraphicsScene.cpp" line="370"/>
+        <location filename="GraphicsScene.cpp" line="675"/>
+        <location filename="GraphicsScene.cpp" line="726"/>
         <source>Text</source>
         <translation type="unfinished">文本</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="613"/>
-        <location filename="GraphicsScene.cpp" line="664"/>
+        <location filename="GraphicsScene.cpp" line="376"/>
+        <location filename="GraphicsScene.cpp" line="681"/>
+        <location filename="GraphicsScene.cpp" line="732"/>
         <source>Angle</source>
         <translation type="unfinished">角度</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="629"/>
+        <location filename="GraphicsScene.cpp" line="341"/>
+        <location filename="GraphicsScene.cpp" line="697"/>
         <source>Yes</source>
         <translation type="unfinished">是</translation>
     </message>
@@ -580,23 +587,63 @@
         <translation type="unfinished">图片文件 （*.jpg）</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="283"/>
+        <location filename="mainwindow.cpp" line="204"/>
+        <source>Export report failed</source>
+        <translation type="unfinished">导出报告失败</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="205"/>
+        <source>Export report failed, please confirm if the computer has installed Microsoft Word!</source>
+        <translation type="unfinished">导出报告失败，请确认计算机安装了Word软件！</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="243"/>
+        <source>Export table failed</source>
+        <translation type="unfinished">导出表格失败</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="244"/>
+        <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
+        <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="258"/>
+        <source>index</source>
+        <translation type="unfinished">页面</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="261"/>
+        <source>type</source>
+        <translation type="unfinished">类型</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="264"/>
+        <source>data1</source>
+        <translation type="unfinished">数据项1</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="267"/>
+        <source>data2</source>
+        <translation type="unfinished">数据项2</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="318"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="283"/>
+        <location filename="mainwindow.cpp" line="319"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="286"/>
+        <location filename="mainwindow.cpp" line="322"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="287"/>
+        <location filename="mainwindow.cpp" line="323"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
@@ -644,29 +691,6 @@
     <message>
         <location filename="PrjInfoDialog.ui" line="98"/>
         <source>测试地点</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QWord</name>
-    <message>
-        <location filename="3rd/QWord.cpp" line="71"/>
-        <source>Error: file already exist!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="3rd/QWord.cpp" line="78"/>
-        <source>Error: word not installed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="3rd/QWord.cpp" line="86"/>
-        <source>query sub object Documents error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="3rd/QWord.cpp" line="95"/>
-        <source>Error: file name empty</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -4,15 +4,23 @@
 #include <QFile>
 #include <QTextStream>
 
-QWord::QWord(QObject *parent)
+QWord::QWord(QObject *parent) :
+    QObject(parent),
+
+    m_word(new QAxObject(parent)),
+    m_documents(NULL),
+    m_document(NULL)
 {
-    m_word = new QAxObject(parent);
-    m_documents = NULL;
-    m_document = NULL;
+    HRESULT r = OleInitialize(0);
+    if (r != S_OK && r != S_FALSE)
+    {
+        qDebug("Qt: Could not initialize OLE (error %x)", (unsigned int)r);
+    }
 }
 
 QWord::~QWord()
 {
+    OleUninitialize();
     //close();
 }
 
@@ -32,34 +40,18 @@ QString QWord::GetWordVersion()
 
 bool QWord::createNewWord()		//创建一个新的word
 {
-    //	QString defaultFileName = tr("日志记录%1").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
-    //	m_saveName=QFileDialog::getSaveFileName(0,tr("日志信息"),defaultFileName,tr("*.doc"));
-    //	QFile file(m_saveName);
-    //	if(file.exists())
-    //	{
-    //		m_strError += "错误：目标文件已存在!";
-    //		return false;
-    //	}
-    //	if(!m_saveName.isEmpty())
-    //	{
-    if(!m_word->setControl("Word.Application"))
+    if (!m_word->setControl("Word.Application"))
     {
         m_strError += "错误：获取word组件失败，请确定是否安装了word!";
         return false;
     }
-    m_word->setProperty("Visible",true);
-    //false不显示任何警告信息。如果为true那么在关闭是会出现类似“文件已修改，是否保存”的提示
+    m_word->setProperty("Visible", true);
     m_word->setProperty("DisplayAlerts", false);
+
     m_documents = m_word->querySubObject("Documents");
     m_documents->dynamicCall("Add (void)");
     m_document = m_word->querySubObject("ActiveDocument");//获取当前激活的文档
     return true;
-    //        }
-    //        else
-    //	{
-    //		m_strError += "错误：文件名为空";
-    //		return false;
-    //	}
 }
 
 bool QWord::createNewWord(const QString& filePath)
@@ -87,7 +79,7 @@ bool QWord::createNewWord(const QString& filePath)
             return false;
         }
         m_documents->dynamicCall("Add (void)");
-        m_document = m_word->querySubObject("ActiveDocument");//获取当前激活的文档
+        m_document = m_word->querySubObject("ActiveDocument");
         return true;
     }
     else
@@ -96,20 +88,34 @@ bool QWord::createNewWord(const QString& filePath)
         return false;
     }
 }
+
+bool QWord::openWord(QString &filepath)
+{
+    if (!m_word->setControl("Word.Application"))
+    {
+        return false;
+    }
+
+    m_word->setProperty("Visible", true);
+    m_documents = m_word->querySubObject("Documents");
+    m_documents->dynamicCall("Add(QString)", filepath);
+    m_document = m_word->querySubObject("ActiveDocument");
+
+    return true;
+}
+
+
 void QWord::save()
 {
     if (m_document)
     {
         m_document->dynamicCall("Save()");
-        //m_document->dynamicCall("Close(boolean)", false);
-        //m_word->dynamicCall("Quit()");
-    }
-    else
-    {
         return;
     }
 }
-void QWord::close()				//关闭 退出 析构时候也会自动调用一次
+
+
+void QWord::close()
 {
     if(!m_saveName.isEmpty())		//如果不为空  则为新建
     {
@@ -264,7 +270,7 @@ void QWord::getUsedRange(int *topLeftRow, int *topLeftColumn, int *bottomRightRo
     QAxObject *columns = range->querySubObject("Columns");
     *bottomRightColumn = *topLeftColumn + columns->property("Count").toInt() - 1;
 }
-void QWord::intsertTable(int row,int column)
+void QWord::insertTable(int row,int column)
 {
     QAxObject* tables = m_document->querySubObject("Tables");
     QAxObject* selection = m_word->querySubObject("Selection");

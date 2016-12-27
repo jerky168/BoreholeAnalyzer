@@ -194,85 +194,191 @@ void MainWindow::on_actionExportImage_triggered()
 
 
 void MainWindow::on_actionExportWord_triggered()
-{
-    if (!my_word.createNewWord())
+{   
+
+    QWord word;
+    if (!word.createNewWord())
     {
-        QMessageBox::critical(this, tr("Export report failed"),
-                              tr("Export report failed, please confirm if the computer has installed Microsoft Office Word!"));
+        QMessageBox::critical(this,
+                              tr("Export report failed"),
+                              tr("Export report failed, please confirm if the computer has installed Microsoft Word!")
+                              );
         return;
     }
 
-    QImage image;
-    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+    word.setPageOrientation(0);
+    word.setWordPageView(3);
+    word.setMargin(72, 72, 54, 54);
+
+    //Header
+    word.insertTable(1, 2);
+
+    word.setCellString(1, 1, tr("Name"));
+    word.setCellString(1, 2, tr("Test"));
+
+    word.moveForEnd();
+
+    word.insertTable(2, 6);
+    word.setCellString(2, 1, tr("Number"));
+    word.setCellString(2, 3, tr("Site"));
+    word.setCellString(2, 5, tr("Time"));
+
+    word.setCellString(3, 1, tr("Diameter"));
+    word.setCellString(3, 3, tr("Depth"));
+    word.setCellString(3, 5, tr("StartDepth"));
+
+    word.moveForEnd();
+
+    word.insertTable(1, 6);
+    word.setCellString(4, 1, tr("Position"));
+    word.setCellString(4, 2, tr("Image"));
+    word.setCellString(4, 3, tr("Remarks"));
+    word.setCellString(4, 6, tr("Position"));
+    word.setCellString(4, 5, tr("Image"));
+    word.setCellString(4, 6, tr("Remarks"));
+    word.moveForEnd();
+
+    int rows = (ImageWidget::maxIndex+2)/2;
+
+    for (int i = 0; i < rows; i++)
     {
-        image = getSceneImage(i);
-        QString filename = QDir::temp().filePath("temp.jpg");
-        image.save(filename, "JPG");
-        my_word.insertPic(filename);
-        my_word.insertMoveDown();
+        word.insertTable(1, 6);
+
+        QImage image = getSceneImage(2*i);
+        image = image.scaled(image.dotsPerMeterX() * 0.048, image.dotsPerMeterY() * 0.2, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        image.save(QDir::temp().filePath("temp.jpg"));
+        word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
+
+        image = getSceneImage(2*i+1);
+        image = image.scaled(image.dotsPerMeterX() * 0.048, image.dotsPerMeterY() * 0.2, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        image.save(QDir::temp().filePath("temp.jpg"));
+        word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
+
+        word.moveForEnd();
     }
 
-    my_word.save();
+
+//    {
+//        QAxObject* selection = word.querySubObject("Selection");
+//        QVariantList params;
+//        params.append(6);
+//        params.append(0);
+//        selection->dynamicCall("EndOf(QVariant&, QVariant&)", params).toInt();
+//    }
+
+//    {
+//        QAxObject* tables = document->querySubObject("Tables");
+//        QAxObject* selection = word.querySubObject("Selection");
+//        QAxObject* range = selection->querySubObject("Range");
+//        QVariantList params;
+//        params.append(range->asVariant());
+//        params.append(1);
+//        params.append(1);
+//        params.append(1);
+//        params.append(2);
+//        tables->querySubObject("Add(QAxObject*, int, int, QVariant&, QVariant&)", params);
+//    }
+
+//    {
+//        QImage image = getSceneImage(0);
+//        image = image.scaled(image.dotsPerMeterX() * 0.05, image.dotsPerMeterY() * 0.225, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+//        image.save(QDir::temp().filePath("temp.jpg"));
+
+//        QAxObject *selection = word.querySubObject("Selection");
+//        QAxObject *table = selection->querySubObject("Tables(1)");
+//        QAxObject *range = table->querySubObject("Cell(int, int)",6,2)->querySubObject("Range");
+//        range->querySubObject("InlineShapes")->dynamicCall("AddPicture(const QString&)", QDir::temp().filePath("temp.jpg"));
+//    }
+
+
+
+//    QImage image;
+//    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+//    {
+//        image = getSceneImage(i);
+//        QString filename = QDir::temp().filePath("temp.jpg");
+//        image.save(filename, "JPG");
+
+//        QAxObject *selection = word.querySubObject("Selection");
+//        QAxObject *shapes = selection->querySubObject("InlineShapes");
+//        shapes->dynamicCall("AddPicture(const QString&)", filename);
+//        selection->dynamicCall("TypeParagraph(void)");
+//    }
+
+
+//    document->dynamicCall("Save()");
+
+    word.save();
+//    CoUninitialize();
 }
 
 
 
 void MainWindow::on_actionExportExcel_triggered()
 {
-//    if (!my_excel.Open("/", 1, true))
-//    {
-//        QMessageBox::critical(this, tr("Export table failed"),
-//                              tr("Export table failed, please confirm if the computer has installed Microsoft Office Excel!"));
-//        return;
-//    }
+    CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
-//    my_excel.Save();
+    QAxObject excel;
+    if (!excel.setControl("Excel.Application"))
+    {
+        QMessageBox::critical(this,
+                              tr("Export table failed"),
+                              tr("Export table failed, please confirm if the computer has installed Microsoft Excel!")
+                              );
+        return;
+    }
 
-//    QString xlsFile = "/";                            //默认路径
-//    bool isExcelOpen = my_excel.Open(xlsFile, true);
+    excel.setProperty("Visible", true);
+    QAxObject *workBooks = excel.querySubObject("WorkBooks");
 
-//    QVector<DefectWidget::ItemData>     currItemsData;//当前页面数据
+    workBooks->dynamicCall("Add (void)");
+    QAxObject *workBook = excel.querySubObject("ActiveWorkBook");
+    QAxObject *worksheet = workBook->querySubObject("WorkSheets(int)", 1);
 
-//    quint16                             currIndex = 0;//当前页面位置
-//    quint16                               currdataNum;//当前页第几个数据
-//    quint16                          aggregateNum = 1;//数据总数
-//    quint16                                   dataNum;//当前数据个数
-//    quint16                                    rowNum;//当前写入数据行数
-//    QString                                  intToStr;//转换int为QString
-//    if ( isExcelOpen )
-//    {
-//        //初始化表头和显示数据
-//        my_excel.setCellString(1,1,"当前所有数据的Excel报表");
-//        my_excel.mergeCells(1,1,4,4);
+    quint32 itemCount = 2;
+    QAxObject *range = worksheet->querySubObject("Cells(int,int)", 1, 1);
+    range->dynamicCall("SetValue(const QString&)", tr("index"));
+    range->setProperty("HorizontalAlignment", -4108);
+    range = worksheet->querySubObject("Cells(int,int)", 1, 2);
+    range->dynamicCall("SetValue(const QString&)", tr("type"));
+    range->setProperty("HorizontalAlignment", -4108);
+    range = worksheet->querySubObject("Cells(int,int)", 1, 3);
+    range->dynamicCall("SetValue(const QString&)", tr("data1"));
+    range->setProperty("HorizontalAlignment", -4108);
+    range = worksheet->querySubObject("Cells(int,int)", 1, 4);
+    range->dynamicCall("SetValue(const QString&)", tr("data2"));
+    range->setProperty("HorizontalAlignment", -4108);
 
-//        my_excel.setCellString(5, 1, "页数");
-//        my_excel.setCellString(5, 2, "类型");
-//        my_excel.setCellString(5, 3, "数据");
-//        my_excel.setCellString(5, 4, "uuid");
 
-//        while( currIndex < ImageWidget::maxIndex )
-//        {
-//            currItemsData = handler->getIndexData(currIndex).items;
-//            for (dataNum = 0, currdataNum = 0; dataNum < currItemsData.count(); dataNum++,currdataNum++ )
-//            {
-//                rowNum = 5 + aggregateNum + currdataNum;
+    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+    {
+        DbHandler::IndexData indexData = handler->getIndexData(i);
+        QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+        for (int j = 0; j < tableDatas.count(); j++)
+        {
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 1);
+            range->dynamicCall("SetValue(const QString&)", QString::number(i+1));
+            range->setProperty("HorizontalAlignment", -4108);
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 2);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).type);
+            range->setProperty("HorizontalAlignment", -4108);
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 3);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 0, 0));
+            range->setProperty("HorizontalAlignment", -4131);
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 4);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 1).replace("\n", "  "));
+            range->setProperty("HorizontalAlignment", -4131);
+            itemCount++;
+        }
+    }
 
-//                my_excel.setCellString(rowNum, 1, intToStr.setNum(currIndex + 1));
-//                my_excel.setCellString(rowNum, 2, intToStr.setNum(currItemsData.at(dataNum).item->type()));
-////                my_excel.setCellString(rowNum, 3, my_excel.GetExcelData(currItemsData.at(dataNum).item));
-//                my_excel.setCellString(rowNum, 4, currItemsData.at(dataNum).uuid.toString());
-//            }
-//            aggregateNum += currdataNum;
-//            currIndex++;
-//        }
-////        my_excel.setRowColumnAuto();
-//        my_excel.Close();
-//    }
-//    else
-//    {
-//        qDebug("open failed\n");
-//    }
+    range = worksheet->querySubObject("UsedRange");
+    QAxObject *cells = range->querySubObject("Columns");
+    cells->dynamicCall("AutoFit");
 
+    workBook->dynamicCall("Save()");
+
+    CoUninitialize();
 }
 
 void MainWindow::on_actionProjectInfo_triggered()

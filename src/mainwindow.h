@@ -9,12 +9,13 @@
 #include <QActionGroup>
 #include <QMessageBox>
 
+#include <QVariant>
+#include <QAxObject>
+
 #include "ToolBar.h"
 
 #include "GraphicsScene.h"
 #include "DbHandler.h"
-#include "QWord.h"
-#include "QExcel.h"
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
 #include "ManualDialog.h"
@@ -23,6 +24,10 @@
 #include "RollWidget.h"
 
 #include "GraphicsSettings.h"
+
+#include "QWord.h"
+#include "QExcel.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -79,8 +84,6 @@ private:
     QActionGroup *actionGroup;
     QActionGroup *editActionGroup;
 
-    QWord my_word;
-    QExcel my_excel;
 
 
     void createUI();

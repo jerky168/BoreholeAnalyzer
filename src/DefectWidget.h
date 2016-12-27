@@ -40,6 +40,8 @@ private:
 
     void initModel();
 
+private slots:
+    void on_deleteButton_clicked();
 
 
 signals:

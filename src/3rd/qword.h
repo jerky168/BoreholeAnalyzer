@@ -1,18 +1,18 @@
-#ifndef QWORD_H
-#define QWORD_H
+#pragma once
 
 #include <QObject>
 #include <QString>
 #include <QVariant>
 #include <QAxObject>
 #include <QAxWidget>
+#include "qt_windows.h"
 
 class QWord : public QObject
 {
     Q_OBJECT
 
 public:
-    QWord(QObject *parent = 0);
+    explicit QWord(QObject *parent = Q_NULLPTR);
     ~QWord();
 
 public:
@@ -35,7 +35,7 @@ public:
     //创建一个新的Word
     bool createNewWord();
     //打开一个现有的Word
-    void openWord();
+    bool openWord(QString &filepath);
     //创建一个新的Word
     bool createNewWord(const QString& filePath );
 
@@ -88,7 +88,7 @@ public:
     //单元格插入图片
     void insertCellPic(int row,int column,const QString& picPath);
     //插入一个几行几列表格
-    void intsertTable(int row,int column);
+    void insertTable(int row,int column);
     //插入回车
     void insertMoveDown();
     //插入文字
@@ -107,4 +107,3 @@ private:
 
 };
 
-#endif // QWORD_H

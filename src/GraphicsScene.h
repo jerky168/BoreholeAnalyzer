@@ -63,8 +63,10 @@ public:
 
     QImage getSceneImage();
     QImage getSceneImageFor3D();
+    QVector<TableData> getSavedTableData();
 
     static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
+    static QVector<TableData> getTableDataFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
 
 
     QPointF scene2Real(QPointF scenePos);
@@ -74,6 +76,10 @@ public:
     bool hasNewItem();
     QMap<QString, QGraphicsItem *> getNewItems();
     void saveNewItems();
+
+
+
+
 
 public slots:
     void clearScene();

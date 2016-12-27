@@ -41,7 +41,9 @@ SOURCES +=  main.cpp\
             items/GraphicsAnyshape.cpp \
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
-            items/GraphicsTextItem.cpp
+            items/GraphicsTextItem.cpp \
+    3rd/QExcel.cpp \
+    3rd/QWord.cpp
 
 
 
@@ -65,7 +67,9 @@ HEADERS  += mainwindow.h \
             items/GraphicsOccurance.h \
             items/GraphicsTextItem.h \
             items/GraphicsLineItem.h \
-            items/type.h
+            items/type.h \
+    3rd/QExcel.h \
+    3rd/QWord.h
 
 
 INCLUDEPATH += items
@@ -87,8 +91,8 @@ RESOURCES += \
 win32 {
     QT += axcontainer
 
-    HEADERS += 3rd/QWord.h  3rd/QExcel.h
-    SOURCES += 3rd/QWord.cpp 3rd/QExcel.cpp
+    HEADERS += 
+    SOURCES +=
     INCLUDEPATH += 3rd
 
     LIBS += -lopengl32 -lglu32

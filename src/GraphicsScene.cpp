@@ -329,6 +329,74 @@ QImage GraphicsScene::getImageFromData(QPixmap pixmap, qreal start, qreal end, Q
 }
 
 
+QVector<GraphicsScene::TableData> GraphicsScene::getSavedTableData()
+{
+    QVector<TableData> tableDatas;
+    for (int i = 0; i < savedItems.count(); i++)
+    {
+        TableData tableData;
+        QGraphicsItem *savedItem = savedItems.values().at(i);
+        tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
+        tableData.data = getShowString(savedItem);
+        tableData.isSaved = tr("Yes");
+        switch(savedItem->type())
+        {
+            case Rect:
+            {
+                tableData.type = tr("Rectangle");
+                break;
+            }
+
+            case AnyShape:
+            {
+                tableData.type = tr("AnyShape");
+                break;
+            }
+
+            case Ruler:
+            {
+                tableData.type = tr("Width");
+                break;
+            }
+
+            case Occurance:
+            {
+                tableData.type = tr("Occurance");
+                break;
+            }
+
+            case Text:
+            {
+                tableData.type = tr("Text");
+                break;
+            }
+
+            case Angle:
+            {
+                tableData.type = tr("Angle");
+                break;
+            }
+
+            default:
+                break;
+        }
+        tableDatas.append(tableData);
+    }
+    return tableDatas;
+}
+
+
+QVector<GraphicsScene::TableData> GraphicsScene::getTableDataFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items)
+{
+    GraphicsScene *scene = new GraphicsScene;
+    scene->updateIndexData(pixmap, start, end, items);
+    QVector<TableData> tableDatas = scene->getSavedTableData();
+    delete scene;
+    return tableDatas;
+}
+
+
+
 QPointF GraphicsScene::scene2Real(QPointF scenePos)
 {
     qreal x = scenePos.x() - Border;
@@ -672,3 +740,4 @@ void GraphicsScene::updateTable()
     }
     emit emitTableData(tableDatas);
 }
+

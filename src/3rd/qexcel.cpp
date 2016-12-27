@@ -1,55 +1,26 @@
 #include "QExcel.h"
-#include "QWord.h"
-#include "DbHandler.h"
 #include "qt_windows.h"
-#include "mainwindow.h"
-#include "QFileDialog.h"
-#include "ImageWidget.h"
+
 QExcel::QExcel(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
 
+    pExcel(new QAxObject(parent)),
+    pWorkbooks(NULL),
+    pWorkbook(NULL),
+    pWorksheet(NULL),
+
+    sXlsFile(""),
+
+    nRowCount(0),
+    nColumnCount(0),
+    nStartRow(0),
+    nStartColumn(0),
+
+    bIsOpen(false),
+    bIsValid(false),
+    bIsANewFile(false),
+    bIsSaveAlready(false)
 {
-    pExcel     = NULL;
-    pWorkbooks = NULL;
-    pWorkbook  = NULL;
-    pWorksheet = NULL;
-
-    sXlsFile     = "";
-    nRowCount    = 0;
-    nColumnCount = 0;
-    nStartRow    = 0;
-    nStartColumn = 0;
-
-    bIsOpen     = false;
-    bIsValid    = false;
-    bIsANewFile = false;
-    bIsSaveAlready = false;
-
-    HRESULT r = OleInitialize(0);
-    if (r != S_OK && r != S_FALSE)
-    {
-        qDebug("Qt: Could not initialize OLE (error %x)", (unsigned int)r);
-    }
-}
-
-QExcel::QExcel(QString xlsFile)
-{
-    pExcel     = NULL;
-    pWorkbooks = NULL;
-    pWorkbook  = NULL;
-    pWorksheet = NULL;
-
-    sXlsFile     = xlsFile;
-    nRowCount    = 0;
-    nColumnCount = 0;
-    nStartRow    = 0;
-    nStartColumn = 0;
-
-    bIsOpen     = false;
-    bIsValid    = false;
-    bIsANewFile = false;
-    bIsSaveAlready = false;
-
     HRESULT r = OleInitialize(0);
     if (r != S_OK && r != S_FALSE)
     {
@@ -66,6 +37,57 @@ QExcel::~QExcel()
     }
     OleUninitialize();
 }
+
+
+QString QExcel::GetExcelVersion()
+{
+    if(!pExcel->setControl("Excel.Application"))
+    {
+        m_strError += "错误：获取excel组件失败，请确定是否安装了excel!";
+        return "";
+    }
+    return pExcel->property("Version").toString();
+}
+
+
+// 创建一个新的excel
+bool QExcel::createNewExcel()
+{
+    if (!pExcel->setControl("Excel.Application"))
+    {
+        return false;
+    }
+    else
+    {
+        pExcel->setProperty("Visible", true);
+
+        pWorkbooks = pExcel->querySubObject("WorkBooks");
+        pWorkbooks->dynamicCall("Add (void)");
+        pWorkbook  = pExcel->querySubObject("ActiveWorkBook");
+        pWorkSheets = pWorkbook->querySubObject("Sheets");
+        pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", 1);
+
+        QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");
+        QAxObject *rows = usedrange->querySubObject("Rows");
+        QAxObject *columns = usedrange->querySubObject("Columns");
+
+        nStartRow    = usedrange->property("Row").toInt();
+        nStartColumn = usedrange->property("Column").toInt();
+
+        nRowCount    = rows->property("Count").toInt();
+        nColumnCount = columns->property("Count").toInt();
+
+        bIsOpen = true;
+        bIsValid = true;
+        bIsANewFile = true;
+        bIsSaveAlready = false;
+
+
+        return true;
+    }
+}
+
+
 
 /**
   *@brief 打开sXlsFile指定的excel报表
@@ -146,12 +168,10 @@ bool QExcel::Open(quint32 nSheet, bool visible)
 
     pWorksheet = pWorkbook->querySubObject("WorkSheets(int)", nCurrSheet);//打开第一个sheet
 
-    //至此已打开，开始获取相应属性
     QAxObject *usedrange = pWorksheet->querySubObject("UsedRange");//获取该sheet的使用范围对象
     QAxObject *rows = usedrange->querySubObject("Rows");
     QAxObject *columns = usedrange->querySubObject("Columns");
 
-    //因为excel可以从任意行列填数据而不一定是从0,0开始，因此要获取首行列下标
     nStartRow    = usedrange->property("Row").toInt();    //第一行的起始位置
     nStartColumn = usedrange->property("Column").toInt(); //第一列的起始位置
 
@@ -160,7 +180,6 @@ bool QExcel::Open(quint32 nSheet, bool visible)
 
     bIsOpen  = true;
     return bIsOpen;
-
 }
 
 
@@ -183,6 +202,7 @@ bool QExcel::Open(QString xlsFile, quint32 nSheet, bool visible)
   */
 void QExcel::Save()
 {
+    // 先判断是否有活动的excel
     if (pWorkbook)
     {
         if (bIsSaveAlready)
@@ -191,6 +211,7 @@ void QExcel::Save()
         }
 
         pWorkbook->dynamicCall("Save()");
+        pExcel->dynamicCall("Quit()");
         // if (!bIsANewFile)
         // {
         //     pWorkbook->dynamicCall("Save()");
@@ -334,61 +355,63 @@ bool QExcel::IsValid()
 {
     return bIsValid;
 }
+
+
 /**
   *@brief 为了不修改dbhandler在此添加一个获得data的函数
   *@return 数据：dataStr
   *
   */
-QString QExcel::GetExcelData(QGraphicsItem *item){
-    QString dataStr;
-    switch (item->type())
-    {
-    case Angle:
-    {
-        GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
+//QString QExcel::GetExcelData(QGraphicsItem *item){
+//    QString dataStr;
+//    switch (item->type())
+//    {
+//    case Angle:
+//    {
+//        GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
 
-    case AnyShape:
-    {
-        GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
-    case Ruler:
-    {
-        GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
-    case Occurance:
-    {
-        GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
-    case Rect:
-    {
-        GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
+//    case AnyShape:
+//    {
+//        GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
+//    case Ruler:
+//    {
+//        GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
+//    case Occurance:
+//    {
+//        GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
+//    case Rect:
+//    {
+//        GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
 
-    case Text:
-    {
-        GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
-        dataStr = i->getDataString();
-        break;
-    }
+//    case Text:
+//    {
+//        GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+//        dataStr = i->getDataString();
+//        break;
+//    }
 
-    default:
-    {
-        break;
-    }
-    }
-    return dataStr;
-}
+//    default:
+//    {
+//        break;
+//    }
+//    }
+//    return dataStr;
+//}
 
 
 

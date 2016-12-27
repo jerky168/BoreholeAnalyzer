@@ -60,3 +60,8 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
     update();
 }
 
+
+void DefectWidget::on_deleteButton_clicked()
+{
+
+}

@@ -2,18 +2,19 @@
 
 #include <QObject>
 #include <QAxObject>
-
 #include <QFile>
+#include <QDebug>
 
 class QExcel : public QObject
 {
     Q_OBJECT
 public:
     explicit QExcel(QObject *parent = Q_NULLPTR);
-    QExcel(QString xlsFile);
     ~QExcel();
 
 public:
+    bool createNewExcel();
+
     bool Open(quint32 nSheet = 1, bool visible = false);//打开xls文件
     bool Open(QString xlsFile, quint32 nSheet = 1, bool visible = false);
     void Save();                //保存xls报表
@@ -28,7 +29,13 @@ public:
     void setRowColumnAuto();
     bool IsOpen();
     bool IsValid();
-    QString GetExcelData(QGraphicsItem *item);
+
+    
+
+    QAxObject* getWorkbooks(){return pWorkbooks;}
+    QAxObject* getWorkbook(){return pWorkbook;}
+    QAxObject* getExcelApp(){return pExcel;}
+    QString GetExcelVersion();
 
 protected:
     void Clear();
@@ -37,6 +44,7 @@ private:
     QAxObject *pExcel;      //指向整个excel应用程序
     QAxObject *pWorkbooks;  //指向工作簿集,excel有很多工作簿
     QAxObject *pWorkbook;   //指向sXlsFile对应的工作簿
+    QAxObject *pWorkSheets; //指向工作簿的所有sheet表单
     QAxObject *pWorksheet;  //指向工作簿中的某个sheet表单
 
     QString   sXlsFile;     //xls文件路径
@@ -51,5 +59,7 @@ private:
     bool      bIsValid;     //是否有效
     bool      bIsANewFile;  //是否是一个新建xls文件，用来区分打开的excel是已存在文件还是有本类新建的
     bool      bIsSaveAlready;//防止重复保存
+
+    QString   m_strError;   //错误信息
 };
 
