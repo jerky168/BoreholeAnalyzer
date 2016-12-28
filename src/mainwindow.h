@@ -84,16 +84,17 @@ private:
     QActionGroup *actionGroup;
     QActionGroup *editActionGroup;
 
-
-
-    void createUI();
     void createActionGroups();
     void createSceneAndView();
     void createConnections();
+
     void resetActions();
 
 
     QImage getSceneImage(quint16 index);
+    QImage getPixmapImage(quint16 index);
+
+
     QMap<QString, QGraphicsItem *> index2Item(DbHandler::IndexData indexData);
 
 signals:

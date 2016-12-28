@@ -26,7 +26,7 @@
 #include <QMap>
 
 
-#define Border          150
+#define Border          200
 #define Interval        30
 #define Segment         30
 
@@ -61,13 +61,14 @@ public:
 
     void itemFinished(QString content);
 
+    QImage getPixmapImage();
     QImage getSceneImage();
     QImage getSceneImageFor3D();
     QVector<TableData> getSavedTableData();
 
     static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
+    static QImage getPixmapImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
     static QVector<TableData> getTableDataFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
-
 
     QPointF scene2Real(QPointF scenePos);
     QPointF real2Scene(QPointF realPos);

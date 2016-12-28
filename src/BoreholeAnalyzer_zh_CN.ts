@@ -587,63 +587,116 @@
         <translation type="unfinished">图片文件 （*.jpg）</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="204"/>
+        <location filename="mainwindow.cpp" line="203"/>
         <source>Export report failed</source>
         <translation type="unfinished">导出报告失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="205"/>
+        <location filename="mainwindow.cpp" line="204"/>
         <source>Export report failed, please confirm if the computer has installed Microsoft Word!</source>
         <translation type="unfinished">导出报告失败，请确认计算机安装了Word软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="243"/>
+        <location filename="mainwindow.cpp" line="216"/>
+        <source>Name</source>
+        <translation type="unfinished">工程名称</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="220"/>
+        <source>Number</source>
+        <translation type="unfinished">测控编号</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="221"/>
+        <source>Site</source>
+        <translation type="unfinished">测试地点</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="222"/>
+        <source>Time</source>
+        <translation type="unfinished">测试时间</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="224"/>
+        <source>Diameter</source>
+        <translation type="unfinished">测孔直径</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="225"/>
+        <source>Depth</source>
+        <translation type="unfinished">测试深度</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="226"/>
+        <source>StartDepth</source>
+        <translation type="unfinished">始测深度</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="231"/>
+        <location filename="mainwindow.cpp" line="234"/>
+        <source>Position</source>
+        <translation type="unfinished">位置</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="232"/>
+        <location filename="mainwindow.cpp" line="235"/>
+        <source>Image</source>
+        <translation type="unfinished">展开图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="233"/>
+        <location filename="mainwindow.cpp" line="236"/>
+        <source>Remarks</source>
+        <translation type="unfinished">备注</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="323"/>
         <source>Export table failed</source>
         <translation type="unfinished">导出表格失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="244"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
         <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="258"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>index</source>
         <translation type="unfinished">页面</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="261"/>
+        <location filename="mainwindow.cpp" line="341"/>
         <source>type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="264"/>
+        <location filename="mainwindow.cpp" line="344"/>
         <source>data1</source>
         <translation type="unfinished">数据项1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="267"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>data2</source>
         <translation type="unfinished">数据项2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="318"/>
+        <location filename="mainwindow.cpp" line="397"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="319"/>
+        <location filename="mainwindow.cpp" line="398"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="401"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="323"/>
+        <location filename="mainwindow.cpp" line="402"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
@@ -691,6 +744,29 @@
     <message>
         <location filename="PrjInfoDialog.ui" line="98"/>
         <source>测试地点</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QWord</name>
+    <message>
+        <location filename="3rd/QWord.cpp" line="63"/>
+        <source>Error: file already exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="3rd/QWord.cpp" line="70"/>
+        <source>Error: word not installed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="3rd/QWord.cpp" line="78"/>
+        <source>query sub object Documents error!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="3rd/QWord.cpp" line="87"/>
+        <source>Error: file name empty</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

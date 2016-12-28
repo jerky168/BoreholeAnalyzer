@@ -27,7 +27,6 @@ void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setPen(thisPen);
 
     painter->drawPolygon(this->polygon());
-
 }
 
 
@@ -145,7 +144,6 @@ QString GraphicsAnyshape::getDataString()
         data.append(QString::number(point.y() - Border, 'f', 2));
     }
 
-    qDebug() << polygon();
     return data;
 }
 
@@ -166,6 +164,5 @@ GraphicsAnyshape * GraphicsAnyshape::loadFromString(QString data)
     GraphicsAnyshape *item = new GraphicsAnyshape(QPoint());
     item->setPolygon(polygon);
 
-    qDebug() << item->polygon();
     return item;
 }

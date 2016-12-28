@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    createUI();
     createActionGroups();
     createSceneAndView();
     createConnections();
@@ -25,13 +24,6 @@ MainWindow::~MainWindow()
     delete handler;
     delete scene;
 }
-
-void MainWindow::createUI()
-{
-//    ToolBar *toolbar = new ToolBar();
-//    addToolBar(Qt::TopToolBarArea, toolbar);
-}
-
 
 // create action group
 void MainWindow::createActionGroups()
@@ -70,13 +62,11 @@ void MainWindow::createConnections()
     QObject::connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
     QObject::connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
 
-    // 切换照片
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
     QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), ui->graphicsView, SLOT(handleModeChanged(GraphicsScene::Mode)));
-    QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
     QObject::connect(scene, SIGNAL(showRealInfo(QString)), ui->defectWidget, SLOT(showRealInfo(QString)));
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
     QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
@@ -98,22 +88,52 @@ void MainWindow::on_actionOpen_triggered()
     if (!handler->openDatabase(filename))
         return;
 
-    ui->actionSave->setEnabled(true);
-    ui->actionSaveAs->setEnabled(true);
-
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     ui->imageWidget->updatePrjInfo(prjInfo);
+
     ui->actionClose->setEnabled(true);
+    ui->actionSave->setEnabled(true);
+    //ui->actionSaveAs->setEnabled(true);
+    ui->actionExportImage->setEnabled(true);
+    ui->actionExportWord->setEnabled(true);
+    ui->actionExportExcel->setEnabled(true);
+
+    ui->actionAnyShape->setEnabled(true);
+    ui->actionCross->setEnabled(true);
+    ui->actionRectangle->setEnabled(true);
+    ui->actionTextbox->setEnabled(true);
+    ui->actionSlitWidth->setEnabled(true);
+    ui->actionShift->setEnabled(true);
+    ui->actionOccurrence->setEnabled(true);
+
+    QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
+
 }
 
 void MainWindow::on_actionClose_triggered()
 {
     emit clearScene();
     ui->imageWidget->clear();
-    ui->actionClose->setEnabled(false);
 
     if (handler->isOpened())
         handler->closeDatabase();
+
+    ui->actionClose->setEnabled(false);
+    ui->actionSave->setEnabled(false);
+    //ui->actionSaveAs->setEnabled(false);
+    ui->actionExportImage->setEnabled(false);
+    ui->actionExportWord->setEnabled(false);
+    ui->actionExportExcel->setEnabled(false);
+
+    ui->actionAnyShape->setEnabled(false);
+    ui->actionCross->setEnabled(false);
+    ui->actionRectangle->setEnabled(false);
+    ui->actionTextbox->setEnabled(false);
+    ui->actionSlitWidth->setEnabled(false);
+    ui->actionShift->setEnabled(false);
+    ui->actionOccurrence->setEnabled(false);
+
+    QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 }
 
 
@@ -192,10 +212,15 @@ void MainWindow::on_actionExportImage_triggered()
 }
 
 
+QImage handleImage(QImage image)
+{
+    return image;
+}
+
+
 
 void MainWindow::on_actionExportWord_triggered()
 {   
-
     QWord word;
     if (!word.createNewWord())
     {
@@ -210,12 +235,9 @@ void MainWindow::on_actionExportWord_triggered()
     word.setWordPageView(3);
     word.setMargin(72, 72, 54, 54);
 
-    //Header
     word.insertTable(1, 2);
 
     word.setCellString(1, 1, tr("Name"));
-    word.setCellString(1, 2, tr("Test"));
-
     word.moveForEnd();
 
     word.insertTable(2, 6);
@@ -233,83 +255,37 @@ void MainWindow::on_actionExportWord_triggered()
     word.setCellString(4, 1, tr("Position"));
     word.setCellString(4, 2, tr("Image"));
     word.setCellString(4, 3, tr("Remarks"));
-    word.setCellString(4, 6, tr("Position"));
+    word.setCellString(4, 4, tr("Position"));
     word.setCellString(4, 5, tr("Image"));
     word.setCellString(4, 6, tr("Remarks"));
     word.moveForEnd();
 
-    int rows = (ImageWidget::maxIndex+2)/2;
 
+    int rows = (ImageWidget::maxIndex+2)/2;
     for (int i = 0; i < rows; i++)
     {
         word.insertTable(1, 6);
 
-        QImage image = getSceneImage(2*i);
-        image = image.scaled(image.dotsPerMeterX() * 0.048, image.dotsPerMeterY() * 0.2, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        QImage image = getPixmapImage(2*i);
+        image.setDotsPerMeterX(image.width() / 0.05);
+        image.setDotsPerMeterY(image.width() / 0.05);
         image.save(QDir::temp().filePath("temp.jpg"));
         word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
 
-        image = getSceneImage(2*i+1);
-        image = image.scaled(image.dotsPerMeterX() * 0.048, image.dotsPerMeterY() * 0.2, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        image.save(QDir::temp().filePath("temp.jpg"));
-        word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
+        if (ImageWidget::maxIndex % 2 == 1)
+        {
+            image = getPixmapImage(2*i+1);
+            image.setDotsPerMeterX(image.width() / 0.05);
+            image.setDotsPerMeterY(image.width() / 0.05);
+            image.save(QDir::temp().filePath("temp.jpg"));
+            word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
+        }
+
 
         word.moveForEnd();
     }
 
-
-//    {
-//        QAxObject* selection = word.querySubObject("Selection");
-//        QVariantList params;
-//        params.append(6);
-//        params.append(0);
-//        selection->dynamicCall("EndOf(QVariant&, QVariant&)", params).toInt();
-//    }
-
-//    {
-//        QAxObject* tables = document->querySubObject("Tables");
-//        QAxObject* selection = word.querySubObject("Selection");
-//        QAxObject* range = selection->querySubObject("Range");
-//        QVariantList params;
-//        params.append(range->asVariant());
-//        params.append(1);
-//        params.append(1);
-//        params.append(1);
-//        params.append(2);
-//        tables->querySubObject("Add(QAxObject*, int, int, QVariant&, QVariant&)", params);
-//    }
-
-//    {
-//        QImage image = getSceneImage(0);
-//        image = image.scaled(image.dotsPerMeterX() * 0.05, image.dotsPerMeterY() * 0.225, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-//        image.save(QDir::temp().filePath("temp.jpg"));
-
-//        QAxObject *selection = word.querySubObject("Selection");
-//        QAxObject *table = selection->querySubObject("Tables(1)");
-//        QAxObject *range = table->querySubObject("Cell(int, int)",6,2)->querySubObject("Range");
-//        range->querySubObject("InlineShapes")->dynamicCall("AddPicture(const QString&)", QDir::temp().filePath("temp.jpg"));
-//    }
-
-
-
-//    QImage image;
-//    for (int i = 0; i <= ImageWidget::maxIndex; i++)
-//    {
-//        image = getSceneImage(i);
-//        QString filename = QDir::temp().filePath("temp.jpg");
-//        image.save(filename, "JPG");
-
-//        QAxObject *selection = word.querySubObject("Selection");
-//        QAxObject *shapes = selection->querySubObject("InlineShapes");
-//        shapes->dynamicCall("AddPicture(const QString&)", filename);
-//        selection->dynamicCall("TypeParagraph(void)");
-//    }
-
-
-//    document->dynamicCall("Save()");
-
     word.save();
-//    CoUninitialize();
 }
 
 
@@ -507,12 +483,21 @@ void MainWindow::showStatus(QString message)
 }
 
 
-
 QImage MainWindow::getSceneImage(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
 }
+
+
+QImage MainWindow::getPixmapImage(quint16 index)
+{
+    DbHandler::IndexData indexData = handler->getIndexData(index);
+    return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+}
+
+
+
 
 QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData indexData)
 {

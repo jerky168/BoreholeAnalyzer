@@ -96,6 +96,70 @@ void GraphicsScene::itemFinished(QString content)
 }
 
 
+QImage GraphicsScene::getPixmapImage()
+{
+    QImage image(pixmap_width + Border, pixmap_height + Border, QImage::Format_RGB32);
+    QPainter painter(&image);
+    painter.fillRect(image.rect(), Qt::white);
+    render(&painter, QRectF(Border, Border, pixmap_width, pixmap_height), QRectF(Border, Border, pixmap_width, pixmap_height));
+
+    QPen thisPen(Qt::black);
+    thisPen.setWidth(8);
+
+    painter.setPen(thisPen);
+    QFont font = GraphicsSettings::instance()->getFont();
+    font.setPointSize(80);
+    painter.setFont(font);
+
+    QVector<QLineF> lines;
+    QLineF line;
+
+    for (int i = 0; i < 11; i++)
+    {
+        qreal x = Border;
+        qreal y = Border + (image.height() - Border) / 10 * i;
+        line.setLine(x - Segment, y , x, y);
+        lines << line;
+
+        painter.drawText(QPointF(Segment, y - Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        qreal x = Border + (image.width() - Border) / 4 * i;
+        qreal y = Border;
+
+        line.setLine(x, y-Segment, x, y);
+        lines << line;
+
+        switch(i)
+        {
+            case 0:
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "N");
+                break;
+            case 1:
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "E");
+                break;
+            case 2:
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "S");
+                break;
+            case 3:
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "W");
+                break;
+            case 4:
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "N");
+                break;
+            default:
+                break;
+        }
+    }
+
+    painter.drawLines(lines);
+
+    return image;
+}
+
+
 QImage GraphicsScene::getSceneImage()
 {
     QImage image(sceneRect().width(), sceneRect().height(), QImage::Format_RGB32);
@@ -260,7 +324,7 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->setPen(thisPen);
     QFont font = GraphicsSettings::instance()->getFont();
-    font.setPointSize(36);
+    font.setPointSize(50);
     painter->setFont(font);
 
 
@@ -324,6 +388,15 @@ QImage GraphicsScene::getImageFromData(QPixmap pixmap, qreal start, qreal end, Q
     GraphicsScene *scene = new GraphicsScene;
     scene->updateIndexData(pixmap, start, end, items);
     QImage image = scene->getSceneImage();
+    delete scene;
+    return image;
+}
+
+QImage GraphicsScene::getPixmapImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items)
+{
+    GraphicsScene *scene = new GraphicsScene;
+    scene->updateIndexData(pixmap, start, end, items);
+    QImage image = scene->getPixmapImage();
     delete scene;
     return image;
 }
@@ -608,14 +681,12 @@ void GraphicsScene::addItemData(QUuid uuid, QGraphicsItem *item, bool saved)
 
 void GraphicsScene::deleteItemData(QUuid uuid)
 {
-    // 如果删除的是刚添加的
     if (newItems.contains(uuid.toString()))
     {
         delete newItems.value(uuid.toString());
         removeItem(newItems.value(uuid.toString()));
         newItems.remove(uuid.toString());
     }
-    // 如果删除的是已经保存的
     else if (savedItems.contains(uuid.toString()))
     {
         delete savedItems.value(uuid.toString());
