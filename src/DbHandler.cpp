@@ -73,17 +73,34 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
     PrjInfo prjInfo;
     QSqlQuery query(database);
 
-    query.exec("select * from ProjectInfo");
+    query.exec("select direction, diameter, startHeight, projectName, date, orificeNumber from ProjectInfo");
     query.first();
-    prjInfo.startHeight = (qreal)query.value(1).toInt() / 10000;
-
+    if (query.value(0).toString().contains("down"))
+        prjInfo.isUp2Down = true;
+    else
+        prjInfo.isUp2Down = false;
+    prjInfo.diameter = query.value(1).toDouble() / 1000;
+    prjInfo.startHeight = query.value(2).toDouble() / 10000;
+    prjInfo.projectName = query.value(3).toString();
+    prjInfo.projectTime = query.value(4).toString();
+    prjInfo.orificeNumber = query.value(5).toString();
 
     query.exec("select * from bigImages");
     query.last();
-    prjInfo.endHeight = (qreal)query.value(0).toInt() / 10000;
+    prjInfo.endHeight = query.value(0).toDouble() / 10000;
 
     return prjInfo;
 }
+
+
+void DbHandler::setPrjInfo(PrjInfo prjInfo)
+{
+    QSqlQuery query(database);
+    //query.prepare("INSERT INTO items (uuid, number, type, data) VALUES (:uuid, :number, :type, :data)")
+}
+
+
+
 
 
 

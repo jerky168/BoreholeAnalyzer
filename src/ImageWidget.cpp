@@ -35,7 +35,7 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     ui->totalPartEdit->setText(QString::number(maxIndex+1));
 }
 
-void ImageWidget::clear()
+void ImageWidget::clearPrjInfo()
 {
     ui->startHeightEdit->clear();
     ui->endHeightEdit->clear();

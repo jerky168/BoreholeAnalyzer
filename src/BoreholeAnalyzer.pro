@@ -30,8 +30,6 @@ SOURCES +=  main.cpp\
             PrjInfoDialog.cpp \
             ToolBar.cpp \
             AboutDialog.cpp \
-            ManualDialog.cpp \
-            ContactDialog.cpp \
             RollWidget.cpp \
             TextDialog.cpp \
             GraphicsScene.cpp \ 
@@ -41,9 +39,7 @@ SOURCES +=  main.cpp\
             items/GraphicsAnyshape.cpp \
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
-            items/GraphicsTextItem.cpp \
-    3rd/QExcel.cpp \
-    3rd/QWord.cpp
+            items/GraphicsTextItem.cpp
 
 
 
@@ -55,8 +51,6 @@ HEADERS  += mainwindow.h \
             PrjInfoDialog.h \
             ToolBar.h \
             AboutDialog.h \
-            ManualDialog.h \
-            ContactDialog.h \
             RollWidget.h \
             TextDialog.h \
             GraphicsScene.h \
@@ -67,9 +61,7 @@ HEADERS  += mainwindow.h \
             items/GraphicsOccurance.h \
             items/GraphicsTextItem.h \
             items/GraphicsLineItem.h \
-            items/type.h \
-    3rd/QExcel.h \
-    3rd/QWord.h
+            items/type.h
 
 
 INCLUDEPATH += items
@@ -78,11 +70,7 @@ FORMS    += mainwindow.ui \
             PrjInfoDialog.ui \
             DefectWidget.ui \
             ImageWidget.ui \
-            AboutDialog.ui \
-            ManualDialog.ui \
-            ContactDialog.ui
-
-
+            AboutDialog.ui
 
 
 RESOURCES += \
@@ -91,8 +79,8 @@ RESOURCES += \
 win32 {
     QT += axcontainer
 
-    HEADERS += 
-    SOURCES +=
+    HEADERS += 3rd/QWord.h  3rd/QExcel.h
+    SOURCES += 3rd/QWord.cpp 3rd/QExcel.cpp
     INCLUDEPATH += 3rd
 
     LIBS += -lopengl32 -lglu32
@@ -100,7 +88,7 @@ win32 {
 }
 
 DISTFILES += \
-    doc/README.MD
+    ../doc/README.MD
 
 unix{
     LIBS += -lglut -lGLU

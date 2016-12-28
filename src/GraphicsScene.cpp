@@ -98,10 +98,12 @@ void GraphicsScene::itemFinished(QString content)
 
 QImage GraphicsScene::getPixmapImage()
 {
-    QImage image(pixmap_width + Border, pixmap_height + Border, QImage::Format_RGB32);
+    qreal realHeight = (qreal)pixmap_height / (pixmap_end - pixmap_start);
+
+    QImage image(pixmap_width + Border, realHeight + Border, QImage::Format_RGB32);
     QPainter painter(&image);
     painter.fillRect(image.rect(), Qt::white);
-    render(&painter, QRectF(Border, Border, pixmap_width, pixmap_height), QRectF(Border, Border, pixmap_width, pixmap_height));
+    render(&painter, QRectF(Border, Border, pixmap_width, realHeight), QRectF(Border, Border, pixmap_width, realHeight));
 
     QPen thisPen(Qt::black);
     thisPen.setWidth(8);
@@ -121,7 +123,7 @@ QImage GraphicsScene::getPixmapImage()
         line.setLine(x - Segment, y , x, y);
         lines << line;
 
-        painter.drawText(QPointF(Segment, y - Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
+        painter.drawText(QPointF(0, y - Segment), QString::number(pixmap_start + i * 0.1, 'f', 1));
     }
 
     for (int i = 0; i < 5; i++)

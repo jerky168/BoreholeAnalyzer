@@ -1,15 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "PrjInfoDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
-    actionGroup(new QActionGroup(this)),
-    editActionGroup(new QActionGroup(this))
+    actionGroupMode(new QActionGroup(this)),
+    actionGroup2D(new QActionGroup(this)),
+    actionGroup3D(new QActionGroup(this)),
+    infoDialog(new PrjInfoDialog(this))
 {
     ui->setupUi(this);
 
@@ -34,17 +35,27 @@ void MainWindow::createActionGroups()
     ui->menuView->addAction(ui->dockWidgetDefect->toggleViewAction());
 
     // make the 2D view and 3D view exclusive
-    actionGroup->addAction(ui->action2DView);
-    actionGroup->addAction(ui->action3DView);
+    actionGroupMode->addAction(ui->action2DView);
+    actionGroupMode->addAction(ui->action3DView);
 
     // make edit action exlusive
-    editActionGroup->addAction(ui->actionShift);
-    editActionGroup->addAction(ui->actionSlitWidth);
-    editActionGroup->addAction(ui->actionRectangle);
-    editActionGroup->addAction(ui->actionAnyShape);
-    editActionGroup->addAction(ui->actionOccurrence);
-    editActionGroup->addAction(ui->actionTextbox);
-    editActionGroup->addAction(ui->actionCross);
+    actionGroup2D->addAction(ui->actionShift);
+    actionGroup2D->addAction(ui->actionSlitWidth);
+    actionGroup2D->addAction(ui->actionRectangle);
+    actionGroup2D->addAction(ui->actionAnyShape);
+    actionGroup2D->addAction(ui->actionOccurrence);
+    actionGroup2D->addAction(ui->actionTextbox);
+    actionGroup2D->addAction(ui->actionCross);
+
+    // add all 3D action together
+    actionGroup3D->setExclusive(false);
+    actionGroup3D->addAction(ui->actionLeftSpin);
+    actionGroup3D->addAction(ui->actionRightSpin);
+    actionGroup3D->addAction(ui->actionAutoLeftSpin);
+    actionGroup3D->addAction(ui->actionAutoRightSpin);
+
+    actionGroup2D->setEnabled(true);
+    actionGroup3D->setEnabled(false);
 }
 
 
@@ -59,8 +70,14 @@ void MainWindow::createSceneAndView()
 void MainWindow::createConnections()
 {
     //switch 2D view and 3D view
-    QObject::connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
-    QObject::connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->action2DView, &QAction::triggered, actionGroup2D, &QActionGroup::setEnabled);
+    connect(ui->action2DView, &QAction::triggered, actionGroup3D, &QActionGroup::setDisabled);
+
+    connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->action3DView, &QAction::triggered, actionGroup2D, &QActionGroup::setDisabled);
+    connect(ui->action3DView, &QAction::triggered, actionGroup3D, &QActionGroup::setEnabled);
+
 
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
@@ -71,6 +88,10 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
     QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 
+    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    QObject::connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
+    QObject::connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -89,7 +110,7 @@ void MainWindow::on_actionOpen_triggered()
         return;
 
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
-    ui->imageWidget->updatePrjInfo(prjInfo);
+    emit updatePrjInfo(prjInfo);
 
     ui->actionClose->setEnabled(true);
     ui->actionSave->setEnabled(true);
@@ -113,10 +134,11 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_actionClose_triggered()
 {
     emit clearScene();
-    ui->imageWidget->clear();
+    emit clearPrjInfo();
 
     if (handler->isOpened())
         handler->closeDatabase();
+
 
     ui->actionClose->setEnabled(false);
     ui->actionSave->setEnabled(false);
@@ -132,6 +154,8 @@ void MainWindow::on_actionClose_triggered()
     ui->actionSlitWidth->setEnabled(false);
     ui->actionShift->setEnabled(false);
     ui->actionOccurrence->setEnabled(false);
+
+
 
     QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 }
@@ -220,8 +244,10 @@ QImage handleImage(QImage image)
 
 
 void MainWindow::on_actionExportWord_triggered()
-{   
+{
+    DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     QWord word;
+
     if (!word.createNewWord())
     {
         QMessageBox::critical(this,
@@ -238,16 +264,23 @@ void MainWindow::on_actionExportWord_triggered()
     word.insertTable(1, 2);
 
     word.setCellString(1, 1, tr("Name"));
+    word.setCellString(1, 2, prjInfo.projectName);
     word.moveForEnd();
 
     word.insertTable(2, 6);
     word.setCellString(2, 1, tr("Number"));
+    word.setCellString(2, 2, prjInfo.orificeNumber);
     word.setCellString(2, 3, tr("Site"));
+    word.setCellString(2, 4, prjInfo.projectSite);
     word.setCellString(2, 5, tr("Time"));
+    word.setCellString(2, 6, prjInfo.projectTime);
 
     word.setCellString(3, 1, tr("Diameter"));
+    word.setCellString(3, 2, QString::number(prjInfo.diameter, 'f', 3) + "m");
     word.setCellString(3, 3, tr("Depth"));
+    word.setCellString(3, 4, QString::number(prjInfo.endHeight, 'f', 3) + "m");
     word.setCellString(3, 5, tr("StartDepth"));
+    word.setCellString(3, 6, QString::number(prjInfo.startHeight, 'f', 3) + "m");
 
     word.moveForEnd();
 
@@ -272,7 +305,11 @@ void MainWindow::on_actionExportWord_triggered()
         image.save(QDir::temp().filePath("temp.jpg"));
         word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
 
-        if (ImageWidget::maxIndex % 2 == 1)
+        if ((ImageWidget::maxIndex + 1) % 2 == 1 && (i == rows - 1))
+        {
+
+        }
+        else
         {
             image = getPixmapImage(2*i+1);
             image.setDotsPerMeterX(image.width() / 0.05);
@@ -291,7 +328,7 @@ void MainWindow::on_actionExportWord_triggered()
 
 
 void MainWindow::on_actionExportExcel_triggered()
-{
+{   
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     QAxObject excel;
@@ -348,23 +385,20 @@ void MainWindow::on_actionExportExcel_triggered()
         }
     }
 
+
     range = worksheet->querySubObject("UsedRange");
     QAxObject *cells = range->querySubObject("Columns");
     cells->dynamicCall("AutoFit");
 
-    workBook->dynamicCall("Save()");
+    workBook->dynamicCall("Close (Boolen)", true);
+    excel.dynamicCall("Quit(void)");
 
     CoUninitialize();
 }
 
 void MainWindow::on_actionProjectInfo_triggered()
 {
-    PrjInfoDialog infoDialog;
-
-    //TODO: initial the project info dialog
-//    infoDialog.updatePrjInfo(prjInfo);
-
-    infoDialog.exec();
+    infoDialog->exec();
 }
 
 
@@ -448,24 +482,18 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionManual_triggered()
 {
-    ManualDialog *dialog = new ManualDialog(this);
-    dialog->exec();
-    delete dialog;
 }
 
 void MainWindow::on_actionContact_triggered()
 {
-    ContactDialog *dialog = new ContactDialog(this);
-    dialog->exec();
-    delete dialog;
-}
 
+}
 
 
 void MainWindow::resetActions()
 {
-    for (quint8 i = 0; i < editActionGroup->actions().count(); i++)
-        editActionGroup->actions()[i]->setChecked(false);
+    for (quint8 i = 0; i < actionGroup2D->actions().count(); i++)
+        actionGroup2D->actions()[i]->setChecked(false);
 }
 
 

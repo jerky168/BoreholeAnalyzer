@@ -97,6 +97,7 @@ public:
     void insertPic(QString& picPath);
     void setMargin(int top, int bottom, int left, int right);
 
+
 private:
     QAxObject* m_word;
     QAxObject* m_documents;

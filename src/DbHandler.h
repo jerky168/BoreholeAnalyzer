@@ -15,9 +15,6 @@
 
 #include <QUuid>
 
-
-
-
 class DbHandler : public QObject
 {
     Q_OBJECT
@@ -26,14 +23,16 @@ public:
     DbHandler(QObject *parent = Q_NULLPTR);
     ~DbHandler();
 
+    // 工程属性
     typedef struct PrjInfo{
         bool isUp2Down;
         qreal startHeight;
         qreal endHeight;
-        quint32 diameter;
+        qreal diameter;
         QString projectName;
-        QDateTime projectTime;
+        QString projectTime;
         QString projectSite;
+        QString orificeNumber;
 
         PrjInfo()
         {
@@ -73,6 +72,9 @@ public:
     ErrorCode lastError() { return errorCode; }
 
     PrjInfo getPrjInfo();
+    void setPrjInfo(PrjInfo prjInfo);
+
+
     BigImage getBigImage(quint16 index);
 
 

@@ -15,14 +15,16 @@ public:
     explicit ImageWidget(QWidget *parent = 0);
     ~ImageWidget();
 
-    void updatePrjInfo(DbHandler::PrjInfo prjInfo);
-    void clear();
-
-
     void cancelSwitch();
 
 
     static quint16 lastIndex, index, maxIndex;
+
+
+public slots:
+    void updatePrjInfo(DbHandler::PrjInfo prjInfo);
+    void clearPrjInfo();
+
 
 private slots:
     void on_lastButton_clicked();

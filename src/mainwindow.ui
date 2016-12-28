@@ -97,10 +97,6 @@
     <property name="title">
      <string>编辑(&amp;E)</string>
     </property>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
-    <addaction name="separator"/>
-    <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="actionDelete"/>
@@ -187,9 +183,6 @@
    <addaction name="actionExportWord"/>
    <addaction name="actionExportExcel"/>
    <addaction name="actionPrint"/>
-   <addaction name="separator"/>
-   <addaction name="actionUndo"/>
-   <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionShift"/>
    <addaction name="actionSlitWidth"/>
@@ -453,7 +446,7 @@
   </action>
   <action name="actionLeftSpin">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -465,7 +458,7 @@
   </action>
   <action name="actionRightSpin">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -477,7 +470,7 @@
   </action>
   <action name="actionAutoLeftSpin">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -489,7 +482,7 @@
   </action>
   <action name="actionAutoRightSpin">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
