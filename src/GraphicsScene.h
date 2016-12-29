@@ -60,6 +60,7 @@ public:
 
 
     void itemFinished(QString content);
+    void itemAborted();
 
     QImage getPixmapImage();
     QImage getSceneImage();
@@ -85,6 +86,8 @@ public:
 public slots:
     void clearScene();
     void updateIndexData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
+    void deleteItem(int row);
+
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -117,4 +120,6 @@ signals:
 
     void emitTableData(QVector<GraphicsScene::TableData> tableData);
     void update3DImage(QImage image, qreal start, qreal end);
+
+    void deleteSaveItem(QUuid uuid);
 };

@@ -389,3 +389,15 @@ void RollWidget::setParameters(int width, int heigth)
 	//y = -5 * ((-z) / 40);
 }
 
+void RollWidget::handleZoomIn()
+{
+    z += 1.2;
+    updateGL();
+}
+
+
+void RollWidget::handleZoomOut()
+{
+    z -= 1.2;
+    updateGL();
+}

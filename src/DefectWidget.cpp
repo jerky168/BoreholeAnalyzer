@@ -23,9 +23,8 @@ void DefectWidget::initModel()
     model = new QStandardItemModel(0, 4, this);
     headerView = new QHeaderView(Qt::Horizontal);
 
-
     QStringList headers;
-    headers << "是否保存" << "页数" << "类型" << "数据";
+    headers << tr("Saved") << tr("Index") << tr("Type") << tr("Data");
     model->setHorizontalHeaderLabels(headers);
     ui->tableView->setModel(model);
 }
@@ -58,10 +57,24 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
     }
     ui->tableView->resizeColumnsToContents();
     update();
+
+    ui->deleteButton->setEnabled(true);
+}
+
+
+
+void DefectWidget::clearTableData()
+{
+    model->removeRows(0, model->rowCount());
+    update();
+
+    ui->deleteButton->setEnabled(false);
 }
 
 
 void DefectWidget::on_deleteButton_clicked()
 {
-
+    int row = ui->tableView->currentIndex().row();
+    if (row >= 0)
+        emit deleteItem(row);
 }

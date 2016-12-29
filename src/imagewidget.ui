@@ -102,10 +102,17 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="switchEdit"/>
+      <widget class="QLineEdit" name="switchEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="4" column="0" colspan="2">
       <widget class="QPushButton" name="lastButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -145,6 +152,9 @@
      </item>
      <item row="4" column="2" colspan="2">
       <widget class="QPushButton" name="nextButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>下一段</string>
        </property>
@@ -153,7 +163,7 @@
      <item row="3" column="2">
       <widget class="QPushButton" name="switchButton">
        <property name="enabled">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="maximumSize">
         <size>

@@ -45,7 +45,6 @@ void MainWindow::createActionGroups()
     actionGroup2D->addAction(ui->actionAnyShape);
     actionGroup2D->addAction(ui->actionOccurrence);
     actionGroup2D->addAction(ui->actionTextbox);
-    actionGroup2D->addAction(ui->actionCross);
 
     // add all 3D action together
     actionGroup3D->setExclusive(false);
@@ -92,11 +91,24 @@ void MainWindow::createConnections()
     QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
     QObject::connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
     QObject::connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
+
+    connect(this, SIGNAL(sigZoomIn()), ui->graphicsView, SLOT(handleZoomIn()));
+    connect(this, SIGNAL(sigZoomOut()), ui->graphicsView, SLOT(handleZoomOut()));
+    connect(this, SIGNAL(sigZoomIn()), ui->widget3D, SLOT(handleZoomIn()));
+    connect(this, SIGNAL(sigZoomOut()), ui->widget3D, SLOT(handleZoomOut()));
+
+    connect(ui->actionCross, SIGNAL(triggered(bool)), ui->graphicsView, SLOT(handleCrossMouse(bool)));
+
+    connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
+
+    connect(ui->defectWidget, SIGNAL(deleteItem(int)), scene, SLOT(deleteItem(int)));
+    connect(scene, SIGNAL(deleteSaveItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Open project file", QDir::homePath(), "Project file (*.ylink)");
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), QDir::homePath(), tr("Project file (*.ylink)"));
     if (filename.isEmpty())
     {
         return;
@@ -106,6 +118,10 @@ void MainWindow::on_actionOpen_triggered()
         on_actionClose_triggered();
     }
 
+
+    setWindowTitle(filename + " - " + App_Name);
+
+
     if (!handler->openDatabase(filename))
         return;
 
@@ -114,7 +130,6 @@ void MainWindow::on_actionOpen_triggered()
 
     ui->actionClose->setEnabled(true);
     ui->actionSave->setEnabled(true);
-    //ui->actionSaveAs->setEnabled(true);
     ui->actionExportImage->setEnabled(true);
     ui->actionExportWord->setEnabled(true);
     ui->actionExportExcel->setEnabled(true);
@@ -127,6 +142,11 @@ void MainWindow::on_actionOpen_triggered()
     ui->actionShift->setEnabled(true);
     ui->actionOccurrence->setEnabled(true);
 
+    ui->actionZoomIn->setEnabled(true);
+    ui->actionZoomOut->setEnabled(true);
+
+    ui->actionProjectInfo->setEnabled(true);
+
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
 }
@@ -136,13 +156,15 @@ void MainWindow::on_actionClose_triggered()
     emit clearScene();
     emit clearPrjInfo();
 
+
+    setWindowTitle(App_Name);
+
     if (handler->isOpened())
         handler->closeDatabase();
 
 
     ui->actionClose->setEnabled(false);
     ui->actionSave->setEnabled(false);
-    //ui->actionSaveAs->setEnabled(false);
     ui->actionExportImage->setEnabled(false);
     ui->actionExportWord->setEnabled(false);
     ui->actionExportExcel->setEnabled(false);
@@ -155,7 +177,10 @@ void MainWindow::on_actionClose_triggered()
     ui->actionShift->setEnabled(false);
     ui->actionOccurrence->setEnabled(false);
 
+    ui->actionZoomIn->setEnabled(false);
+    ui->actionZoomOut->setEnabled(false);
 
+    ui->actionProjectInfo->setEnabled(false);
 
     QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 }
@@ -229,8 +254,8 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionExportImage_triggered()
 {
-    QString filename = QFileDialog::getSaveFileName(this, "get save file", QDir::homePath(), tr("Images (*.jpg)"));
-    DbHandler::IndexData indexData = handler->getIndexData(0);
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export Image"), QDir::homePath(), tr("Images files (*.jpg);;All files (*.*)"));
+    DbHandler::IndexData indexData = handler->getIndexData(ImageWidget::index);
     QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
     image.save(filename, "JPG");
 }
@@ -398,6 +423,8 @@ void MainWindow::on_actionExportExcel_triggered()
 
 void MainWindow::on_actionProjectInfo_triggered()
 {
+    DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
+    infoDialog->updatePrjInfo(prjInfo);
     infoDialog->exec();
 }
 
@@ -486,7 +513,7 @@ void MainWindow::on_actionManual_triggered()
 
 void MainWindow::on_actionContact_triggered()
 {
-
+    QDesktopServices::openUrl(QUrl(Website_Url));
 }
 
 
@@ -584,5 +611,16 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
         }
     }
     return items;
+}
+
+
+void MainWindow::on_actionZoomIn_triggered()
+{
+    emit sigZoomIn();
+}
+
+void MainWindow::on_actionZoomOut_triggered()
+{
+    emit sigZoomOut();
 }
 

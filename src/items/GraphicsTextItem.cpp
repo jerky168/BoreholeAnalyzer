@@ -58,11 +58,26 @@ void GraphicsTextItem::showTextDialog(QFont font)
     {
         textDialogCloseFlag = true;
     }
+    else
+    {
+        delete dialog;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemAborted();
+        return;
+    }
 
     if (!dialog->getText().isEmpty())
     {
         this->setText(dialog->getText());
     }
+    else
+    {
+        delete dialog;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemAborted();
+        return;
+    }
+
     this->setFont(dialog->getFont());
     delete dialog;
 

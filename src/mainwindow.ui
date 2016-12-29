@@ -84,7 +84,6 @@
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSaveAs"/>
     <addaction name="actionClose"/>
     <addaction name="recentMenu"/>
     <addaction name="separator"/>
@@ -101,7 +100,6 @@
     <addaction name="actionPaste"/>
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
-    <addaction name="actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="menuTool">
     <property name="title">
@@ -194,10 +192,14 @@
    <addaction name="separator"/>
    <addaction name="action2DView"/>
    <addaction name="action3DView"/>
+   <addaction name="separator"/>
    <addaction name="actionLeftSpin"/>
    <addaction name="actionRightSpin"/>
    <addaction name="actionAutoLeftSpin"/>
    <addaction name="actionAutoRightSpin"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoomIn"/>
+   <addaction name="actionZoomOut"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetImage">
@@ -248,18 +250,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
-   </property>
-  </action>
-  <action name="actionSaveAs">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/res/images/save-as.png</normaloff>:/res/images/save-as.png</iconset>
-   </property>
-   <property name="text">
-    <string>另存为(&amp;A)...</string>
    </property>
   </action>
   <action name="actionClose">
@@ -382,18 +372,6 @@
     <string>Del</string>
    </property>
   </action>
-  <action name="actionSelectAll">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/res/images/select-all.png</normaloff>:/res/images/select-all.png</iconset>
-   </property>
-   <property name="text">
-    <string>全选(&amp;A)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+A</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="res.qrc">
@@ -493,6 +471,9 @@
    </property>
   </action>
   <action name="actionZoomIn">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/zoom-in.png</normaloff>:/res/images/zoom-in.png</iconset>
@@ -502,6 +483,9 @@
    </property>
   </action>
   <action name="actionZoomOut">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/res/images/zoom-out.png</normaloff>:/res/images/zoom-out.png</iconset>
@@ -511,6 +495,9 @@
    </property>
   </action>
   <action name="actionProjectInfo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>工程属性</string>
    </property>
@@ -682,10 +669,13 @@
   </action>
   <action name="actionCross">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>false</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">

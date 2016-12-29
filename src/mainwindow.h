@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <QActionGroup>
 #include <QMessageBox>
+#include <QUrl>
+#include <QDesktopServices>
+
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
@@ -15,6 +18,8 @@
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
 #include "RollWidget.h"
+
+#include "app.h"
 
 
 namespace Ui {
@@ -59,6 +64,11 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
 
+    void on_actionZoomIn_triggered();
+
+    void on_actionZoomOut_triggered();
+
+
 private:
     Ui::MainWindow *ui;
     DbHandler *handler;
@@ -86,6 +96,9 @@ signals:
 
     void updatePrjInfo(DbHandler::PrjInfo prjjInfo);
     void clearPrjInfo();
+
+    void sigZoomIn();
+    void sigZoomOut();
 
 };
 

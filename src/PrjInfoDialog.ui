@@ -25,95 +25,126 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_7">
      <property name="text">
-      <string>测孔编号</string>
+      <string>工程名称</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="1">
     <widget class="QLineEdit" name="numberEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>测孔直径</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="diameterEdit">
-     <property name="readOnly">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>起始深度</string>
+      <string>测孔编号</string>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="startDepthEdit">
+    <widget class="QLineEdit" name="diameterEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>终止深度</string>
+      <string>起始深度</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>测孔直径</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="endDepthEdit">
+    <widget class="QLineEdit" name="startDepthEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>测试时间</string>
+      <string>终止深度</string>
      </property>
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="testTimeEdit">
+    <widget class="QLineEdit" name="endDepthEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
     </widget>
    </item>
    <item row="5" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>测试时间</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="testTimeEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>测试地点</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="7" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
     <widget class="QLineEdit" name="testSiteEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="nameEdit"/>
    </item>
   </layout>
  </widget>

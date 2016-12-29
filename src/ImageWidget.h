@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QMessageBox>
 #include "DbHandler.h"
 
 namespace Ui {
@@ -34,7 +35,6 @@ private slots:
 
 private:
     Ui::ImageWidget *ui;
-
 
 
 signals:

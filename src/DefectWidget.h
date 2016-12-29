@@ -17,7 +17,6 @@ namespace Ui {
 class DefectWidget;
 }
 
-
 class DefectWidget : public QWidget
 {
     Q_OBJECT
@@ -30,7 +29,7 @@ public:
 public slots:
     void showRealInfo(QString info);
     void updateTableData(QVector<GraphicsScene::TableData> tableDatas);
-
+    void clearTableData();
 
 private:
     Ui::DefectWidget *ui;
@@ -43,8 +42,8 @@ private:
 private slots:
     void on_deleteButton_clicked();
 
-
 signals:
+    void deleteItem(int row);
 
 };
 

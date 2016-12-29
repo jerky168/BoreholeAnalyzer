@@ -29,6 +29,8 @@ private slots:
 
 private:
     Ui::PrjInfoDialog *ui;
-    bool hasChange;
+
+signals:
+    void savePrjInfo(DbHandler::PrjInfo);
 };
 

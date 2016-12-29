@@ -1,7 +1,8 @@
 #include "GraphicsView.h"
 
 GraphicsView::GraphicsView( QWidget * parent ) :
-    QGraphicsView(parent)
+    QGraphicsView(parent),
+    isCross(false)
 {
     setDragMode(ScrollHandDrag);
 	setMouseTracking(true);
@@ -18,12 +19,16 @@ void GraphicsView::handleModeChanged(GraphicsScene::Mode curMode)
 {
     if (curMode != GraphicsScene::MoveItem)
     {
-        setDragMode(QGraphicsView::NoDrag);
+        if (isCross)
+            setCursor(QCursor(Qt::CrossCursor));
+        else
+            setDragMode(QGraphicsView::NoDrag);
     }
     else
     {
         setDragMode(QGraphicsView::ScrollHandDrag);
     }
+
 }
 
 void GraphicsView::wheelEvent(QWheelEvent *event)
@@ -52,4 +57,30 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
     emit mouseMoved(mouseEvent);
 
     QGraphicsView::mouseMoveEvent(mouseEvent);
+}
+
+void GraphicsView::handleZoomIn()
+{
+    factor = qPow(1.125, 1);
+    scale(factor, factor);
+}
+
+void GraphicsView::handleZoomOut()
+{
+    factor = qPow(1.125, -1);
+    scale(factor, factor);
+}
+
+void GraphicsView::handleCrossMouse(bool checked)
+{
+    if (checked)
+    {
+        setCursor(QCursor(Qt::CrossCursor));
+        isCross = true;
+    }
+    else
+    {
+        setCursor(QCursor(Qt::ArrowCursor));
+        isCross = false;
+    }
 }

@@ -72,7 +72,7 @@ public:
     ErrorCode lastError() { return errorCode; }
 
     PrjInfo getPrjInfo();
-    void setPrjInfo(PrjInfo prjInfo);
+
 
 
     BigImage getBigImage(quint16 index);
@@ -93,7 +93,10 @@ public:
     void saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr);
     IndexData getIndexData(quint16 index);
 
+public slots:
+    void setPrjInfo(DbHandler::PrjInfo prjInfo);
 
+    void deleteItem(QUuid uuid);
 
 private:
     QSqlDatabase database;

@@ -41,9 +41,10 @@ public slots:
     void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 	void keyReleaseEvent(QKeyEvent *event);
-
-
     void setImage(QImage image, qreal start, qreal end);
+
+    void handleZoomIn();
+    void handleZoomOut();
 
 private:
 	bool altDown;

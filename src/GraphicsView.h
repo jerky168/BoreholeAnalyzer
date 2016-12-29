@@ -21,6 +21,10 @@ public:
 public slots:
     void handleModeChanged(GraphicsScene::Mode curMode);
 
+    void handleZoomIn();
+    void handleZoomOut();
+    void handleCrossMouse(bool checked);
+
 protected:
 	void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *mouseEvent);
@@ -28,6 +32,8 @@ protected:
 private:
     // 放大倍数
 	double factor;
+
+    bool isCross;
     //double totalFactor;
 
 signals:

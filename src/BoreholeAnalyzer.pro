@@ -61,7 +61,8 @@ HEADERS  += mainwindow.h \
             items/GraphicsOccurance.h \
             items/GraphicsTextItem.h \
             items/GraphicsLineItem.h \
-            items/type.h
+            items/type.h \
+    app.h
 
 
 INCLUDEPATH += items

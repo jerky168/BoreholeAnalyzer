@@ -93,13 +93,24 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
 }
 
 
+
+
 void DbHandler::setPrjInfo(PrjInfo prjInfo)
 {
+    if (!isOpened())
+        return;
+
     QSqlQuery query(database);
-    //query.prepare("INSERT INTO items (uuid, number, type, data) VALUES (:uuid, :number, :type, :data)")
+    query.exec("DELETE FROM ProjectInfo");
+    query.prepare("INSERT INTO ProjectInfo (diameter, startHeight, projectName, date, orificeNumber) "
+                  "VALUES (:diameter, :startHeight, :projectName, :date, :orificeNumber)");
+    query.bindValue(":diameter", prjInfo.diameter * 1000);
+    query.bindValue(":startHeight", prjInfo.startHeight * 10000);
+    query.bindValue(":projectName", prjInfo.projectName);
+    query.bindValue(":date", prjInfo.projectTime);
+    query.bindValue(":orificeNumber", prjInfo.orificeNumber);
+    query.exec();
 }
-
-
 
 
 
@@ -132,6 +143,16 @@ void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr
     query.bindValue(":number", index);
     query.bindValue(":type", type);
     query.bindValue(":data", dataStr);
+    query.exec();
+}
+
+
+
+void DbHandler::deleteItem(QUuid uuid)
+{
+    QSqlQuery query(database);
+    query.prepare("DELETE FROM items WHERE uuid = :uuid");
+    query.bindValue(":uuid", uuid.toString());
     query.exec();
 }
 

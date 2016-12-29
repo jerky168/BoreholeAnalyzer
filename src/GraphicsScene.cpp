@@ -95,6 +95,13 @@ void GraphicsScene::itemFinished(QString content)
     updateTable();
 }
 
+void GraphicsScene::itemAborted()
+{
+    item->ungrabMouse();
+    setCurMode(MoveItem);
+    delete item;
+}
+
 
 QImage GraphicsScene::getPixmapImage()
 {
@@ -685,15 +692,14 @@ void GraphicsScene::deleteItemData(QUuid uuid)
 {
     if (newItems.contains(uuid.toString()))
     {
-        delete newItems.value(uuid.toString());
         removeItem(newItems.value(uuid.toString()));
         newItems.remove(uuid.toString());
     }
     else if (savedItems.contains(uuid.toString()))
     {
-        delete savedItems.value(uuid.toString());
         removeItem(savedItems.value(uuid.toString()));
-        newItems.insert(uuid.toString(), savedItems.value(uuid.toString()));
+        savedItems.remove(uuid.toString());
+        emit deleteSaveItem(uuid);
     }
     updateTable();
 }
@@ -814,3 +820,14 @@ void GraphicsScene::updateTable()
     emit emitTableData(tableDatas);
 }
 
+void GraphicsScene::deleteItem(int row)
+{
+    if (row < newItems.count())
+    {
+        deleteItemData(QUuid(newItems.keys().at(row)));
+    }
+    else
+    {
+        deleteItemData(QUuid(savedItems.keys().at(row-newItems.count())));
+    }
+}
