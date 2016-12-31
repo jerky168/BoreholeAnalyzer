@@ -44,6 +44,12 @@ RollWidget::RollWidget(QWidget *parent, bool fs) :
     quadratic = gluNewQuadric();
     gluQuadricNormals(quadratic, GLU_SMOOTH);
     gluQuadricTexture(quadratic, GL_TRUE);
+
+    timerLeft.setInterval(100);
+    timerRight.setInterval(100);
+
+    connect(&timerLeft, &QTimer::timeout, [this]() {setZRotation(zrot - 20);});
+    connect(&timerRight, &QTimer::timeout, [this]() {setZRotation(zrot + 20);});
 }
 
 RollWidget::~RollWidget()
@@ -295,6 +301,8 @@ void RollWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int dx = event->x() - lastPos.x();
     int dy = event->y() - lastPos.y();
+
+
 	if (true == altDown)
 	{
 		if (event->buttons() & Qt::LeftButton) 
@@ -324,7 +332,7 @@ void RollWidget::mouseMoveEvent(QMouseEvent *event)
 		{
 			//x += dx / 250.0;
 			y -= dy / (100.0 / qAbs(z / 10));
-			updateGL();
+            updateGL();
 		}
 	}
     lastPos = event->pos();
@@ -389,15 +397,44 @@ void RollWidget::setParameters(int width, int heigth)
 	//y = -5 * ((-z) / 40);
 }
 
+
 void RollWidget::handleZoomIn()
 {
     z += 1.2;
     updateGL();
 }
 
-
 void RollWidget::handleZoomOut()
 {
     z -= 1.2;
     updateGL();
+}
+
+void RollWidget::handleLeftSpin()
+{
+    setZRotation(zrot - 50);
+}
+
+void RollWidget::handleRightSpin()
+{
+    setZRotation(zrot + 50);
+}
+
+
+void RollWidget::startLeftSpin()
+{
+    timerRight.stop();
+    timerLeft.start();
+}
+
+void RollWidget::startRightSpin()
+{
+    timerLeft.stop();
+    timerRight.start();
+}
+
+void RollWidget::stopAutoSpin()
+{
+    timerLeft.stop();
+    timerRight.stop();
 }

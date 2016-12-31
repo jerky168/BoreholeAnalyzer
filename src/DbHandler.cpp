@@ -133,6 +133,20 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
     return bigImage;
 }
 
+void DbHandler::setBigImage(qreal start, qreal end, QImage image)
+{
+    QSqlQuery query(database);
+    query.prepare("UPDATE bigImages SET data = :data WHERE id = :id");
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "JPG");
+    query.bindValue(":data", ba);
+    query.bindValue(":id", end * 10000);
+    query.exec();
+}
+
 
 
 void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr)

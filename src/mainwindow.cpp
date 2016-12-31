@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     actionGroupMode(new QActionGroup(this)),
     actionGroup2D(new QActionGroup(this)),
     actionGroup3D(new QActionGroup(this)),
+    actionGroupSpin(new QActionGroup(this)),
     infoDialog(new PrjInfoDialog(this))
 {
     ui->setupUi(this);
@@ -39,7 +40,7 @@ void MainWindow::createActionGroups()
     actionGroupMode->addAction(ui->action3DView);
 
     // make edit action exlusive
-    actionGroup2D->addAction(ui->actionShift);
+    //actionGroup2D->addAction(ui->actionShift);
     actionGroup2D->addAction(ui->actionSlitWidth);
     actionGroup2D->addAction(ui->actionRectangle);
     actionGroup2D->addAction(ui->actionAnyShape);
@@ -50,11 +51,14 @@ void MainWindow::createActionGroups()
     actionGroup3D->setExclusive(false);
     actionGroup3D->addAction(ui->actionLeftSpin);
     actionGroup3D->addAction(ui->actionRightSpin);
-    actionGroup3D->addAction(ui->actionAutoLeftSpin);
-    actionGroup3D->addAction(ui->actionAutoRightSpin);
 
     actionGroup2D->setEnabled(true);
     actionGroup3D->setEnabled(false);
+
+    // make auto spin exlusive
+    actionGroupSpin->addAction(ui->actionAutoLeftSpin);
+    actionGroupSpin->addAction(ui->actionAutoRightSpin);
+    actionGroupSpin->setEnabled(false);
 }
 
 
@@ -72,11 +76,16 @@ void MainWindow::createConnections()
     connect(ui->action2DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(0);});
     connect(ui->action2DView, &QAction::triggered, actionGroup2D, &QActionGroup::setEnabled);
     connect(ui->action2DView, &QAction::triggered, actionGroup3D, &QActionGroup::setDisabled);
+    connect(ui->action2DView, &QAction::triggered, actionGroupSpin, &QActionGroup::setDisabled);
 
     connect(ui->action3DView, &QAction::triggered, [this](bool checked) {if (checked) ui->stackedWidget->setCurrentIndex(1);});
     connect(ui->action3DView, &QAction::triggered, actionGroup2D, &QActionGroup::setDisabled);
     connect(ui->action3DView, &QAction::triggered, actionGroup3D, &QActionGroup::setEnabled);
+    connect(ui->action3DView, &QAction::triggered, actionGroupSpin, &QActionGroup::setEnabled);
 
+    connect(actionGroup3D, &QActionGroup::triggered, [this]() {ui->actionAutoLeftSpin->setChecked(false);ui->actionAutoRightSpin->setChecked(false);ui->widget3D->stopAutoSpin();});
+    connect(ui->actionAutoLeftSpin, &QAction::triggered, ui->widget3D, &RollWidget::startLeftSpin);
+    connect(ui->actionAutoRightSpin, &QAction::triggered, ui->widget3D, &RollWidget::startRightSpin);
 
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
 
@@ -92,17 +101,20 @@ void MainWindow::createConnections()
     QObject::connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
     QObject::connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
 
-    connect(this, SIGNAL(sigZoomIn()), ui->graphicsView, SLOT(handleZoomIn()));
-    connect(this, SIGNAL(sigZoomOut()), ui->graphicsView, SLOT(handleZoomOut()));
-    connect(this, SIGNAL(sigZoomIn()), ui->widget3D, SLOT(handleZoomIn()));
-    connect(this, SIGNAL(sigZoomOut()), ui->widget3D, SLOT(handleZoomOut()));
-
     connect(ui->actionCross, SIGNAL(triggered(bool)), ui->graphicsView, SLOT(handleCrossMouse(bool)));
 
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
 
     connect(ui->defectWidget, SIGNAL(deleteItem(int)), scene, SLOT(deleteItem(int)));
     connect(scene, SIGNAL(deleteSaveItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+
+
+    connect(ui->actionLeftSpin, SIGNAL(triggered()), ui->widget3D, SLOT(handleLeftSpin()));
+    connect(ui->actionRightSpin, SIGNAL(triggered()), ui->widget3D, SLOT(handleRightSpin()));
+    connect(ui->actionZoomIn, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomIn()));
+    connect(ui->actionZoomIn, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomIn()));
+    connect(ui->actionZoomOut, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomOut()));
+    connect(ui->actionZoomOut, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomOut()));
 
 }
 
@@ -463,10 +475,59 @@ void MainWindow::on_actionRedo_triggered()
 
 }
 
+QImage shiftImage(QImage img, qreal angle)
+{
+    if (angle > 180 || angle < -180)
+    {
+        return img;
+    }
+    else if (0 == angle)
+    {
+        return img;
+    }
+    else
+    {
+        quint32 left, right;
+        if (angle < 0)
+        {
+            left = -angle / 360.0 * img.width();
+            right = img.width() - left;
+        }
+        else if (angle > 0)
+        {
+            right = angle / 360.0 * img.width();
+            left = img.width() - right;
+        }
+
+        QImage newImg(img.size(), QImage::Format_ARGB32);
+        QPainter painter(&newImg);
+        painter.drawImage(QRect(0, 0, right, img.height()), img.copy(QRect(left, 0, right, img.height())));
+        painter.drawImage(QRect(right, 0, left, img.height()), img.copy(QRect(0, 0, left, img.height())));
+        return newImg;
+    }
+
+    return img;
+}
+
 
 void MainWindow::on_actionShift_triggered()
 {
-    scene->setCurMode(GraphicsScene::InsertShift);
+    ShiftDialog shiftDialog(this);
+    if (shiftDialog.exec())
+    {
+        QProgressDialog progress(tr("Image is shifting..."), QString(), 0, ImageWidget::maxIndex+1, this);
+        progress.setWindowTitle(tr("In progress..."));
+        progress.setModal(true);
+        progress.setValue(0);
+
+        for (int i = 0; i <= ImageWidget::maxIndex; i++)
+        {
+            DbHandler::BigImage bigImage = handler->getBigImage(i);
+            handler->setBigImage(bigImage.start, bigImage.end, shiftImage(bigImage.pixmap.toImage(), shiftDialog.getShiftAngle()));
+            progress.setValue(i+1);
+        }
+        switchImage(ImageWidget::index);
+    }
 }
 
 void MainWindow::on_actionSlitWidth_triggered()
@@ -614,13 +675,4 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 }
 
 
-void MainWindow::on_actionZoomIn_triggered()
-{
-    emit sigZoomIn();
-}
-
-void MainWindow::on_actionZoomOut_triggered()
-{
-    emit sigZoomOut();
-}
 

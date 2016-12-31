@@ -144,19 +144,19 @@ QImage GraphicsScene::getPixmapImage()
         switch(i)
         {
             case 0:
-                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "N");
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), tr("N"));
                 break;
             case 1:
-                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "E");
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), tr("E"));
                 break;
             case 2:
-                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "S");
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), tr("S"));
                 break;
             case 3:
-                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "W");
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), tr("W"));
                 break;
             case 4:
-                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), "N");
+                painter.drawText(QPointF(x-2*Segment, y - 4*Segment), tr("N"));
                 break;
             default:
                 break;
@@ -369,19 +369,19 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
         switch(i)
         {
             case 0:
-                painter->drawText(QPointF(x+Segment, y + 3*Segment), "N");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), tr("N"));
                 break;
             case 1:
-                painter->drawText(QPointF(x+Segment, y + 3*Segment), "E");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), tr("E"));
                 break;
             case 2:
-                painter->drawText(QPointF(x+Segment, y + 3*Segment), "S");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), tr("S"));
                 break;
             case 3:
-                painter->drawText(QPointF(x+Segment, y + 3*Segment), "W");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), tr("W"));
                 break;
             case 4:
-                painter->drawText(QPointF(x+Segment, y + 3*Segment), "N");
+                painter->drawText(QPointF(x+Segment, y + 3*Segment), tr("N"));
                 break;
             default:
                 break;
@@ -721,7 +721,7 @@ void GraphicsScene::updateTable()
         TableData tableData;
         QGraphicsItem *newItem = newItems.values().at(i);
         tableData.depth = QString::number(scene2Real(newItem->pos()).y(), 'f', 3) + "m";
-        tableData.data = getShowString(newItem).section('\n', 0, 0);
+        tableData.data = getShowString(newItem);
         tableData.isSaved = tr("No");
         switch(newItem->type())
         {
@@ -772,7 +772,7 @@ void GraphicsScene::updateTable()
         TableData tableData;
         QGraphicsItem *savedItem = savedItems.values().at(i);
         tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
-        tableData.data = getShowString(savedItem).section('\n', 0, 0);
+        tableData.data = getShowString(savedItem);
         tableData.isSaved = tr("Yes");
         switch(savedItem->type())
         {

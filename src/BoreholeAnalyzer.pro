@@ -4,17 +4,18 @@
 #
 #-------------------------------------------------
 
-QT  += core gui
+QT  += core gui opengl sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-QT  += opengl sql
-
 
 TARGET = BoreholeAnalyzer
 TEMPLATE = app
 
 CONFIG += precompile_header debug_and_release
+
+
+RC_ICONS = res/images/IDT.ico
+
 
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = precompiled.h
@@ -39,7 +40,8 @@ SOURCES +=  main.cpp\
             items/GraphicsAnyshape.cpp \
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
-            items/GraphicsTextItem.cpp
+            items/GraphicsTextItem.cpp \
+    ShiftDialog.cpp
 
 
 
@@ -62,7 +64,8 @@ HEADERS  += mainwindow.h \
             items/GraphicsTextItem.h \
             items/GraphicsLineItem.h \
             items/type.h \
-    app.h
+            app.h \
+    ShiftDialog.h
 
 
 INCLUDEPATH += items
@@ -71,7 +74,8 @@ FORMS    += mainwindow.ui \
             PrjInfoDialog.ui \
             DefectWidget.ui \
             ImageWidget.ui \
-            AboutDialog.ui
+            AboutDialog.ui \
+    ShiftDialog.ui
 
 
 RESOURCES += \

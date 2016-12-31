@@ -20,11 +20,11 @@ DefectWidget::~DefectWidget()
 
 void DefectWidget::initModel()
 {
-    model = new QStandardItemModel(0, 4, this);
+    model = new QStandardItemModel(0, 3, this);
     headerView = new QHeaderView(Qt::Horizontal);
 
     QStringList headers;
-    headers << tr("Saved") << tr("Index") << tr("Type") << tr("Data");
+    headers << tr("Index") << tr("Type") << tr("Data1") << tr("Data2");
     model->setHorizontalHeaderLabels(headers);
     ui->tableView->setModel(model);
 }
@@ -45,15 +45,19 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
     {
         QList<QStandardItem *> items;
         QStandardItem *item;
-        item = new QStandardItem(tableDatas.at(i).isSaved);
-        items.append(item);
-        item = new QStandardItem(QString::number(ImageWidget::index));
+//        item = new QStandardItem(tableDatas.at(i).isSaved);
+//        items.append(item);
+        item = new QStandardItem(QString::number(ImageWidget::index+1));
         items.append(item);
         item = new QStandardItem(tableDatas.at(i).type);
         items.append(item);
-        item = new QStandardItem(tableDatas.at(i).data);
+        QString data = tableDatas.at(i).data;
+        item = new QStandardItem(data.section('\n', 0, 0));
+        items.append(item);
+        item = new QStandardItem(data.section('\n', 1).replace("\n", "  "));
         items.append(item);
         model->appendRow(items);
+
     }
     ui->tableView->resizeColumnsToContents();
     update();

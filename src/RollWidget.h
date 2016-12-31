@@ -4,8 +4,9 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QCloseEvent>
+#include <QTimer>
 
-#include <GL/glu.h>		// Header File For The Glaux Library
+#include <GL/glu.h>
 
 class RollWidget : public QGLWidget
 {
@@ -45,8 +46,16 @@ public slots:
 
     void handleZoomIn();
     void handleZoomOut();
+    void handleLeftSpin();
+    void handleRightSpin();
+
+    void startLeftSpin();
+    void startRightSpin();
+    void stopAutoSpin();
 
 private:
+    QTimer timerLeft, timerRight;
+
 	bool altDown;
     QImage loadImage;
 	bool fullscreen;
@@ -56,16 +65,16 @@ private:
     qreal rollEnd;
 
 	QPoint lastPos;
-	GLfloat xrot;				// X Rotation
-	GLfloat yrot;				// Y Rotation
+    GLfloat xrot;
+    GLfloat yrot;
 	GLfloat zrot;
-	GLfloat xspeed;				// X Rotation Speed
-	GLfloat yspeed;				// Y Rotation Speed
-	GLfloat z;			// Depth Into The Screen
+    GLfloat xspeed;
+    GLfloat yspeed;
+    GLfloat z;
 	GLfloat x;
 	GLfloat y;
 
-    GLUquadricObj *quadratic;	 // 二次几何体
+    GLUquadricObj *quadratic;
 
 	void setParameters(int width, int heigth);
 
@@ -75,4 +84,7 @@ private:
 		while((rval << 1)<a) rval<<=1;
 		return rval;
     }
+
+
+
 };

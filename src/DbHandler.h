@@ -12,7 +12,7 @@
 #include <QImage>
 #include <QDateTime>
 #include <QVector>
-
+#include <QBuffer>
 #include <QUuid>
 
 class DbHandler : public QObject
@@ -76,7 +76,7 @@ public:
 
 
     BigImage getBigImage(quint16 index);
-
+    void setBigImage(qreal start, qreal end, QImage image);
 
     typedef struct {
         QUuid uuid;

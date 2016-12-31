@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include <QUrl>
 #include <QDesktopServices>
-
+#include <QProgressDialog>
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
@@ -18,8 +18,8 @@
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
 #include "RollWidget.h"
-
 #include "app.h"
+#include "ShiftDialog.h"
 
 
 namespace Ui {
@@ -64,9 +64,7 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
 
-    void on_actionZoomIn_triggered();
 
-    void on_actionZoomOut_triggered();
 
 
 private:
@@ -78,6 +76,8 @@ private:
     QActionGroup *actionGroupMode;  //2D, 3D模式切换
     QActionGroup *actionGroup2D;    //2D模式下的操作
     QActionGroup *actionGroup3D;    //3D模式下的操作
+
+    QActionGroup *actionGroupSpin;
 
 
     void createActionGroups();
@@ -96,9 +96,6 @@ signals:
 
     void updatePrjInfo(DbHandler::PrjInfo prjjInfo);
     void clearPrjInfo();
-
-    void sigZoomIn();
-    void sigZoomOut();
 
 };
 

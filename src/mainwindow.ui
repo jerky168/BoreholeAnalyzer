@@ -99,13 +99,13 @@
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="actionDelete"/>
+    <addaction name="actionShift"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuTool">
     <property name="title">
      <string>工具(&amp;T)</string>
     </property>
-    <addaction name="actionShift"/>
     <addaction name="actionSlitWidth"/>
     <addaction name="actionRectangle"/>
     <addaction name="actionAnyShape"/>
@@ -182,7 +182,11 @@
    <addaction name="actionExportExcel"/>
    <addaction name="actionPrint"/>
    <addaction name="separator"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="actionDelete"/>
    <addaction name="actionShift"/>
+   <addaction name="separator"/>
    <addaction name="actionSlitWidth"/>
    <addaction name="actionRectangle"/>
    <addaction name="actionAnyShape"/>
@@ -447,6 +451,9 @@
    </property>
   </action>
   <action name="actionAutoLeftSpin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -459,6 +466,9 @@
    </property>
   </action>
   <action name="actionAutoRightSpin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -579,7 +589,7 @@
   </action>
   <action name="actionShift">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="enabled">
     <bool>false</bool>
