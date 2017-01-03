@@ -578,8 +578,20 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             QPointF pos1 = scene2Real(i->line().p1());
             QPointF pos2 = scene2Real(i->line().p2());
 
-            qreal length = i->line().length() / GraphicsSettings::instance()->getRatio() * 100;
-            str += tr("Length:  ") + QString::number(length, 'f', 2) + "cm\n";
+            qreal realWidth = pixmap_width / GraphicsSettings::instance()->getRatio();
+            qreal radius = realWidth / 2 / M_PI;
+            qreal angle1 = qFabs(pos1.x() - pos2.x());
+
+            if (angle1 > 180)
+                angle1 = 360 - angle1;
+
+            qreal length = qSqrt(2 * qPow(radius, 2) - 2 * qPow(radius, 2) * qCos(qDegreesToRadians(angle1)));
+            qreal height = qFabs(pos1.y() - pos2.y());
+            qreal realLength = qSqrt(qPow(length, 2) + qPow(height, 2));
+            qreal angle = qRadiansToDegrees(qAtan(height / length));
+
+            str += tr("Inclination angle:  ") + QString::number(angle, 'f', 2) + "°\n";
+            str += tr("Real length: ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
             str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
             str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
 
@@ -830,4 +842,15 @@ void GraphicsScene::deleteItem(int row)
     {
         deleteItemData(QUuid(savedItems.keys().at(row-newItems.count())));
     }
+}
+
+
+QStringList GraphicsScene::getAllItemString()
+{
+    QStringList strList;
+    for (int i = 0; i < savedItems.count(); i++)
+    {
+        strList << getShowString(savedItems.values().at(i));
+    }
+    return strList;
 }

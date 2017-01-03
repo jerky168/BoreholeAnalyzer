@@ -80,6 +80,7 @@ public:
     void saveNewItems();
 
 
+    QStringList getAllItemString();
 
 
 

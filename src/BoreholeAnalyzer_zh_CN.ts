@@ -47,9 +47,8 @@
         <translation type="obsolete">是否保存</translation>
     </message>
     <message>
-        <location filename="DefectWidget.cpp" line="27"/>
         <source>Index</source>
-        <translation type="unfinished">索引</translation>
+        <translation type="obsolete">索引</translation>
     </message>
     <message>
         <location filename="DefectWidget.cpp" line="27"/>
@@ -106,76 +105,85 @@
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="568"/>
-        <location filename="GraphicsScene.cpp" line="582"/>
         <source>Length:  </source>
         <translation type="unfinished">长度：</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="569"/>
-        <location filename="GraphicsScene.cpp" line="583"/>
+        <location filename="GraphicsScene.cpp" line="595"/>
         <source>Start:  </source>
         <translation type="unfinished">起点：</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="570"/>
-        <location filename="GraphicsScene.cpp" line="584"/>
+        <location filename="GraphicsScene.cpp" line="596"/>
         <source>End:  </source>
         <translation type="unfinished">终点：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="592"/>
+        <location filename="GraphicsScene.cpp" line="593"/>
+        <source>Inclination angle:  </source>
+        <translation type="unfinished">倾角倾向：</translation>
+    </message>
+    <message>
+        <location filename="GraphicsScene.cpp" line="594"/>
+        <source>Real length: </source>
+        <translation type="unfinished">实际长度：</translation>
+    </message>
+    <message>
+        <location filename="GraphicsScene.cpp" line="604"/>
         <source>Text:  </source>
         <translation type="unfinished">文本：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="613"/>
+        <location filename="GraphicsScene.cpp" line="625"/>
         <source>Angle:  </source>
         <translation type="unfinished">角度：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="614"/>
+        <location filename="GraphicsScene.cpp" line="626"/>
         <source>Vertex A:  </source>
         <translation type="unfinished">顶点A：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="615"/>
+        <location filename="GraphicsScene.cpp" line="627"/>
         <source>Vertex B:  </source>
         <translation type="unfinished">顶点B：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="616"/>
+        <location filename="GraphicsScene.cpp" line="628"/>
         <source>Vertex C:  </source>
         <translation type="unfinished">顶点C：</translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="635"/>
+        <location filename="GraphicsScene.cpp" line="647"/>
         <source>North-northeast </source>
         <translation type="unfinished">北偏东 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="640"/>
+        <location filename="GraphicsScene.cpp" line="652"/>
         <source>South-southeast </source>
         <translation type="unfinished">南偏东 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="645"/>
+        <location filename="GraphicsScene.cpp" line="657"/>
         <source>South-southwest </source>
         <translation type="unfinished">南偏西 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="650"/>
+        <location filename="GraphicsScene.cpp" line="662"/>
         <source>North-northwest </source>
         <translation type="unfinished">北偏西 </translation>
     </message>
     <message>
-        <location filename="GraphicsScene.cpp" line="725"/>
+        <location filename="GraphicsScene.cpp" line="737"/>
         <source>No</source>
         <translation type="unfinished">否</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="428"/>
-        <location filename="GraphicsScene.cpp" line="730"/>
-        <location filename="GraphicsScene.cpp" line="781"/>
+        <location filename="GraphicsScene.cpp" line="742"/>
+        <location filename="GraphicsScene.cpp" line="793"/>
         <source>Rectangle</source>
         <translation type="unfinished">矩形</translation>
     </message>
@@ -207,42 +215,42 @@
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="434"/>
-        <location filename="GraphicsScene.cpp" line="736"/>
-        <location filename="GraphicsScene.cpp" line="787"/>
+        <location filename="GraphicsScene.cpp" line="748"/>
+        <location filename="GraphicsScene.cpp" line="799"/>
         <source>AnyShape</source>
         <translation type="unfinished">任意形状</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="440"/>
-        <location filename="GraphicsScene.cpp" line="742"/>
-        <location filename="GraphicsScene.cpp" line="793"/>
+        <location filename="GraphicsScene.cpp" line="754"/>
+        <location filename="GraphicsScene.cpp" line="805"/>
         <source>Width</source>
         <translation type="unfinished">长度</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="446"/>
-        <location filename="GraphicsScene.cpp" line="748"/>
-        <location filename="GraphicsScene.cpp" line="799"/>
+        <location filename="GraphicsScene.cpp" line="760"/>
+        <location filename="GraphicsScene.cpp" line="811"/>
         <source>Occurance</source>
         <translation type="unfinished">产状</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="452"/>
-        <location filename="GraphicsScene.cpp" line="754"/>
-        <location filename="GraphicsScene.cpp" line="805"/>
+        <location filename="GraphicsScene.cpp" line="766"/>
+        <location filename="GraphicsScene.cpp" line="817"/>
         <source>Text</source>
         <translation type="unfinished">文本</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="458"/>
-        <location filename="GraphicsScene.cpp" line="760"/>
-        <location filename="GraphicsScene.cpp" line="811"/>
+        <location filename="GraphicsScene.cpp" line="772"/>
+        <location filename="GraphicsScene.cpp" line="823"/>
         <source>Angle</source>
         <translation type="unfinished">角度</translation>
     </message>
     <message>
         <location filename="GraphicsScene.cpp" line="423"/>
-        <location filename="GraphicsScene.cpp" line="776"/>
+        <location filename="GraphicsScene.cpp" line="788"/>
         <source>Yes</source>
         <translation type="unfinished">是</translation>
     </message>
