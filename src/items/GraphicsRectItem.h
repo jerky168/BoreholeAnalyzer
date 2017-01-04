@@ -16,7 +16,7 @@ public:
     GraphicsRectItem(const QRectF &rect, QGraphicsItem *parent = Q_NULLPTR);
     ~GraphicsRectItem();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
+    //void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
 
     typedef struct

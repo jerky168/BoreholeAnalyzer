@@ -10,6 +10,13 @@ GraphicsRectItem::GraphicsRectItem(const QRectF &rect, QGraphicsItem *parent) :
 
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
+
+
+    QPen thisPen;
+    thisPen.setColor(Qt::yellow);
+    thisPen.setWidth(pen().width());
+    thisPen.setStyle(Qt::SolidLine);
+    this->setPen(thisPen);
 }
 
 GraphicsRectItem::~GraphicsRectItem()
@@ -18,20 +25,20 @@ GraphicsRectItem::~GraphicsRectItem()
 }
 
 
-void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    widget = Q_NULLPTR;
-    option = Q_NULLPTR;
-    painter->setRenderHint(QPainter::Antialiasing);
+//void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+//{
+//    widget = Q_NULLPTR;
+//    option = Q_NULLPTR;
+//    painter->setRenderHint(QPainter::Antialiasing);
 
-    QPen thisPen;
-    thisPen.setColor(Qt::yellow);
-    thisPen.setWidth(pen().width());
-    thisPen.setStyle(Qt::SolidLine);
-    painter->setPen(thisPen);
+//    QPen thisPen;
+//    thisPen.setColor(Qt::yellow);
+//    thisPen.setWidth(pen().width());
+//    thisPen.setStyle(Qt::SolidLine);
+//    painter->setPen(thisPen);
 
-    painter->drawRect(rect());
-}
+//    painter->drawRect(rect());
+//}
 
 
 void GraphicsRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)

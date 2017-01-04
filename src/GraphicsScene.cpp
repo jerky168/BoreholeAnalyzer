@@ -110,7 +110,7 @@ QImage GraphicsScene::getPixmapImage()
     QImage image(pixmap_width + Border, realHeight + Border, QImage::Format_RGB32);
     QPainter painter(&image);
     painter.fillRect(image.rect(), Qt::white);
-    render(&painter, QRectF(Border, Border, pixmap_width, realHeight), QRectF(Border, Border, pixmap_width, realHeight));
+    render(&painter, QRect(Border, Border, pixmap_width, realHeight), QRect(Border, Border, pixmap_width, realHeight));
 
     QPen thisPen(Qt::black);
     thisPen.setWidth(8);
@@ -181,7 +181,7 @@ QImage GraphicsScene::getSceneImageFor3D()
 {
     QImage image(sceneRect().width() - 2*Border, sceneRect().height() - 2*Border, QImage::Format_RGB32);
     QPainter painter(&image);
-    render(&painter, image.rect(), QRectF(Border, Border, image.width(), image.height()));
+    render(&painter, image.rect(), QRect(Border, Border, image.width(), image.height()));
 
     QPen thisPen(Qt::yellow);
     thisPen.setWidth(8);

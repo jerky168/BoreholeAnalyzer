@@ -594,7 +594,7 @@ void MainWindow::on_actionManual_triggered()
 
 void MainWindow::on_actionContact_triggered()
 {
-    QDesktopServices::openUrl(QUrl(Website_Url));
+    QDesktopServices::openUrl(QUrl(Company_Url));
 }
 
 

@@ -6,7 +6,12 @@ GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     content(QString())
 {
     addPoint(pos);
-    setPen(QPen(GraphicsSettings::instance()->getPenColor(), GraphicsSettings::instance()->getPenWidth()));
+
+    QPen thisPen;
+    thisPen.setColor(Qt::yellow);
+    thisPen.setWidth(GraphicsSettings::instance()->getPenWidth());
+    thisPen.setStyle(Qt::SolidLine);
+    this->setPen(thisPen);
 }
 
 GraphicsAnyshape::~GraphicsAnyshape()
@@ -14,20 +19,20 @@ GraphicsAnyshape::~GraphicsAnyshape()
 
 }
 
-void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    option = Q_NULLPTR;
-    widget = Q_NULLPTR;
-    painter->setRenderHint(QPainter::Antialiasing);
+//void GraphicsAnyshape::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+//{
+//    option = Q_NULLPTR;
+//    widget = Q_NULLPTR;
+//    painter->setRenderHint(QPainter::Antialiasing);
 
-    QPen thisPen;
-    thisPen.setColor(Qt::yellow);
-    thisPen.setWidth(pen().width());
-    thisPen.setStyle(Qt::SolidLine);
-    painter->setPen(thisPen);
+//    QPen thisPen;
+//    thisPen.setColor(Qt::yellow);
+//    thisPen.setWidth(pen().width());
+//    thisPen.setStyle(Qt::SolidLine);
+//    painter->setPen(thisPen);
 
-    painter->drawPolygon(this->polygon());
-}
+//    painter->drawPolygon(this->polygon());
+//}
 
 
 

@@ -9,6 +9,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QProgressDialog>
+#include <QSettings>
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
@@ -73,12 +74,13 @@ private:
     GraphicsScene *scene;
     PrjInfoDialog *infoDialog;
 
-    QActionGroup *actionGroupMode;  //2D, 3D模式切换
-    QActionGroup *actionGroup2D;    //2D模式下的操作
-    QActionGroup *actionGroup3D;    //3D模式下的操作
+    QActionGroup *actionGroupMode;  // 2D, 3D模式切换
+    QActionGroup *actionGroup2D;    // 2D模式下的操作
+    QActionGroup *actionGroup3D;    // 3D模式下的操作
+    QActionGroup *actionGroupSpin;  // 旋转操作
 
-    QActionGroup *actionGroupSpin;
 
+    QSettings settings;
 
     void createActionGroups();
     void createSceneAndView();

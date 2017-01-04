@@ -10,7 +10,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle(App_Name);
-    ui->contentLabel->setText(App_Name + "\nV" + App_Version);
+    ui->contentLabel->setText(App_Name + "\nv" + App_Version);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
 }
 
