@@ -24,7 +24,7 @@ void DefectWidget::initModel()
     headerView = new QHeaderView(Qt::Horizontal);
 
     QStringList headers;
-    headers << tr("Index") << tr("Type") << tr("Data1") << tr("Data2");
+    headers << tr("Type") << tr("Data1") << tr("Data2");
     model->setHorizontalHeaderLabels(headers);
     ui->tableView->setModel(model);
 }
@@ -47,8 +47,8 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
         QStandardItem *item;
 //        item = new QStandardItem(tableDatas.at(i).isSaved);
 //        items.append(item);
-        item = new QStandardItem(QString::number(ImageWidget::index+1));
-        items.append(item);
+//        item = new QStandardItem(QString::number(ImageWidget::index+1));
+//        items.append(item);
         item = new QStandardItem(tableDatas.at(i).type);
         items.append(item);
         QString data = tableDatas.at(i).data;

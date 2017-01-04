@@ -91,6 +91,8 @@ private:
     QMap<QString, QGraphicsItem *> index2Item(DbHandler::IndexData indexData);
 
 
+    QString getWordString(quint16 index);
+
 signals:
     void clearScene();
 

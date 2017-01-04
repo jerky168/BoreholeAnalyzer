@@ -578,8 +578,52 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             QPointF pos1 = scene2Real(i->line().p1());
             QPointF pos2 = scene2Real(i->line().p2());
 
-            qreal length = i->line().length() / GraphicsSettings::instance()->getRatio() * 100;
-            str += tr("Length:  ") + QString::number(length, 'f', 2) + "cm\n";
+            qreal realWidth = pixmap_width / GraphicsSettings::instance()->getRatio();
+            qreal radius = realWidth / 2 / M_PI;
+
+
+            qreal angle1;   // 等腰三角形的顶角
+            qreal angle2;   // 等腰三角形的顶角角平分线的方位角
+            qreal angle3;   // 倾向方位角
+
+            angle1 = qFabs(pos2.x() - pos1.x());
+
+            // 如果方位角之差大于180°
+            if (angle1 > 180)
+            {
+                qreal min = (pos2.x() > pos1.x()) ? pos1.x() : pos2.x();
+                qreal max = (pos2.x() > pos1.x()) ? pos2.x() : pos1.x();
+                min += 360;
+                angle2 = (min + max) / 2;
+                angle3 = angle2 - 90;
+            }
+            // 如果方位角之差小于等于180°
+            else
+            {
+                angle2 = (pos2.x() - pos1.x()) / 2;
+                angle3 = angle2 + 90;
+                if (angle3 >= 360)
+                    angle3 -= 360;
+            }
+
+            if ((pos1.x() > pos2.x() && pos1.y() < pos2.y()) || (pos1.x() < pos2.x() && pos1.y() > pos2.y()))
+            {
+                angle3 += 180;
+                if (angle3 >= 360)
+                    angle3 -= 360;
+            }
+
+
+            qreal hemline = qSqrt(2 * qPow(radius, 2) - 2 * qPow(radius, 2) * qCos(qDegreesToRadians(angle1)));
+            qreal height = qFabs(pos1.y() - pos2.y());
+            qreal angle = qRadiansToDegrees(qAtan(height / hemline));
+
+            qreal length = i->line().length() / GraphicsSettings::instance()->getRatio();
+            qreal realLength = qSqrt(qPow(hemline, 2) + qPow(height, 2));
+
+            str += tr("Inclination angle:  ") + getAngleString(angle3) + tr(" ") + QString::number(angle, 'f', 2) + "°\n";
+            str += tr("Length:  ") + QString::number(length * 100, 'f', 2) + "cm\n";
+            str += tr("Real length:  ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
             str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
             str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
 
@@ -830,4 +874,15 @@ void GraphicsScene::deleteItem(int row)
     {
         deleteItemData(QUuid(savedItems.keys().at(row-newItems.count())));
     }
+}
+
+
+QStringList GraphicsScene::getAllItemString()
+{
+    QStringList strList;
+    for (int i = 0; i < savedItems.count(); i++)
+    {
+        strList << getShowString(savedItems.values().at(i));
+    }
+    return strList;
 }

@@ -280,6 +280,22 @@ QImage handleImage(QImage image)
 
 
 
+QString MainWindow::getWordString(quint16 index)
+{
+    DbHandler::IndexData indexData = handler->getIndexData(index);
+    GraphicsScene *scene = new GraphicsScene();
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    QString str;
+    QStringList strList = scene->getAllItemString();
+    for (int i = 0; i < strList.count(); i++)
+    {
+        str += strList.at(i) + "\n";
+    }
+    delete scene;
+    return str;
+}
+
+
 void MainWindow::on_actionExportWord_triggered()
 {
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
@@ -341,6 +357,8 @@ void MainWindow::on_actionExportWord_triggered()
         image.setDotsPerMeterY(image.width() / 0.05);
         image.save(QDir::temp().filePath("temp.jpg"));
         word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
+        word.setCellFontSize(i + 5, 3, 5);
+        word.setCellString(i + 5, 3, getWordString(2*i));
 
         if ((ImageWidget::maxIndex + 1) % 2 == 1 && (i == rows - 1))
         {
@@ -353,6 +371,8 @@ void MainWindow::on_actionExportWord_triggered()
             image.setDotsPerMeterY(image.width() / 0.05);
             image.save(QDir::temp().filePath("temp.jpg"));
             word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
+            word.setCellFontSize(i + 5, 6, 5);
+            word.setCellString(i + 5, 6, getWordString(2*i+1));
         }
 
 
