@@ -581,7 +581,6 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             qreal realWidth = pixmap_width / GraphicsSettings::instance()->getRatio();
             qreal radius = realWidth / 2 / M_PI;
 
-
             qreal angle1;   // 等腰三角形的顶角
             qreal angle2;   // 等腰三角形的顶角角平分线的方位角
             qreal angle3;   // 倾向方位角

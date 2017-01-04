@@ -11,6 +11,5 @@
 #define     App_Version     Major_Version_Number + "." + Minor_Version_Number + "." + Data_Version_Number
 
 
-
 #define     Website_Url     "http://www.y-link.cn/"
 
