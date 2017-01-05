@@ -353,442 +353,447 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="79"/>
+        <location filename="mainwindow.ui" line="78"/>
         <source>导出</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="97"/>
+        <location filename="mainwindow.ui" line="96"/>
         <source>编辑(&amp;E)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="107"/>
+        <location filename="mainwindow.ui" line="106"/>
         <source>工具(&amp;T)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="118"/>
+        <location filename="mainwindow.ui" line="117"/>
         <source>图像(&amp;I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="133"/>
+        <location filename="mainwindow.ui" line="132"/>
         <source>视图(&amp;V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="140"/>
+        <location filename="mainwindow.ui" line="139"/>
         <source>帮助(&amp;H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="155"/>
+        <location filename="mainwindow.ui" line="154"/>
         <source>工具栏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="211"/>
+        <location filename="mainwindow.ui" line="210"/>
         <source>图像管理</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="220"/>
+        <location filename="mainwindow.ui" line="219"/>
         <source>岩芯描述</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="233"/>
+        <location filename="mainwindow.ui" line="232"/>
         <source>打开(&amp;O)...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="236"/>
+        <location filename="mainwindow.ui" line="235"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="241"/>
+        <location filename="mainwindow.ui" line="240"/>
         <source>清除菜单(C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="253"/>
+        <location filename="mainwindow.ui" line="252"/>
         <source>保存(&amp;S)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="256"/>
+        <location filename="mainwindow.ui" line="255"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="268"/>
+        <location filename="mainwindow.ui" line="267"/>
         <source>关闭(&amp;C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="271"/>
+        <location filename="mainwindow.ui" line="270"/>
         <source>关闭</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="274"/>
+        <location filename="mainwindow.ui" line="273"/>
         <source>Ctrl+W</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="283"/>
+        <location filename="mainwindow.ui" line="282"/>
         <source>退出(&amp;X)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="286"/>
+        <location filename="mainwindow.ui" line="285"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="298"/>
+        <location filename="mainwindow.ui" line="297"/>
         <source>撤销(&amp;U)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="301"/>
+        <location filename="mainwindow.ui" line="300"/>
         <source>Ctrl+Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="313"/>
+        <location filename="mainwindow.ui" line="312"/>
         <source>重做(&amp;R)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="315"/>
         <source>Ctrl+Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="328"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>剪切(&amp;T)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="331"/>
+        <location filename="mainwindow.ui" line="330"/>
         <source>Ctrl+X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="343"/>
+        <location filename="mainwindow.ui" line="342"/>
         <source>复制(&amp;C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="346"/>
+        <location filename="mainwindow.ui" line="345"/>
         <source>Ctrl+C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="358"/>
+        <location filename="mainwindow.ui" line="357"/>
         <source>粘贴(&amp;P)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="361"/>
+        <location filename="mainwindow.ui" line="360"/>
         <source>Ctrl+V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="373"/>
+        <location filename="mainwindow.ui" line="372"/>
         <source>删除(&amp;D)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="376"/>
+        <location filename="mainwindow.ui" line="375"/>
         <source>Del</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="385"/>
+        <location filename="mainwindow.ui" line="384"/>
         <source>关于</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="390"/>
+        <location filename="mainwindow.ui" line="389"/>
         <source>使用手册</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="399"/>
+        <location filename="mainwindow.ui" line="398"/>
         <source>联系我们</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="414"/>
+        <location filename="mainwindow.ui" line="413"/>
         <source>2D视图</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="426"/>
+        <location filename="mainwindow.ui" line="425"/>
         <source>3D视图</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="438"/>
+        <location filename="mainwindow.ui" line="437"/>
         <source>左旋</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="450"/>
+        <location filename="mainwindow.ui" line="449"/>
         <source>右旋</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="465"/>
+        <location filename="mainwindow.ui" line="464"/>
         <source>自动左旋</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="480"/>
+        <location filename="mainwindow.ui" line="479"/>
         <source>自动右旋</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="492"/>
+        <location filename="mainwindow.ui" line="491"/>
         <source>放大</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="504"/>
+        <location filename="mainwindow.ui" line="503"/>
         <source>缩小</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="512"/>
+        <location filename="mainwindow.ui" line="511"/>
         <source>工程属性</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="515"/>
+        <location filename="mainwindow.ui" line="514"/>
         <source>Ctrl+I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="526"/>
+        <location filename="mainwindow.ui" line="525"/>
         <source>快捷工具栏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="537"/>
+        <location filename="mainwindow.ui" line="536"/>
         <source>岩芯描述管理栏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="548"/>
+        <location filename="mainwindow.ui" line="547"/>
         <source>图像浏览参数栏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="560"/>
+        <location filename="mainwindow.ui" line="559"/>
         <source>打印预览</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="563"/>
+        <location filename="mainwindow.ui" line="562"/>
         <source>Ctrl+P</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="575"/>
+        <location filename="mainwindow.ui" line="574"/>
         <source>导出图片</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="587"/>
+        <location filename="mainwindow.ui" line="586"/>
         <source>导出报告</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="602"/>
+        <location filename="mainwindow.ui" line="601"/>
         <source>方位偏移</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="617"/>
+        <location filename="mainwindow.ui" line="616"/>
         <source>缝宽</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="632"/>
+        <location filename="mainwindow.ui" line="631"/>
         <source>矩形</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="647"/>
+        <location filename="mainwindow.ui" line="646"/>
         <source>任意形状</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="662"/>
+        <location filename="mainwindow.ui" line="661"/>
         <source>产状</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="677"/>
+        <location filename="mainwindow.ui" line="676"/>
         <source>文本框</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="695"/>
+        <location filename="mainwindow.ui" line="694"/>
         <source>十字光标</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="707"/>
+        <location filename="mainwindow.ui" line="706"/>
         <source>导出表格</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="125"/>
+        <location filename="mainwindow.cpp" line="124"/>
+        <source>Clear menu</source>
+        <translation type="unfinished">清除菜单</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="233"/>
         <source>Open project file</source>
         <translation type="unfinished">打开工程文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="125"/>
+        <location filename="mainwindow.cpp" line="233"/>
         <source>Project file (*.ylink)</source>
         <translation type="unfinished">工程文件 (*.ylink)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="271"/>
+        <location filename="mainwindow.cpp" line="339"/>
         <source>Images files (*.jpg);;All files (*.*)</source>
         <translation type="unfinished">图片文件 (*.jpg);;所有文件 (*.*)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="271"/>
+        <location filename="mainwindow.cpp" line="339"/>
         <source>Export Image</source>
         <translation type="unfinished">导出图片</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="309"/>
+        <location filename="mainwindow.cpp" line="377"/>
         <source>Export report failed</source>
         <translation type="unfinished">导出报告失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="310"/>
+        <location filename="mainwindow.cpp" line="378"/>
         <source>Export report failed, please confirm if the computer has installed Microsoft Word!</source>
         <translation type="unfinished">导出报告失败，请确认计算机安装了Word软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="321"/>
+        <location filename="mainwindow.cpp" line="389"/>
         <source>Name</source>
         <translation type="unfinished">工程名称</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="326"/>
+        <location filename="mainwindow.cpp" line="394"/>
         <source>Number</source>
         <translation type="unfinished">测控编号</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="328"/>
+        <location filename="mainwindow.cpp" line="396"/>
         <source>Site</source>
         <translation type="unfinished">测试地点</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="330"/>
+        <location filename="mainwindow.cpp" line="398"/>
         <source>Time</source>
         <translation type="unfinished">测试时间</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="333"/>
+        <location filename="mainwindow.cpp" line="401"/>
         <source>Diameter</source>
         <translation type="unfinished">测孔直径</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="335"/>
+        <location filename="mainwindow.cpp" line="403"/>
         <source>Depth</source>
         <translation type="unfinished">测试深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="337"/>
+        <location filename="mainwindow.cpp" line="405"/>
         <source>StartDepth</source>
         <translation type="unfinished">始测深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="343"/>
-        <location filename="mainwindow.cpp" line="346"/>
+        <location filename="mainwindow.cpp" line="411"/>
+        <location filename="mainwindow.cpp" line="414"/>
         <source>Position</source>
         <translation type="unfinished">位置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="344"/>
-        <location filename="mainwindow.cpp" line="347"/>
+        <location filename="mainwindow.cpp" line="412"/>
+        <location filename="mainwindow.cpp" line="415"/>
         <source>Image</source>
         <translation type="unfinished">展开图</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="345"/>
-        <location filename="mainwindow.cpp" line="348"/>
+        <location filename="mainwindow.cpp" line="413"/>
+        <location filename="mainwindow.cpp" line="416"/>
         <source>Remarks</source>
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="397"/>
+        <location filename="mainwindow.cpp" line="465"/>
         <source>Export table failed</source>
         <translation type="unfinished">导出表格失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="398"/>
+        <location filename="mainwindow.cpp" line="466"/>
         <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
         <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="412"/>
+        <location filename="mainwindow.cpp" line="480"/>
         <source>index</source>
         <translation type="unfinished">页面</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="415"/>
+        <location filename="mainwindow.cpp" line="483"/>
         <source>type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="418"/>
+        <location filename="mainwindow.cpp" line="486"/>
         <source>data1</source>
         <translation type="unfinished">数据项1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="421"/>
+        <location filename="mainwindow.cpp" line="489"/>
         <source>data2</source>
         <translation type="unfinished">数据项2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="470"/>
+        <location filename="mainwindow.cpp" line="538"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="471"/>
+        <location filename="mainwindow.cpp" line="539"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="474"/>
+        <location filename="mainwindow.cpp" line="542"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="475"/>
+        <location filename="mainwindow.cpp" line="543"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="540"/>
+        <location filename="mainwindow.cpp" line="608"/>
         <source>Image is shifting...</source>
         <translatorcomment>处理中...</translatorcomment>
         <translation type="unfinished">图像偏移中...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="541"/>
+        <location filename="mainwindow.cpp" line="609"/>
         <source>In progress...</source>
         <translation type="unfinished">处理中...</translation>
     </message>
@@ -867,12 +872,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="app.h" line="10"/>
+        <location filename="app.h" line="12"/>
         <source>BoreholeAnalyzer</source>
         <translation type="unfinished">钻孔电视分析软件</translation>
     </message>
     <message>
-        <location filename="app.h" line="12"/>
+        <location filename="app.h" line="16"/>
         <source>Y-Link</source>
         <translation type="unfinished">上海岩联工程技术有限公司</translation>
     </message>
