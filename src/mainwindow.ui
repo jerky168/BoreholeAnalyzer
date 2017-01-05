@@ -87,7 +87,6 @@
     <addaction name="recentMenu"/>
     <addaction name="separator"/>
     <addaction name="menuExport"/>
-    <addaction name="actionPrint"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -176,10 +175,10 @@
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
+   <addaction name="separator"/>
    <addaction name="actionExportImage"/>
    <addaction name="actionExportWord"/>
    <addaction name="actionExportExcel"/>
-   <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="actionCopy"/>
    <addaction name="actionPaste"/>

@@ -824,3 +824,21 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
     return items;
 }
 
+//void MainWindow::keyPressEvent(QKeyEvent *event)
+//{
+//    if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_Tab))
+//    {
+//        if (0 == ui->stackedWidget->currentIndex())
+//        {
+//            ui->action2DView->setChecked(false);
+//            ui->action3DView->setChecked(true);
+//            ui->stackedWidget->setCurrentIndex(1);
+//        }
+//        else
+//        {
+//            ui->action2DView->setChecked(true);
+//            ui->action3DView->setChecked(false);
+//            ui->stackedWidget->setCurrentIndex(0);
+//        }
+//    }
+//}

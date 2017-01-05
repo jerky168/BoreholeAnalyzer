@@ -67,6 +67,9 @@ private slots:
     void on_actionRedo_triggered();
 
 
+//    void keyPressEvent(QKeyEvent *event);
+
+
     void addRecentFiles(QString filename);
     void openRecentFile();
     void updateRecentFiles();
