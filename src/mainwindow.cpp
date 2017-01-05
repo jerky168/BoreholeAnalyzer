@@ -468,7 +468,9 @@ void MainWindow::on_actionExportWord_triggered()
 
     word.moveForEnd();
 
-    word.insertTable(1, 6);
+    word.insertTable(1, 10);
+    word.mergeRowCells(4, 2, 4);
+    word.mergeRowCells(4, 5, 7);
     word.setCellString(4, 1, tr("Position"));
     word.setCellString(4, 2, tr("Image"));
     word.setCellString(4, 3, tr("Remarks"));
@@ -481,8 +483,9 @@ void MainWindow::on_actionExportWord_triggered()
     int rows = (ImageWidget::maxIndex+2)/2;
     for (int i = 0; i < rows; i++)
     {
-        word.insertTable(1, 6);
-
+        word.insertTable(1, 10);
+        word.mergeRowCells(i + 5, 2, 4);
+        word.mergeRowCells(i + 5, 5, 7);
         QImage image = getPixmapImage(2*i);
         image.setDotsPerMeterX(image.width() / 0.05);
         image.setDotsPerMeterY(image.width() / 0.05);
@@ -491,11 +494,7 @@ void MainWindow::on_actionExportWord_triggered()
         word.setCellFontSize(i + 5, 3, 5);
         word.setCellString(i + 5, 3, getWordString(2*i));
 
-        if ((ImageWidget::maxIndex + 1) % 2 == 1 && (i == rows - 1))
-        {
-
-        }
-        else
+        if ((ImageWidget::maxIndex + 1) % 2 != 1 || (i != rows - 1))
         {
             image = getPixmapImage(2*i+1);
             image.setDotsPerMeterX(image.width() / 0.05);

@@ -362,3 +362,16 @@ void QWord::setOptionCheckSpell(bool flags)
     opetions->setProperty("ContextualSpeller",flags);
     opetions->setProperty("CheckSpellingAsYouType",flags);
 }
+
+void QWord::mergeRowCells(int row, int column_start, int column_end)
+{
+    QAxObject *selection = m_word->querySubObject("Selection");
+    QAxObject *table = selection->querySubObject("Tables(1)");
+    int start = table->querySubObject("Cell(int, int)", row, column_start)->querySubObject("Range")->property("Start").toInt();
+    int end = table->querySubObject("Cell(int, int)", row, column_end)->querySubObject("Range")->property("End").toInt();
+
+    selection->dynamicCall("SetRange(int, int)", start, end);
+    QAxObject *range = selection->querySubObject("Range");
+    QAxObject *cells = range->querySubObject("Cells");
+    cells->dynamicCall("Merge (void)");
+}
