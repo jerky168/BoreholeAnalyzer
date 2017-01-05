@@ -1,10 +1,17 @@
 #include "DbHandler.h"
 
-
 DbHandler::DbHandler(QObject *parent) :
     QObject(parent)
 {
-
+    projectInfoFields.insert("direction", "TEXT");
+    projectInfoFields.insert("diameter", "INTEGER");
+    projectInfoFields.insert("startDepth", "INTEGER");
+    projectInfoFields.insert("endDepth", "INTEGER");
+    projectInfoFields.insert("orificeNumber", "TEXT");
+    projectInfoFields.insert("projectName", "TEXT");
+    projectInfoFields.insert("projectTime", "TEXT");
+    projectInfoFields.insert("projectSite", "TEXT");
+    projectInfoFields.insert("projectPerson", "TEXT");
 }
 
 
@@ -13,6 +20,7 @@ DbHandler::~DbHandler()
     if (isOpened())
         database.close();
 }
+
 
 
 
@@ -31,12 +39,19 @@ bool DbHandler::openDatabase(QString filepath)
 
     QSqlQuery query(database);
 
+    // 检查是否有ProjectInfo表且里面是否有数据
     if (!query.exec("select * from ProjectInfo") || !query.first())
     {
         qDebug() << query.lastError().text();
         errorCode = NoProjectInfo;
         return false;
     }
+    // 检查表中是否有所有的字段 没有则添加
+    else if (!query.exec("select projectSite from ProjectInfo"))
+    {
+        query.exec("alter table ProjectInfo add projectSite TEXT");
+    }
+
 
     if (!query.exec("select * from bigImages") || !query.first())
     {
@@ -73,17 +88,18 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
     PrjInfo prjInfo;
     QSqlQuery query(database);
 
-    query.exec("select direction, diameter, startHeight, projectName, date, orificeNumber from ProjectInfo");
+    query.exec("select * from ProjectInfo");
     query.first();
-    if (query.value(0).toString().contains("down"))
+    if (query.value("direction").toString().contains("down"))
         prjInfo.isUp2Down = true;
     else
         prjInfo.isUp2Down = false;
-    prjInfo.diameter = query.value(1).toDouble() / 1000;
-    prjInfo.startHeight = query.value(2).toDouble() / 10000;
-    prjInfo.projectName = query.value(3).toString();
-    prjInfo.projectTime = query.value(4).toString();
-    prjInfo.orificeNumber = query.value(5).toString();
+    prjInfo.diameter = query.value("diameter").toInt();
+    prjInfo.startHeight = query.value("startHeight").toDouble() / 10000;
+    prjInfo.projectName = query.value("projectName").toString();
+    prjInfo.projectTime = query.value("date").toString();
+    prjInfo.orificeNumber = query.value("orificeNumber").toString();
+    prjInfo.projectSite = query.value("projectSite").toString();
 
     query.exec("select * from bigImages");
     query.last();
@@ -94,7 +110,6 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
 
 
 
-
 void DbHandler::setPrjInfo(PrjInfo prjInfo)
 {
     if (!isOpened())
@@ -102,13 +117,14 @@ void DbHandler::setPrjInfo(PrjInfo prjInfo)
 
     QSqlQuery query(database);
     query.exec("DELETE FROM ProjectInfo");
-    query.prepare("INSERT INTO ProjectInfo (diameter, startHeight, projectName, date, orificeNumber) "
-                  "VALUES (:diameter, :startHeight, :projectName, :date, :orificeNumber)");
-    query.bindValue(":diameter", prjInfo.diameter * 1000);
+    query.prepare("INSERT INTO ProjectInfo (diameter, startHeight, projectName, date, orificeNumber, projectSite) "
+                  "VALUES (:diameter, :startHeight, :projectName, :date, :orificeNumber, :projectSite)");
+    query.bindValue(":diameter", prjInfo.diameter);
     query.bindValue(":startHeight", prjInfo.startHeight * 10000);
     query.bindValue(":projectName", prjInfo.projectName);
     query.bindValue(":date", prjInfo.projectTime);
     query.bindValue(":orificeNumber", prjInfo.orificeNumber);
+    query.bindValue(":projectSite", prjInfo.projectSite);
     query.exec();
 }
 

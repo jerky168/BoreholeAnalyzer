@@ -832,72 +832,72 @@
         <translation type="unfinished">始测深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="472"/>
-        <location filename="mainwindow.cpp" line="475"/>
+        <location filename="mainwindow.cpp" line="474"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>Position</source>
         <translation type="unfinished">位置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="473"/>
-        <location filename="mainwindow.cpp" line="476"/>
+        <location filename="mainwindow.cpp" line="475"/>
+        <location filename="mainwindow.cpp" line="478"/>
         <source>Image</source>
         <translation type="unfinished">展开图</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="474"/>
-        <location filename="mainwindow.cpp" line="477"/>
+        <location filename="mainwindow.cpp" line="476"/>
+        <location filename="mainwindow.cpp" line="479"/>
         <source>Remarks</source>
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="526"/>
+        <location filename="mainwindow.cpp" line="525"/>
         <source>Export table failed</source>
         <translation type="unfinished">导出表格失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="527"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
         <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="541"/>
+        <location filename="mainwindow.cpp" line="540"/>
         <source>index</source>
         <translation type="unfinished">页面</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="544"/>
+        <location filename="mainwindow.cpp" line="543"/>
         <source>type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="547"/>
+        <location filename="mainwindow.cpp" line="546"/>
         <source>data1</source>
         <translation type="unfinished">数据项1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="550"/>
+        <location filename="mainwindow.cpp" line="549"/>
         <source>data2</source>
         <translation type="unfinished">数据项2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="599"/>
+        <location filename="mainwindow.cpp" line="598"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="600"/>
+        <location filename="mainwindow.cpp" line="599"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="603"/>
+        <location filename="mainwindow.cpp" line="602"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="367"/>
-        <location filename="mainwindow.cpp" line="604"/>
+        <location filename="mainwindow.cpp" line="603"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
@@ -930,14 +930,14 @@
         <translation type="unfinished">确认</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="669"/>
+        <location filename="mainwindow.cpp" line="668"/>
         <source>Image is shifting...</source>
         <translatorcomment>处理中...</translatorcomment>
         <translation type="unfinished">图像偏移中...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="368"/>
-        <location filename="mainwindow.cpp" line="670"/>
+        <location filename="mainwindow.cpp" line="669"/>
         <source>In progress...</source>
         <translation type="unfinished">处理中...</translation>
     </message>
@@ -959,32 +959,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="71"/>
+        <location filename="PrjInfoDialog.ui" line="78"/>
         <source>测孔直径</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="64"/>
+        <location filename="PrjInfoDialog.ui" line="40"/>
         <source>起始深度</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="30"/>
+        <location filename="PrjInfoDialog.ui" line="54"/>
         <source>工程名称</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="88"/>
+        <location filename="PrjInfoDialog.ui" line="61"/>
         <source>终止深度</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="105"/>
+        <location filename="PrjInfoDialog.ui" line="108"/>
+        <source>9999-B9-99 99:99:99</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="PrjInfoDialog.ui" line="118"/>
         <source>测试时间</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.ui" line="122"/>
+        <location filename="PrjInfoDialog.ui" line="128"/>
+        <source> mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="PrjInfoDialog.ui" line="150"/>
+        <location filename="PrjInfoDialog.ui" line="166"/>
+        <source> m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="PrjInfoDialog.ui" line="85"/>
         <source>测试地点</source>
         <translation type="unfinished"></translation>
     </message>
@@ -999,18 +1015,27 @@
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.cpp" line="56"/>
-        <location filename="PrjInfoDialog.cpp" line="62"/>
-        <location filename="PrjInfoDialog.cpp" line="68"/>
-        <source>Input error</source>
-        <translation type="unfinished">输入错误</translation>
+        <location filename="PrjInfoDialog.cpp" line="72"/>
+        <source>Success</source>
+        <translation type="unfinished">成功</translation>
     </message>
     <message>
-        <location filename="PrjInfoDialog.cpp" line="56"/>
-        <location filename="PrjInfoDialog.cpp" line="62"/>
-        <location filename="PrjInfoDialog.cpp" line="68"/>
+        <location filename="PrjInfoDialog.cpp" line="72"/>
+        <source>Save project information successfully.</source>
+        <translation type="unfinished">成功保存工程信息。</translation>
+    </message>
+    <message>
+        <location filename="PrjInfoDialog.cpp" line="72"/>
+        <source>Ok</source>
+        <translation type="unfinished">确认</translation>
+    </message>
+    <message>
+        <source>Input error</source>
+        <translation type="obsolete">输入错误</translation>
+    </message>
+    <message>
         <source>Please input valid number!</source>
-        <translation type="unfinished">请输入有效的数字！</translation>
+        <translation type="obsolete">请输入有效的数字！</translation>
     </message>
 </context>
 <context>

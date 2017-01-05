@@ -22,9 +22,9 @@ void PrjInfoDialog::updatePrjInfo(DbHandler::PrjInfo prjInfo)
 {
     ui->nameEdit->setText(prjInfo.projectName);
     ui->numberEdit->setText(prjInfo.orificeNumber);
-    ui->diameterEdit->setText(QString::number(prjInfo.diameter, 'f', 3));
-    ui->startDepthEdit->setText(QString::number(prjInfo.startHeight, 'f', 3));
-    ui->endDepthEdit->setText(QString::number(prjInfo.endHeight, 'f', 3));
+    ui->diameterSpinBox->setValue(prjInfo.diameter);
+    ui->startDepthSpinBox->setValue(prjInfo.startHeight);
+    ui->endDepthSpinBox->setValue(prjInfo.endHeight);
     ui->testTimeEdit->setText(prjInfo.projectTime);
     ui->testSiteEdit->setText(prjInfo.projectSite);
 }
@@ -34,9 +34,9 @@ void PrjInfoDialog::clearPrjInfo()
 {
     ui->nameEdit->clear();
     ui->numberEdit->clear();
-    ui->diameterEdit->clear();
-    ui->startDepthEdit->clear();
-    ui->endDepthEdit->clear();
+    ui->diameterSpinBox->clear();
+    ui->startDepthSpinBox->clear();
+    ui->endDepthSpinBox->clear();
     ui->testTimeEdit->clear();
     ui->testSiteEdit->clear();
 }
@@ -45,30 +45,31 @@ void PrjInfoDialog::clearPrjInfo()
 void PrjInfoDialog::on_buttonBox_accepted()
 {
     DbHandler::PrjInfo info;
-    bool ok = false;
+//    bool ok = false;
     info.projectName = ui->nameEdit->text();
     info.projectSite = ui->testSiteEdit->text();
     info.projectTime = ui->testTimeEdit->text();
     info.orificeNumber = ui->numberEdit->text();
-    info.diameter = ui->diameterEdit->text().toDouble(&ok);
-    if (ui->diameterEdit->text().isEmpty() && !ok)
-    {
-        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
-        return;
-    }
-    info.startHeight = ui->startDepthEdit->text().toDouble(&ok);
-    if (ui->startDepthEdit->text().isEmpty() && !ok)
-    {
-        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
-        return;
-    }
-    info.endHeight = ui->endDepthEdit->text().toDouble(&ok);
-    if (ui->endDepthEdit->text().isEmpty() && !ok)
-    {
-        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
-        return;
-    }
+    info.diameter = ui->diameterSpinBox->value();
+//    if (ui->diameterEdit->text().isEmpty() && !ok)
+//    {
+//        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
+//        return;
+//    }
+    info.startHeight = ui->startDepthSpinBox->value();
+//    if (ui->startDepthEdit->text().isEmpty() && !ok)
+//    {
+//        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
+//        return;
+//    }
+    info.endHeight = ui->endDepthSpinBox->value();
+//    if (ui->endDepthEdit->text().isEmpty() && !ok)
+//    {
+//        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
+//        return;
+//    }
     emit savePrjInfo(info);
+    QMessageBox::information(this, tr("Success"), tr("Save project information successfully."), tr("Ok"));
     clearPrjInfo();
     close();
 }

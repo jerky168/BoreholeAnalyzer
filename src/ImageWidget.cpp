@@ -28,11 +28,11 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     lastIndex = 0;
     emit sigSwitchImage(index);
 
-    ui->startHeightEdit->setText(QString::number(prjInfo.startHeight, 'f', 3).append("m"));
-    ui->endHeightEdit->setText(QString::number(prjInfo.endHeight, 'f', 3).append("m"));
-    ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
+    ui->startHeightEdit->setText(QString::number(prjInfo.startHeight, 'f', 3).append(" m"));
+    ui->endHeightEdit->setText(QString::number(prjInfo.endHeight, 'f', 3).append(" m"));
+    ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
     ui->currentPartEdit->setText(QString::number(index+1));
-    ui->totalLengthEdit->setText(QString::number(prjInfo.endHeight - prjInfo.startHeight, 'f', 3).append("m"));
+    ui->totalLengthEdit->setText(QString::number(prjInfo.endHeight - prjInfo.startHeight, 'f', 3).append(" m"));
     ui->totalPartEdit->setText(QString::number(maxIndex+1));
 
     ui->switchEdit->setEnabled(true);
@@ -76,7 +76,7 @@ void ImageWidget::on_lastButton_clicked()
     lastIndex = index;
     index--;
     emit sigSwitchImage(index);
-    ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
+    ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
     ui->currentPartEdit->setText(QString::number(index+1));
 }
 
