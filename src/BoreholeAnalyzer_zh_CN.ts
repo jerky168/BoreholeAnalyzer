@@ -71,6 +71,121 @@
     </message>
 </context>
 <context>
+    <name>ExportImageDialog</name>
+    <message>
+        <location filename="ExportImageDialog.ui" line="26"/>
+        <source>导出形式：</source>
+        <oldsource>导出格式：</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="37"/>
+        <source>导出当前段图片</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="42"/>
+        <source>导出所有图片</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="74"/>
+        <source>文件名：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="90"/>
+        <location filename="ExportImageDialog.ui" line="122"/>
+        <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="104"/>
+        <source>段数</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="109"/>
+        <source>段数-总段数</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="114"/>
+        <source>起始深度-终止深度</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="136"/>
+        <source>JPG (*.jpg)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="141"/>
+        <source>PNG (*.png)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="146"/>
+        <source>BMP (*.bmp)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="20"/>
+        <source>导出图片</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="50"/>
+        <source>导出路径：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.ui" line="64"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="11"/>
+        <location filename="ExportImageDialog.cpp" line="98"/>
+        <source>Ok</source>
+        <translation type="unfinished">确认</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="12"/>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="24"/>
+        <source>Export image</source>
+        <translation type="unfinished">导出图片</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="24"/>
+        <source>Images files(*.jpg *.png *.bmp);;All files (*.*)</source>
+        <translation type="unfinished">图像文件 (*.jpg *.png *.bmp);;所有文件 (*.*)</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="97"/>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="29"/>
+        <source>Export all images</source>
+        <translation type="unfinished">导出所有图片</translation>
+    </message>
+    <message>
+        <source>Images files(*.jpg *.png *.bmp);;All files(*.*)</source>
+        <translation type="obsolete">图像文件 (*.jpg *.png *.bmp);;所有文件</translation>
+    </message>
+    <message>
+        <location filename="ExportImageDialog.cpp" line="97"/>
+        <source>Path textbox is empty!</source>
+        <translation type="unfinished">路径文本框为空！</translation>
+    </message>
+</context>
+<context>
     <name>GraphicsScene</name>
     <message>
         <location filename="GraphicsScene.cpp" line="304"/>
@@ -315,7 +430,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ImageWidget.ui" line="214"/>
+        <location filename="ImageWidget.ui" line="218"/>
         <source>总深度</source>
         <translation type="unfinished"></translation>
     </message>
@@ -349,7 +464,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="70"/>
-        <source>最近的文件(&amp;R)</source>
+        <source>最近打开的文件(&amp;R)</source>
+        <oldsource>最近的文件(&amp;R)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -653,147 +769,175 @@
         <translation type="unfinished">清除菜单</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="233"/>
+        <location filename="mainwindow.cpp" line="241"/>
         <source>Open project file</source>
         <translation type="unfinished">打开工程文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="233"/>
+        <location filename="mainwindow.cpp" line="241"/>
         <source>Project file (*.ylink)</source>
         <translation type="unfinished">工程文件 (*.ylink)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="339"/>
         <source>Images files (*.jpg);;All files (*.*)</source>
-        <translation type="unfinished">图片文件 (*.jpg);;所有文件 (*.*)</translation>
+        <translation type="obsolete">图片文件 (*.jpg);;所有文件 (*.*)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="339"/>
         <source>Export Image</source>
-        <translation type="unfinished">导出图片</translation>
+        <translation type="obsolete">导出图片</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="377"/>
+        <location filename="mainwindow.cpp" line="438"/>
         <source>Export report failed</source>
         <translation type="unfinished">导出报告失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="378"/>
+        <location filename="mainwindow.cpp" line="439"/>
         <source>Export report failed, please confirm if the computer has installed Microsoft Word!</source>
         <translation type="unfinished">导出报告失败，请确认计算机安装了Word软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="389"/>
+        <location filename="mainwindow.cpp" line="450"/>
         <source>Name</source>
         <translation type="unfinished">工程名称</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="394"/>
+        <location filename="mainwindow.cpp" line="455"/>
         <source>Number</source>
         <translation type="unfinished">测控编号</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="396"/>
+        <location filename="mainwindow.cpp" line="457"/>
         <source>Site</source>
         <translation type="unfinished">测试地点</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="398"/>
+        <location filename="mainwindow.cpp" line="459"/>
         <source>Time</source>
         <translation type="unfinished">测试时间</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="401"/>
+        <location filename="mainwindow.cpp" line="462"/>
         <source>Diameter</source>
         <translation type="unfinished">测孔直径</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="403"/>
+        <location filename="mainwindow.cpp" line="464"/>
         <source>Depth</source>
         <translation type="unfinished">测试深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="405"/>
+        <location filename="mainwindow.cpp" line="466"/>
         <source>StartDepth</source>
         <translation type="unfinished">始测深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="411"/>
-        <location filename="mainwindow.cpp" line="414"/>
+        <location filename="mainwindow.cpp" line="472"/>
+        <location filename="mainwindow.cpp" line="475"/>
         <source>Position</source>
         <translation type="unfinished">位置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="412"/>
-        <location filename="mainwindow.cpp" line="415"/>
+        <location filename="mainwindow.cpp" line="473"/>
+        <location filename="mainwindow.cpp" line="476"/>
         <source>Image</source>
         <translation type="unfinished">展开图</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="413"/>
-        <location filename="mainwindow.cpp" line="416"/>
+        <location filename="mainwindow.cpp" line="474"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>Remarks</source>
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="465"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>Export table failed</source>
         <translation type="unfinished">导出表格失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="466"/>
+        <location filename="mainwindow.cpp" line="527"/>
         <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
         <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="480"/>
+        <location filename="mainwindow.cpp" line="541"/>
         <source>index</source>
         <translation type="unfinished">页面</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="483"/>
+        <location filename="mainwindow.cpp" line="544"/>
         <source>type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="486"/>
+        <location filename="mainwindow.cpp" line="547"/>
         <source>data1</source>
         <translation type="unfinished">数据项1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="489"/>
+        <location filename="mainwindow.cpp" line="550"/>
         <source>data2</source>
         <translation type="unfinished">数据项2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="538"/>
+        <location filename="mainwindow.cpp" line="599"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="539"/>
+        <location filename="mainwindow.cpp" line="600"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="542"/>
+        <location filename="mainwindow.cpp" line="603"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="543"/>
+        <location filename="mainwindow.cpp" line="367"/>
+        <location filename="mainwindow.cpp" line="604"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="608"/>
+        <location filename="mainwindow.cpp" line="367"/>
+        <source>Exporting images...</source>
+        <translation type="unfinished">导出图片中...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="391"/>
+        <source>Exporting image %1 of %2: %3</source>
+        <translation type="unfinished">导出图片 %1/%2: %3</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="360"/>
+        <location filename="mainwindow.cpp" line="398"/>
+        <source>Export %1 images successfully.</source>
+        <translation type="unfinished">成功导出 %1 图片。</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="361"/>
+        <location filename="mainwindow.cpp" line="399"/>
+        <source>Success</source>
+        <translation type="unfinished">成功</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="362"/>
+        <location filename="mainwindow.cpp" line="400"/>
+        <source>Ok</source>
+        <translation type="unfinished">确认</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="669"/>
         <source>Image is shifting...</source>
         <translatorcomment>处理中...</translatorcomment>
         <translation type="unfinished">图像偏移中...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="609"/>
+        <location filename="mainwindow.cpp" line="368"/>
+        <location filename="mainwindow.cpp" line="670"/>
         <source>In progress...</source>
         <translation type="unfinished">处理中...</translation>
     </message>

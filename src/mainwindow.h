@@ -21,6 +21,7 @@
 #include "RollWidget.h"
 #include "app.h"
 #include "ShiftDialog.h"
+#include "ExportImageDialog.h"
 
 
 namespace Ui {

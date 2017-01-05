@@ -344,10 +344,63 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionExportImage_triggered()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Export Image"), QDir::homePath(), tr("Images files (*.jpg);;All files (*.*)"));
-    DbHandler::IndexData indexData = handler->getIndexData(ImageWidget::index);
-    QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-    image.save(filename, "JPG");
+    ExportImageDialog *dialog = new ExportImageDialog(this);
+    if (!dialog->exec())
+    {
+        delete dialog;
+        return;
+    }
+
+
+    if (dialog->getForm())
+    {
+        QString filename = dialog->getPath();
+        QImage image = scene->getSceneImage();
+        image.save(filename);
+        QString str = QString(tr("Export %1 images successfully.")).arg(1);
+        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+        messageBox.exec();
+    }
+    else
+    {
+        QProgressDialog progress(tr("Exporting images..."), tr("Cancel"), 0, ImageWidget::maxIndex+1, this);
+        progress.setWindowTitle(tr("In progress..."));
+        progress.setModal(true);
+        progress.setAutoReset(false);
+        progress.setValue(0);
+        for (int i = 0; i <= ImageWidget::maxIndex; i++)
+        {
+            QString filename = dialog->getPath();
+            DbHandler::IndexData indexData = handler->getIndexData(i);
+            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+            switch (dialog->getIndexForm()) {
+            case 0:
+                filename.replace("to-be-filled", QString::number(i+1));
+                break;
+            case 1:
+                filename.replace("to-be-filled", QString::number(i+1) + "-" + QString::number(ImageWidget::maxIndex+1));
+                break;
+            case 2:
+                filename.replace("to-be-filled", QString::number(indexData.image.start, 'f', 2) + "m-" +
+                                                 QString::number(indexData.image.end, 'f', 2) + "m");
+                break;
+            default:
+                break;
+            }
+            QString status = QString(tr("Exporting image %1 of %2: %3")).arg(i+1).arg(ImageWidget::maxIndex+1).arg(filename);
+            progress.setLabelText(status);
+            image.save(filename);
+            progress.setValue(i+1);
+            if (progress.wasCanceled())
+                break;
+        }
+        QString str = QString(tr("Export %1 images successfully.")).arg(progress.value());
+        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+        messageBox.exec();
+    }
+    delete dialog;
 }
 
 

@@ -41,7 +41,8 @@ SOURCES +=  main.cpp\
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
             items/GraphicsTextItem.cpp \
-    ShiftDialog.cpp
+    ShiftDialog.cpp \
+    ExportImageDialog.cpp
 
 
 
@@ -65,7 +66,8 @@ HEADERS  += mainwindow.h \
             items/GraphicsLineItem.h \
             items/type.h \
             app.h \
-    ShiftDialog.h
+    ShiftDialog.h \
+    ExportImageDialog.h
 
 
 INCLUDEPATH += items
@@ -75,7 +77,8 @@ FORMS    += mainwindow.ui \
             DefectWidget.ui \
             ImageWidget.ui \
             AboutDialog.ui \
-    ShiftDialog.ui
+    ShiftDialog.ui \
+    ExportImageDialog.ui
 
 
 RESOURCES += \
