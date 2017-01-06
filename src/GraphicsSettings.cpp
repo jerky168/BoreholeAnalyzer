@@ -25,9 +25,10 @@ GraphicsSettings::GraphicsSettings() :
     isDrawingFlag(false),
     penFont(QApplication::font()),
     penColor(Qt::black),
-    imageRatio(1.0)
+    imageXRatio(1.0),
+    imageYRatio(1.0)
 {
-    penFont.setPointSize(30);
+    penFont.setPointSize(50);
 }
 
 void GraphicsSettings::setPenWidth(int width)
@@ -50,8 +51,9 @@ void GraphicsSettings::setColor(QColor color)
     penColor = color;
 }
 
-void GraphicsSettings::setRatio(qreal ratio)
+void GraphicsSettings::setRatio(qreal xRatio, qreal yRatio)
 {
-    imageRatio = ratio;
+    imageXRatio = xRatio;
+    imageYRatio = yRatio;
 }
 

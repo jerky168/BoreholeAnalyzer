@@ -33,6 +33,7 @@ mkdir BoreHoleAnalyzer_%CURRENT_TIME%
 cd BoreHoleAnalyzer_%CURRENT_TIME%
 
 xcopy %SRC%\..\dist .\dist /e /i
+copy %SRC%\changelog .\dist\packages\com.ylink.idt\data
 
 
 qmake %SRC%\BoreholeAnalyzer.pro

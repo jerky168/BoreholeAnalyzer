@@ -34,6 +34,9 @@ public:
 
     void setFinished() {hasDrawed = true;}
 
+    QString getRemark() {return remarkContent;}
+    void setRemark(QString remark) {remarkContent = remark;}
+
 protected:
 //    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
@@ -44,6 +47,8 @@ protected:
 private:
     bool hasDrawed;
     QString content;
+
+    QString remarkContent;
 
     qreal calcArea();
     void addPoint(QPointF pos);

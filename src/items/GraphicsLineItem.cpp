@@ -121,16 +121,16 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
                 if (hasDrawed)
                     return true;
 
-                double x1 = line().p1().x();
-                double x2 = line().p2().x();
-                double y1 = line().p1().y();
-                double y2 = line().p2().y();
-                double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
+//                double x1 = line().p1().x();
+//                double x2 = line().p2().x();
+//                double y1 = line().p1().y();
+//                double y2 = line().p2().y();
+//                double dis = pow((pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)), 0.5);
 
-                content = QString::number(dis*100/GraphicsSettings::instance()->getRatio(), 'f', 2).append("cm");
+//                content = QString::number(dis*100/GraphicsSettings::instance()->getRatio(), 'f', 2).append("cm");
 
                 GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-                scene->itemFinished(content);
+                scene->itemFinished(QString());
 
                 GraphicsSettings::instance()->setIsDrawing(false);
                 break;

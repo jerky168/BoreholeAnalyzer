@@ -66,14 +66,14 @@ void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!hasDrawed)
     {
-        qreal x = rect().x() + rect().width() / 2;
-        qreal y = rect().y() + rect().height() / 2;
-        qreal area = rect().width() * rect().height() / qPow(GraphicsSettings::instance()->getRatio(), 2) * 10000;
+//        qreal x = rect().x() + rect().width() / 2;
+//        qreal y = rect().y() + rect().height() / 2;
+//        qreal area = rect().width() * rect().height() / qPow(GraphicsSettings::instance()->getRatio(), 2) * 10000;
 
-        content = QString::number(area, 'f', 2).append("cm2");
+//        content = QString::number(area, 'f', 2).append("cm2");
 
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-        scene->itemFinished(content);
+        scene->itemFinished(QString());
 
         hasDrawed = true;
         return;

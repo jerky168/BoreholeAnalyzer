@@ -22,7 +22,7 @@ void PrjInfoDialog::updatePrjInfo(DbHandler::PrjInfo prjInfo)
 {
     ui->nameEdit->setText(prjInfo.projectName);
     ui->numberEdit->setText(prjInfo.orificeNumber);
-    ui->diameterSpinBox->setValue(prjInfo.diameter);
+    ui->diameterSpinBox->setValue(prjInfo.diameter*1000.0);
     ui->startDepthSpinBox->setValue(prjInfo.startHeight);
     ui->endDepthSpinBox->setValue(prjInfo.endHeight);
     ui->testTimeEdit->setText(prjInfo.projectTime);
@@ -50,7 +50,7 @@ void PrjInfoDialog::on_buttonBox_accepted()
     info.projectSite = ui->testSiteEdit->text();
     info.projectTime = ui->testTimeEdit->text();
     info.orificeNumber = ui->numberEdit->text();
-    info.diameter = ui->diameterSpinBox->value();
+    info.diameter = ui->diameterSpinBox->value() / 1000.0;
 //    if (ui->diameterEdit->text().isEmpty() && !ok)
 //    {
 //        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));

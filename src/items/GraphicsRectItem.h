@@ -38,6 +38,9 @@ public:
 
     void setFinished() {hasDrawed = true;}
 
+    QString getRemark() {return remarkContent;}
+    void setRemark(QString remark) {remarkContent = remark;}
+
 protected:  
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -48,6 +51,7 @@ private:
     QPointF origPos;
 
     QString content;
+    QString remarkContent;
 
 
 };

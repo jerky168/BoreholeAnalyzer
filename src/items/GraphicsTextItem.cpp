@@ -1,25 +1,22 @@
 #include "GraphicsTextItem.h"
 
-GraphicsTextItem::GraphicsTextItem(const QPointF& position, const QString& text, QGraphicsItem *parent) :
+GraphicsTextItem::GraphicsTextItem(const QPointF &position, const QString &text, QGraphicsItem *parent) :
     QGraphicsSimpleTextItem(parent),
-    textDialogCloseFlag(false),
-    hasDrawed(false)
+    hasDrawed(false),
+    currentColor(TextInputDialog::Black)
 {
     setPos(position);
     setText(text);
-    setPen(QPen(GraphicsSettings::instance()->getPenColor(), 0));
+    setBrush(QBrush(Qt::black));
     setFont(GraphicsSettings::instance()->getFont());
+    QFont font = this->font();
+    font.setBold(true);
+    setFont(font);
 }
-
 
 GraphicsTextItem::~GraphicsTextItem()
 {
 
-}
-
-bool GraphicsTextItem::getTextDialogCloseFlag()
-{
-    return textDialogCloseFlag;
 }
 
 void GraphicsTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -28,71 +25,139 @@ void GraphicsTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
 
     setPos(event->scenePos());
-    showTextDialog(GraphicsSettings::instance()->getFont());
-    hasDrawed = true;
+
+    TextInputDialog *inputDialog = new TextInputDialog(text(), font().pointSize(), currentColor);
+    if (QDialog::Accepted == inputDialog->exec())
+    {
+        setText(inputDialog->getText());
+        QFont font = this->font();
+        font.setPointSize(inputDialog->getFontSize());
+        setFont(font);
+        GraphicsSettings::instance()->setFont(font);
+
+        currentColor = inputDialog->getColor();
+        switch (currentColor) {
+        case TextInputDialog::Black:
+            setBrush(QBrush(Qt::black));
+            break;
+        case TextInputDialog::White:
+            setBrush(QBrush(Qt::white));
+            break;
+        case TextInputDialog::Red:
+            setBrush(QBrush(Qt::red));
+            break;
+        case TextInputDialog::Green:
+            setBrush(QBrush(Qt::green));
+            break;
+        case TextInputDialog::Blue:
+            setBrush(QBrush(Qt::blue));
+            break;
+        case TextInputDialog::Yellow:
+            setBrush(QBrush(Qt::yellow));
+            break;
+        default:
+            break;
+        }
+
+        delete inputDialog;
+        hasDrawed = true;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemFinished(text());
+    }
+    else
+    {
+        delete inputDialog;
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->itemAborted();
+    }
+}
+
+void GraphicsTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    TextInputDialog *inputDialog = new TextInputDialog(text(), font().pointSize(), currentColor);
+    if (QDialog::Accepted == inputDialog->exec())
+    {
+        setText(inputDialog->getText());
+        QFont font = this->font();
+        font.setPointSize(inputDialog->getFontSize());
+        setFont(font);
+        GraphicsSettings::instance()->setFont(font);
+
+        currentColor = inputDialog->getColor();
+        switch (currentColor) {
+        case TextInputDialog::Black:
+            setBrush(QBrush(Qt::black));
+            break;
+        case TextInputDialog::White:
+            setBrush(QBrush(Qt::white));
+            break;
+        case TextInputDialog::Red:
+            setBrush(QBrush(Qt::red));
+            break;
+        case TextInputDialog::Green:
+            setBrush(QBrush(Qt::green));
+            break;
+        case TextInputDialog::Blue:
+            setBrush(QBrush(Qt::blue));
+            break;
+        case TextInputDialog::Yellow:
+            setBrush(QBrush(Qt::yellow));
+            break;
+        default:
+            break;
+        }
+
+        delete inputDialog;
+
+        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+        scene->updateTable();
+    }
 }
 
 
-//bool GraphicsTextItem::sceneEvent(QEvent *event)
+//void GraphicsTextItem::showTextDialog(QFont font)
 //{
-//    if (event->type() == QEvent::GraphicsSceneMouseDoubleClick)
+//    TextDialog *dialog = new TextDialog(font);
+//    dialog->setText(this->text());
+//    dialog->setWindowTitle("输入文本");
+//    dialog->exec();
+
+//    if (dialog->getCloseFlag())
 //    {
-//        GraphicsSettings::instance()->setFont(font());
-//        showTextDialog(GraphicsSettings::instance()->getFont());
+//        textDialogCloseFlag = true;
 //    }
 //    else
 //    {
-//        QGraphicsItem::sceneEvent(event);
+//        delete dialog;
+//        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+//        scene->itemAborted();
+//        return;
 //    }
-//    return true;
+
+//    if (!dialog->getText().isEmpty())
+//    {
+//        this->setText(dialog->getText());
+//    }
+//    else
+//    {
+//        delete dialog;
+//        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+//        scene->itemAborted();
+//        return;
+//    }
+
+//    this->setFont(dialog->getFont());
+//    delete dialog;
+
+//    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
+//    scene->itemFinished(text());
 //}
 
-void GraphicsTextItem::showTextDialog(QFont font)
-{
-    TextDialog *dialog = new TextDialog(font);
-    dialog->setText(this->text());
-    dialog->setWindowTitle("输入文本");
-    dialog->exec();
-
-    if (dialog->getCloseFlag())
-    {
-        textDialogCloseFlag = true;
-    }
-    else
-    {
-        delete dialog;
-        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-        scene->itemAborted();
-        return;
-    }
-
-    if (!dialog->getText().isEmpty())
-    {
-        this->setText(dialog->getText());
-    }
-    else
-    {
-        delete dialog;
-        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-        scene->itemAborted();
-        return;
-    }
-
-    this->setFont(dialog->getFont());
-    delete dialog;
-
-    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-    scene->itemFinished(text());
-}
 
 
-GraphicsTextItem::Data GraphicsTextItem::getData()
-{
-    Data data;
-    data.point = this->scenePos();
-    data.content = this->text();
-    return data;
-}
+
+
+
 
 
 

@@ -95,7 +95,7 @@ qreal GraphicsAnyshape::calcArea()
     }
 
     area = qFabs(area);
-    area /= 2 * qPow(GraphicsSettings::instance()->getRatio(), 2);
+    area /= 2 * GraphicsSettings::instance()->getXRatio() * GraphicsSettings::instance()->getYRatio();
     area *= 10000;
 
     return area;

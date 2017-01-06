@@ -17,7 +17,6 @@
 #include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
-#include "GraphicsAngleItem.h"
 #include "GraphicsRectItem.h"
 #include "GraphicsAnyshape.h"
 #include "GraphicsOccurance.h"
@@ -51,6 +50,7 @@ public:
         QString type;
         QString isSaved;
         QString data;
+        QString remark;
     }TableData;
 
 
@@ -68,9 +68,9 @@ public:
     QImage getSceneImageFor3D();
     QVector<TableData> getSavedTableData();
 
-    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
-    static QImage getPixmapImageFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
-    static QVector<TableData> getTableDataFromData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
+    static QImage getImageFromData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
+    static QImage getPixmapImageFromData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
+    static QVector<TableData> getTableDataFromData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
 
     QPointF scene2Real(QPointF scenePos);
     QPointF real2Scene(QPointF realPos);
@@ -83,12 +83,14 @@ public:
 
     QStringList getAllItemString();
 
-
+    void updateTable();
 
 public slots:
     void clearScene();
-    void updateIndexData(QPixmap pixmap, qreal start, qreal end, QMap<QString, QGraphicsItem *> items);
+    void updateIndexData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
     void deleteItem(int row);
+
+    void updateItemRemark(int row, QString remark);
 
 
 protected:
@@ -98,6 +100,7 @@ protected:
 
 private:
     bool showInfo;  // 实时信息栏是否显示鼠标当前位置
+    qreal pixmap_diameter;  // 直径
     qreal pixmap_start, pixmap_end; // 照片的起始深度和终止神父
     qreal pixmap_width, pixmap_height;  // 照片的宽度和高度
     QGraphicsItem *item;    // 当前正在绘制的item
@@ -113,7 +116,7 @@ private:
     void deleteItemData(QUuid uuid);
     void clearItemData();
 
-    void updateTable();
+
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode);
@@ -123,5 +126,6 @@ signals:
     void emitTableData(QVector<GraphicsScene::TableData> tableData);
     void update3DImage(QImage image, qreal start, qreal end);
 
-    void deleteSaveItem(QUuid uuid);
+    void deleteSavedItem(QUuid uuid);
+    void updateSavedItemRemark(QUuid uuid, QString remark);
 };

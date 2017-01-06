@@ -32,17 +32,16 @@ SOURCES +=  main.cpp\
             ToolBar.cpp \
             AboutDialog.cpp \
             RollWidget.cpp \
-            TextDialog.cpp \
             GraphicsScene.cpp \ 
             GraphicsView.cpp \
-            items/GraphicsAngleItem.cpp \
             items/GraphicsRectItem.cpp \
             items/GraphicsAnyshape.cpp \
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
             items/GraphicsTextItem.cpp \
     ShiftDialog.cpp \
-    ExportImageDialog.cpp
+    ExportImageDialog.cpp \
+    TextInputDialog.cpp
 
 
 
@@ -55,10 +54,8 @@ HEADERS  += mainwindow.h \
             ToolBar.h \
             AboutDialog.h \
             RollWidget.h \
-            TextDialog.h \
             GraphicsScene.h \
             GraphicsView.h \
-            items/GraphicsAngleItem.h \
             items/GraphicsRectItem.h \
             items/GraphicsAnyshape.h \
             items/GraphicsOccurance.h \
@@ -67,7 +64,8 @@ HEADERS  += mainwindow.h \
             items/type.h \
             app.h \
     ShiftDialog.h \
-    ExportImageDialog.h
+    ExportImageDialog.h \
+    TextInputDialog.h
 
 
 INCLUDEPATH += items
@@ -78,7 +76,8 @@ FORMS    += mainwindow.ui \
             ImageWidget.ui \
             AboutDialog.ui \
     ShiftDialog.ui \
-    ExportImageDialog.ui
+    ExportImageDialog.ui \
+    TextInputDialog.ui
 
 
 RESOURCES += \
@@ -96,7 +95,8 @@ win32 {
 }
 
 DISTFILES += \
-    ../doc/README.MD
+    ../doc/README.MD \
+    changelog
 
 unix{
     LIBS += -lglut -lGLU

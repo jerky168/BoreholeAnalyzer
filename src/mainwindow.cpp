@@ -182,7 +182,9 @@ void MainWindow::createConnections()
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
 
     connect(ui->defectWidget, SIGNAL(deleteItem(int)), scene, SLOT(deleteItem(int)));
-    connect(scene, SIGNAL(deleteSaveItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+    connect(ui->defectWidget, SIGNAL(updateItemRemark(int,QString)), scene, SLOT(updateItemRemark(int,QString)));
+    connect(scene, SIGNAL(deleteSavedItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+    connect(scene, SIGNAL(updateSavedItemRemark(QUuid,QString)), handler, SLOT(updateItemremark(QUuid,QString)));
 
 
     connect(ui->actionLeftSpin, SIGNAL(triggered()), ui->widget3D, SLOT(handleLeftSpin()));
@@ -296,38 +298,35 @@ void MainWindow::on_actionSave_triggered()
             quint16 index = ImageWidget::index;
             QGraphicsItem *item = items.value(uuid.toString());
             quint8 type = item->type();
-            QString dataStr;
+            QString dataStr, remark;
             switch (item->type())
             {
-                case Angle:
-                {
-                    GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-
                 case AnyShape:
                 {
                     GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
                     dataStr = i->getDataString();
+                    remark = i->getRemark();
                     break;
                 }
                 case Ruler:
                 {
                     GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
                     dataStr = i->getDataString();
+                    remark = i->getRemark();
                     break;
                 }
                 case Occurance:
                 {
                     GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
                     dataStr = i->getDataString();
+                    remark = i->getRemark();
                     break;
                 }
                 case Rect:
                 {
                     GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
                     dataStr = i->getDataString();
+                    remark = i->getRemark();
                     break;
                 }
 
@@ -335,6 +334,7 @@ void MainWindow::on_actionSave_triggered()
                 {
                     GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
                     dataStr = i->getDataString();
+                    remark = i->getRemark();
                     break;
                 }
 
@@ -343,7 +343,7 @@ void MainWindow::on_actionSave_triggered()
                     break;
                 }
             }
-            handler->saveItem(uuid, index, type, dataStr);
+            handler->saveItem(uuid, index, type, dataStr, remark);
         }
         scene->saveNewItems();
     }
@@ -386,7 +386,7 @@ void MainWindow::on_actionExportImage_triggered()
         {
             QString filename = dialog->getPath();
             DbHandler::IndexData indexData = handler->getIndexData(i);
-            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
             switch (dialog->getIndexForm()) {
             case 0:
                 filename.replace("to-be-filled", QString::number(i+1));
@@ -434,7 +434,7 @@ QString MainWindow::getWordString(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     GraphicsScene *scene = new GraphicsScene();
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
     QString str;
     QStringList strList = scene->getAllItemString();
     for (int i = 0; i < strList.count(); i++)
@@ -556,36 +556,42 @@ void MainWindow::on_actionExportExcel_triggered()
 
     quint32 itemCount = 2;
     QAxObject *range = worksheet->querySubObject("Cells(int,int)", 1, 1);
-    range->dynamicCall("SetValue(const QString&)", tr("index"));
-    range->setProperty("HorizontalAlignment", -4108);
+    range->dynamicCall("SetValue(const QString&)", tr("Serial number"));
     range = worksheet->querySubObject("Cells(int,int)", 1, 2);
-    range->dynamicCall("SetValue(const QString&)", tr("type"));
+    range->dynamicCall("SetValue(const QString&)", tr("Index"));
     range->setProperty("HorizontalAlignment", -4108);
     range = worksheet->querySubObject("Cells(int,int)", 1, 3);
-    range->dynamicCall("SetValue(const QString&)", tr("data1"));
+    range->dynamicCall("SetValue(const QString&)", tr("Type"));
     range->setProperty("HorizontalAlignment", -4108);
     range = worksheet->querySubObject("Cells(int,int)", 1, 4);
-    range->dynamicCall("SetValue(const QString&)", tr("data2"));
+    range->dynamicCall("SetValue(const QString&)", tr("Description"));
+    range->setProperty("HorizontalAlignment", -4108);
+    range = worksheet->querySubObject("Cells(int,int)", 1, 5);
+    range->dynamicCall("SetValue(const QString&)", tr("Remark"));
     range->setProperty("HorizontalAlignment", -4108);
 
 
-    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+    for (int i = 0, number = 1; i <= ImageWidget::maxIndex; i++)
     {
         DbHandler::IndexData indexData = handler->getIndexData(i);
-        QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-        for (int j = 0; j < tableDatas.count(); j++)
+        QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
+        for (int j = 0; j < tableDatas.count(); j++, number++)
         {
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 1);
-            range->dynamicCall("SetValue(const QString&)", QString::number(i+1));
+            range->dynamicCall("SetValue(const QString&)", QString::number(number));
             range->setProperty("HorizontalAlignment", -4108);
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 2);
-            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).type);
+            range->dynamicCall("SetValue(const QString&)", QString::number(i+1));
             range->setProperty("HorizontalAlignment", -4108);
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 3);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).type);
+            range->setProperty("HorizontalAlignment", -4108);
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 4);
             range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 0, 0));
             range->setProperty("HorizontalAlignment", -4131);
-            range = worksheet->querySubObject("Cells(int,int)", itemCount, 4);
-            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 1).replace("\n", "  "));
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 5);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).remark);
+            //range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 1).replace("\n", "  "));
             range->setProperty("HorizontalAlignment", -4131);
             itemCount++;
         }
@@ -629,7 +635,7 @@ void MainWindow::switchImage(quint16 index)
     }
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
 
 
@@ -771,16 +777,15 @@ void MainWindow::showStatus(QString message)
 QImage MainWindow::getSceneImage(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
 
 
 QImage MainWindow::getPixmapImage(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
-
 
 
 
@@ -792,18 +797,13 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
         QUuid uuid = indexData.itemDatas.at(i).uuid;
         qint32 type = indexData.itemDatas.at(i).type;
         QString dataStr = indexData.itemDatas.at(i).dataStr;
+        QString remark = indexData.itemDatas.at(i).remark;
         switch (type)
         {
-            case Angle:
-            {
-                GraphicsAngleItem *item = GraphicsAngleItem::loadFromString(dataStr);
-                item->setFinished();
-                items.insert(uuid.toString(), item);
-                break;
-            }
             case AnyShape:
             {
                 GraphicsAnyshape *item = GraphicsAnyshape::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -811,6 +811,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Ruler:
             {
                 GraphicsLineItem *item = GraphicsLineItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -818,6 +819,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Occurance:
             {
                 GraphicsOccurance *item = GraphicsOccurance::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -825,6 +827,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Rect:
             {
                 GraphicsRectItem *item = GraphicsRectItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -832,6 +835,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Text:
             {
                 GraphicsTextItem *item = GraphicsTextItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;

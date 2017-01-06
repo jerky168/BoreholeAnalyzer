@@ -42,8 +42,11 @@ private:
 private slots:
     void on_deleteButton_clicked();
 
+    void itemChanged(QStandardItem *item);
+
 signals:
     void deleteItem(int row);
+    void updateItemRemark(int row, QString remark);
 
 };
 

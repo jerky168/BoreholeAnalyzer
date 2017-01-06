@@ -5,9 +5,9 @@
 #include <QDir>
 
 #define     Major_Version_Number    "0"
-#define     Minor_Version_Number    "5"
+#define     Minor_Version_Number    "6"
 #define     Revision_Number         "0"
-#define     Build_Number            "20170105"
+#define     Build_Number            "20170106"
 
 #define     App_Name_CN         QObject::tr("BoreholeAnalyzer")
 #define     App_Name_EN         "BoreholeAnalyzer"
