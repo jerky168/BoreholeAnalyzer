@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>钻孔电视分析软件</DisplayName>
     <Description>用于分析采集软件生成的工程文件。</Description>
-    <Version>1.0.0</Version>
-    <ReleaseDate>2016-11-05</ReleaseDate>
+    <Version>0.1.1230</Version>
+    <ReleaseDate>2016-12-30</ReleaseDate>
     <Default>script</Default>
     <Script>installscript.qs</Script>
 </Package>
