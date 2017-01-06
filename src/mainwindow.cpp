@@ -7,11 +7,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
+    infoDialog(new PrjInfoDialog(this)),
     actionGroupMode(new QActionGroup(this)),
     actionGroup2D(new QActionGroup(this)),
     actionGroup3D(new QActionGroup(this)),
-    actionGroupSpin(new QActionGroup(this)),
-    infoDialog(new PrjInfoDialog(this))
+    actionGroupSpin(new QActionGroup(this))
 {
     ui->setupUi(this);
 
