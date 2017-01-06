@@ -28,7 +28,7 @@ public:
         bool isUp2Down;
         qreal startHeight;
         qreal endHeight;
-        qreal diameter;
+        qint32 diameter;
         QString projectName;
         QString projectTime;
         QString projectSite;
@@ -101,6 +101,8 @@ public slots:
 private:
     QSqlDatabase database;
     ErrorCode errorCode;
+
+    QMap<QString, QString> projectInfoFields;
 
 };
 

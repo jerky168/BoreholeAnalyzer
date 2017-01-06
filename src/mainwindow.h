@@ -9,6 +9,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QProgressDialog>
+#include <QSettings>
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
@@ -20,6 +21,7 @@
 #include "RollWidget.h"
 #include "app.h"
 #include "ShiftDialog.h"
+#include "ExportImageDialog.h"
 
 
 namespace Ui {
@@ -65,7 +67,13 @@ private slots:
     void on_actionRedo_triggered();
 
 
+//    void keyPressEvent(QKeyEvent *event);
 
+
+    void addRecentFiles(QString filename);
+    void openRecentFile();
+    void updateRecentFiles();
+    void clearRecentFiles();
 
 private:
     Ui::MainWindow *ui;
@@ -73,17 +81,22 @@ private:
     GraphicsScene *scene;
     PrjInfoDialog *infoDialog;
 
-    QActionGroup *actionGroupMode;  //2D, 3D模式切换
-    QActionGroup *actionGroup2D;    //2D模式下的操作
-    QActionGroup *actionGroup3D;    //3D模式下的操作
+    QActionGroup *actionGroupExport;    // 导出操作
+    QActionGroup *actionGroupMode;      // 2D, 3D模式切换
+    QActionGroup *actionGroup2D;        // 2D模式下的操作
+    QActionGroup *actionGroup3D;        // 3D模式下的操作
+    QActionGroup *actionGroupSpin;      // 旋转操作
 
-    QActionGroup *actionGroupSpin;
 
+    QSettings settings;
 
+    void initRegistry();
     void createActionGroups();
     void createSceneAndView();
     void createConnections();
     void resetActions();
+
+    void openFile(QString filename);
 
 
     QImage getSceneImage(quint16 index);
@@ -98,6 +111,9 @@ signals:
 
     void updatePrjInfo(DbHandler::PrjInfo prjjInfo);
     void clearPrjInfo();
+
+    void sigFileOpened(QString filename);
+    void sigFileClosed();
 
 };
 

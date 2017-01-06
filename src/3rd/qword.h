@@ -97,6 +97,9 @@ public:
     void insertPic(QString& picPath);
     void setMargin(int top, int bottom, int left, int right);
 
+    // 合并横排单元格
+    void mergeRowCells(int row, int column_start, int column_end);
+
 
 private:
     QAxObject* m_word;

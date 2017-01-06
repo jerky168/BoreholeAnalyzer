@@ -110,7 +110,7 @@ QImage GraphicsScene::getPixmapImage()
     QImage image(pixmap_width + Border, realHeight + Border, QImage::Format_RGB32);
     QPainter painter(&image);
     painter.fillRect(image.rect(), Qt::white);
-    render(&painter, QRectF(Border, Border, pixmap_width, realHeight), QRectF(Border, Border, pixmap_width, realHeight));
+    render(&painter, QRect(Border, Border, pixmap_width, realHeight), QRect(Border, Border, pixmap_width, realHeight));
 
     QPen thisPen(Qt::black);
     thisPen.setWidth(8);
@@ -181,7 +181,7 @@ QImage GraphicsScene::getSceneImageFor3D()
 {
     QImage image(sceneRect().width() - 2*Border, sceneRect().height() - 2*Border, QImage::Format_RGB32);
     QPainter painter(&image);
-    render(&painter, image.rect(), QRectF(Border, Border, image.width(), image.height()));
+    render(&painter, image.rect(), QRect(Border, Border, image.width(), image.height()));
 
     QPen thisPen(Qt::yellow);
     thisPen.setWidth(8);
@@ -580,18 +580,49 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
 
             qreal realWidth = pixmap_width / GraphicsSettings::instance()->getRatio();
             qreal radius = realWidth / 2 / M_PI;
-            qreal angle1 = qFabs(pos1.x() - pos2.x());
 
+            qreal angle1;   // 等腰三角形的顶角
+            qreal angle2;   // 等腰三角形的顶角角平分线的方位角
+            qreal angle3;   // 倾向方位角
+
+            angle1 = qFabs(pos2.x() - pos1.x());
+
+            // 如果方位角之差大于180°
             if (angle1 > 180)
-                angle1 = 360 - angle1;
+            {
+                qreal min = (pos2.x() > pos1.x()) ? pos1.x() : pos2.x();
+                qreal max = (pos2.x() > pos1.x()) ? pos2.x() : pos1.x();
+                min += 360;
+                angle2 = (min + max) / 2;
+                angle3 = angle2 - 90;
+            }
+            // 如果方位角之差小于等于180°
+            else
+            {
+                angle2 = (pos2.x() - pos1.x()) / 2;
+                angle3 = angle2 + 90;
+                if (angle3 >= 360)
+                    angle3 -= 360;
+            }
 
-            qreal length = qSqrt(2 * qPow(radius, 2) - 2 * qPow(radius, 2) * qCos(qDegreesToRadians(angle1)));
+            if ((pos1.x() > pos2.x() && pos1.y() < pos2.y()) || (pos1.x() < pos2.x() && pos1.y() > pos2.y()))
+            {
+                angle3 += 180;
+                if (angle3 >= 360)
+                    angle3 -= 360;
+            }
+
+
+            qreal hemline = qSqrt(2 * qPow(radius, 2) - 2 * qPow(radius, 2) * qCos(qDegreesToRadians(angle1)));
             qreal height = qFabs(pos1.y() - pos2.y());
-            qreal realLength = qSqrt(qPow(length, 2) + qPow(height, 2));
-            qreal angle = qRadiansToDegrees(qAtan(height / length));
+            qreal angle = qRadiansToDegrees(qAtan(height / hemline));
 
-            str += tr("Inclination angle:  ") + QString::number(angle, 'f', 2) + "°\n";
-            str += tr("Real length: ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
+            qreal length = i->line().length() / GraphicsSettings::instance()->getRatio();
+            qreal realLength = qSqrt(qPow(hemline, 2) + qPow(height, 2));
+
+            str += tr("Inclination angle:  ") + getAngleString(angle3) + tr(" ") + QString::number(angle, 'f', 2) + "°\n";
+            str += tr("Length:  ") + QString::number(length * 100, 'f', 2) + "cm\n";
+            str += tr("Real length:  ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
             str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
             str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
 

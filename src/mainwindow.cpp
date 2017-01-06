@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
+    actionGroupExport(new QActionGroup(this)),
     actionGroupMode(new QActionGroup(this)),
     actionGroup2D(new QActionGroup(this)),
     actionGroup3D(new QActionGroup(this)),
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    initRegistry();
     createActionGroups();
     createSceneAndView();
     createConnections();
@@ -25,6 +27,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete handler;
     delete scene;
+    delete infoDialog;
 }
 
 // create action group
@@ -34,6 +37,13 @@ void MainWindow::createActionGroups()
     ui->menuView->addAction(ui->mainToolBar->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetImage->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetDefect->toggleViewAction());
+
+    // add export action together
+    actionGroupExport->addAction(ui->actionExportImage);
+    actionGroupExport->addAction(ui->actionExportWord);
+    actionGroupExport->addAction(ui->actionExportExcel);
+    actionGroupExport->setExclusive(false);
+    actionGroupExport->setEnabled(false);
 
     // make the 2D view and 3D view exclusive
     actionGroupMode->addAction(ui->action2DView);
@@ -61,6 +71,68 @@ void MainWindow::createActionGroups()
     actionGroupSpin->setEnabled(false);
 }
 
+
+// initialize registry
+void MainWindow::initRegistry()
+{
+    if (!settings.isWritable())
+    {
+        return;
+    }
+    else if (!settings.contains("recentFiles") || settings.value("recentFiles") == QVariant())
+    {
+        return;
+    }
+
+    updateRecentFiles();
+}
+
+
+
+void MainWindow::addRecentFiles(QString filename)
+{
+    QStringList fileList = settings.value("recentFiles").toStringList();
+    if (fileList.contains(filename))
+        fileList.removeOne(filename);
+    fileList.append(filename);
+    if (fileList.count() > 8)
+        fileList.removeFirst();
+    settings.setValue("recentFiles", QVariant(fileList));
+    updateRecentFiles();
+}
+
+
+void MainWindow::openRecentFile()
+{
+    QAction *action = (QAction *)sender();
+    openFile(action->text().section(" | ", 1, 1));
+}
+
+void MainWindow::updateRecentFiles()
+{
+    ui->recentMenu->clear();
+    QStringList filenameList = settings.value("recentFiles").toStringList();
+    QList<QAction *> actions;
+    for (int i = filenameList.count() - 1, j = 1; i >= 0; i--, j++)
+    {
+        QAction *action = new QAction(QString::number(j) + " | " + filenameList.at(i));
+        connect(action, &QAction::triggered, this, &MainWindow::openRecentFile);
+        actions.append(action);
+    }
+    ui->recentMenu->addActions(actions);
+    ui->recentMenu->addSeparator();
+    QAction *action = new QAction(tr("Clear menu"));
+    connect(action, &QAction::triggered, this, &MainWindow::clearRecentFiles);
+    if (filenameList.isEmpty())
+        action->setEnabled(false);
+    ui->recentMenu->addAction(action);
+}
+
+void MainWindow::clearRecentFiles()
+{
+    settings.setValue("recentFiles", QVariant());
+    updateRecentFiles();
+}
 
 // graphics view
 void MainWindow::createSceneAndView()
@@ -116,11 +188,15 @@ void MainWindow::createConnections()
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomOut()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomOut()));
 
+    connect(this, &MainWindow::sigFileOpened, [this]() {actionGroupExport->setEnabled(true);});
+    connect(this, &MainWindow::sigFileClosed, [this]() {actionGroupExport->setEnabled(false);});
+
+    connect(this, SIGNAL(sigFileOpened(QString)), this, SLOT(addRecentFiles(QString)));
 }
 
-void MainWindow::on_actionOpen_triggered()
+
+void MainWindow::openFile(QString filename)
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), QDir::homePath(), tr("Project file (*.ylink)"));
     if (filename.isEmpty())
     {
         return;
@@ -129,9 +205,7 @@ void MainWindow::on_actionOpen_triggered()
     {
         on_actionClose_triggered();
     }
-
-
-    setWindowTitle(filename + " - " + App_Name);
+    setWindowTitle(filename + " - " + App_Name_CN);
 
 
     if (!handler->openDatabase(filename))
@@ -142,9 +216,6 @@ void MainWindow::on_actionOpen_triggered()
 
     ui->actionClose->setEnabled(true);
     ui->actionSave->setEnabled(true);
-    ui->actionExportImage->setEnabled(true);
-    ui->actionExportWord->setEnabled(true);
-    ui->actionExportExcel->setEnabled(true);
 
     ui->actionAnyShape->setEnabled(true);
     ui->actionCross->setEnabled(true);
@@ -161,6 +232,14 @@ void MainWindow::on_actionOpen_triggered()
 
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
+    emit sigFileOpened(filename);
+}
+
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), Default_Folder, tr("Project file (*.ylink)"));
+    openFile(filename);
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -169,7 +248,7 @@ void MainWindow::on_actionClose_triggered()
     emit clearPrjInfo();
 
 
-    setWindowTitle(App_Name);
+    setWindowTitle(App_Name_CN);
 
     if (handler->isOpened())
         handler->closeDatabase();
@@ -177,9 +256,6 @@ void MainWindow::on_actionClose_triggered()
 
     ui->actionClose->setEnabled(false);
     ui->actionSave->setEnabled(false);
-    ui->actionExportImage->setEnabled(false);
-    ui->actionExportWord->setEnabled(false);
-    ui->actionExportExcel->setEnabled(false);
 
     ui->actionAnyShape->setEnabled(false);
     ui->actionCross->setEnabled(false);
@@ -195,6 +271,8 @@ void MainWindow::on_actionClose_triggered()
     ui->actionProjectInfo->setEnabled(false);
 
     QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
+
+    emit sigFileClosed();
 }
 
 
@@ -266,10 +344,63 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionExportImage_triggered()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Export Image"), QDir::homePath(), tr("Images files (*.jpg);;All files (*.*)"));
-    DbHandler::IndexData indexData = handler->getIndexData(ImageWidget::index);
-    QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-    image.save(filename, "JPG");
+    ExportImageDialog *dialog = new ExportImageDialog(this);
+    if (!dialog->exec())
+    {
+        delete dialog;
+        return;
+    }
+
+
+    if (dialog->getForm())
+    {
+        QString filename = dialog->getPath();
+        QImage image = scene->getSceneImage();
+        image.save(filename);
+        QString str = QString(tr("Export %1 images successfully.")).arg(1);
+        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+        messageBox.exec();
+    }
+    else
+    {
+        QProgressDialog progress(tr("Exporting images..."), tr("Cancel"), 0, ImageWidget::maxIndex+1, this);
+        progress.setWindowTitle(tr("In progress..."));
+        progress.setModal(true);
+        progress.setAutoReset(false);
+        progress.setValue(0);
+        for (int i = 0; i <= ImageWidget::maxIndex; i++)
+        {
+            QString filename = dialog->getPath();
+            DbHandler::IndexData indexData = handler->getIndexData(i);
+            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+            switch (dialog->getIndexForm()) {
+            case 0:
+                filename.replace("to-be-filled", QString::number(i+1));
+                break;
+            case 1:
+                filename.replace("to-be-filled", QString::number(i+1) + "-" + QString::number(ImageWidget::maxIndex+1));
+                break;
+            case 2:
+                filename.replace("to-be-filled", QString::number(indexData.image.start, 'f', 2) + "m-" +
+                                                 QString::number(indexData.image.end, 'f', 2) + "m");
+                break;
+            default:
+                break;
+            }
+            QString status = QString(tr("Exporting image %1 of %2: %3")).arg(i+1).arg(ImageWidget::maxIndex+1).arg(filename);
+            progress.setLabelText(status);
+            image.save(filename);
+            progress.setValue(i+1);
+            if (progress.wasCanceled())
+                break;
+        }
+        QString str = QString(tr("Export %1 images successfully.")).arg(progress.value());
+        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+        messageBox.exec();
+    }
+    delete dialog;
 }
 
 
@@ -337,7 +468,9 @@ void MainWindow::on_actionExportWord_triggered()
 
     word.moveForEnd();
 
-    word.insertTable(1, 6);
+    word.insertTable(1, 10);
+    word.mergeRowCells(4, 2, 4);
+    word.mergeRowCells(4, 5, 7);
     word.setCellString(4, 1, tr("Position"));
     word.setCellString(4, 2, tr("Image"));
     word.setCellString(4, 3, tr("Remarks"));
@@ -350,8 +483,9 @@ void MainWindow::on_actionExportWord_triggered()
     int rows = (ImageWidget::maxIndex+2)/2;
     for (int i = 0; i < rows; i++)
     {
-        word.insertTable(1, 6);
-
+        word.insertTable(1, 10);
+        word.mergeRowCells(i + 5, 2, 4);
+        word.mergeRowCells(i + 5, 5, 7);
         QImage image = getPixmapImage(2*i);
         image.setDotsPerMeterX(image.width() / 0.05);
         image.setDotsPerMeterY(image.width() / 0.05);
@@ -360,11 +494,7 @@ void MainWindow::on_actionExportWord_triggered()
         word.setCellFontSize(i + 5, 3, 5);
         word.setCellString(i + 5, 3, getWordString(2*i));
 
-        if ((ImageWidget::maxIndex + 1) % 2 == 1 && (i == rows - 1))
-        {
-
-        }
-        else
+        if ((ImageWidget::maxIndex + 1) % 2 != 1 || (i != rows - 1))
         {
             image = getPixmapImage(2*i+1);
             image.setDotsPerMeterX(image.width() / 0.05);
@@ -594,7 +724,7 @@ void MainWindow::on_actionManual_triggered()
 
 void MainWindow::on_actionContact_triggered()
 {
-    QDesktopServices::openUrl(QUrl(Website_Url));
+    QDesktopServices::openUrl(QUrl(Company_Url));
 }
 
 
@@ -694,5 +824,21 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
     return items;
 }
 
-
-
+//void MainWindow::keyPressEvent(QKeyEvent *event)
+//{
+//    if ((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_Tab))
+//    {
+//        if (0 == ui->stackedWidget->currentIndex())
+//        {
+//            ui->action2DView->setChecked(false);
+//            ui->action3DView->setChecked(true);
+//            ui->stackedWidget->setCurrentIndex(1);
+//        }
+//        else
+//        {
+//            ui->action2DView->setChecked(true);
+//            ui->action3DView->setChecked(false);
+//            ui->stackedWidget->setCurrentIndex(0);
+//        }
+//    }
+//}
