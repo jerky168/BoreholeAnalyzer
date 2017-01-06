@@ -19,14 +19,17 @@ ExportImageDialog::~ExportImageDialog()
 
 void ExportImageDialog::on_toolButton_clicked()
 {
+    QSettings settings;
+    QString dir = settings.value("lastExportImage").toString();
+
     if (getForm())
     {
-        QString filename = QFileDialog::getSaveFileName(this, tr("Export image"), tr(""), tr("Images files(*.jpg *.png *.bmp);;All files (*.*)"));
+        QString filename = QFileDialog::getSaveFileName(this, tr("Export image"), dir, tr("Images files(*.jpg *.png *.bmp);;All files (*.*)"));
         ui->pathEdit->setText(filename);
     }
     else
     {
-        QString folderPath = QFileDialog::getExistingDirectory(this, tr("Export all images"), QDir::homePath());
+        QString folderPath = QFileDialog::getExistingDirectory(this, tr("Export all images"), dir);
         ui->pathEdit->setText(folderPath);
     }
 }

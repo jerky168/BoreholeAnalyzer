@@ -99,6 +99,10 @@ void MainWindow::addRecentFiles(QString filename)
         fileList.removeFirst();
     settings.setValue("recentFiles", QVariant(fileList));
     updateRecentFiles();
+
+    QDir dir(filename);
+    dir.cdUp();
+    settings.setValue("lastOpen", dir.absolutePath());
 }
 
 
@@ -238,7 +242,11 @@ void MainWindow::openFile(QString filename)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), Default_Folder, tr("Project file (*.ylink)"));
+    QString dir = Default_Folder;
+    if (settings.contains("lastOpen"))
+        dir = settings.value("lastOpen").toString();
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), dir, tr("Project file (*.ylink)"));
     openFile(filename);
 }
 
@@ -357,6 +365,11 @@ void MainWindow::on_actionExportImage_triggered()
         QString filename = dialog->getPath();
         QImage image = scene->getSceneImage();
         image.save(filename);
+
+        QDir dir(dialog->getPath());
+        dir.cdUp();
+        settings.setValue("lastExportImage", dir.absolutePath());
+
         QString str = QString(tr("Export %1 images successfully.")).arg(1);
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
@@ -395,6 +408,12 @@ void MainWindow::on_actionExportImage_triggered()
             if (progress.wasCanceled())
                 break;
         }
+
+        QDir dir(dialog->getPath());
+        dir.cdUp();
+        dir.cdUp();
+        settings.setValue("lastExportImage", dir.absolutePath());
+
         QString str = QString(tr("Export %1 images successfully.")).arg(progress.value());
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));

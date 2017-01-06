@@ -43,3 +43,5 @@ setup/BoreHoleAnalyzer_*
 /release
 /debug
 
+*.exe
+*.txt

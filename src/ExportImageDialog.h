@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 
 namespace Ui {
 class ExportImageDialog;
