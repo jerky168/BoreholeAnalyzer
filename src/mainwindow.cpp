@@ -7,11 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
+    actionGroupFile(new QActionGroup(this)),
     actionGroupExport(new QActionGroup(this)),
+    actionGroupGOperate(new QActionGroup(this)),
     actionGroupMode(new QActionGroup(this)),
     actionGroup2D(new QActionGroup(this)),
     actionGroup3D(new QActionGroup(this)),
     actionGroupSpin(new QActionGroup(this)),
+    actionGroupZoom(new QActionGroup(this)),
     infoDialog(new PrjInfoDialog(this))
 {
     ui->setupUi(this);
@@ -38,6 +41,13 @@ void MainWindow::createActionGroups()
     ui->menuView->addAction(ui->dockWidgetImage->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetDefect->toggleViewAction());
 
+    // add file action together
+    actionGroupFile->addAction(ui->actionSave);
+    actionGroupFile->addAction(ui->actionClose);
+    actionGroupFile->addAction(ui->actionProjectInfo);
+    actionGroupFile->setExclusive(false);
+    actionGroupFile->setEnabled(false);
+
     // add export action together
     actionGroupExport->addAction(ui->actionExportImage);
     actionGroupExport->addAction(ui->actionExportWord);
@@ -45,30 +55,46 @@ void MainWindow::createActionGroups()
     actionGroupExport->setExclusive(false);
     actionGroupExport->setEnabled(false);
 
+    // add global operation together
+    actionGroupGOperate->addAction(ui->actionCopy);
+    actionGroupGOperate->addAction(ui->actionPaste);
+    actionGroupGOperate->addAction(ui->actionDelete);
+    actionGroupGOperate->addAction(ui->actionShift);
+    actionGroupGOperate->setExclusive(false);
+    actionGroupGOperate->setEnabled(false);
+
     // make the 2D view and 3D view exclusive
     actionGroupMode->addAction(ui->action2DView);
     actionGroupMode->addAction(ui->action3DView);
+    actionGroupMode->setExclusive(true);
+    actionGroupMode->setEnabled(true);
 
     // make edit action exlusive
-    //actionGroup2D->addAction(ui->actionShift);
     actionGroup2D->addAction(ui->actionSlitWidth);
     actionGroup2D->addAction(ui->actionRectangle);
     actionGroup2D->addAction(ui->actionAnyShape);
     actionGroup2D->addAction(ui->actionOccurrence);
     actionGroup2D->addAction(ui->actionTextbox);
+    actionGroup2D->setExclusive(true);
+    actionGroup2D->setEnabled(false);
 
-    // add all 3D action together
-    actionGroup3D->setExclusive(false);
+    // add all 3D action together 
     actionGroup3D->addAction(ui->actionLeftSpin);
     actionGroup3D->addAction(ui->actionRightSpin);
-
-    actionGroup2D->setEnabled(true);
+    actionGroup3D->setExclusive(false);
     actionGroup3D->setEnabled(false);
 
     // make auto spin exlusive
     actionGroupSpin->addAction(ui->actionAutoLeftSpin);
     actionGroupSpin->addAction(ui->actionAutoRightSpin);
+    actionGroupSpin->setExclusive(true);
     actionGroupSpin->setEnabled(false);
+
+    // add zoomin and zoomout together
+    actionGroupZoom->addAction(ui->actionZoomIn);
+    actionGroupZoom->addAction(ui->actionZoomOut);
+    actionGroupZoom->setExclusive(false);
+    actionGroupZoom->setEnabled(false);
 }
 
 
@@ -97,7 +123,7 @@ void MainWindow::addRecentFiles(QString filename)
     fileList.append(filename);
     if (fileList.count() > 8)
         fileList.removeFirst();
-    settings.setValue("recentFiles", QVariant(fileList));
+    settings.setValue("recentFiles", fileList);
     updateRecentFiles();
 
     QDir dir(filename);
@@ -109,7 +135,15 @@ void MainWindow::addRecentFiles(QString filename)
 void MainWindow::openRecentFile()
 {
     QAction *action = (QAction *)sender();
-    openFile(action->text().section(" | ", 1, 1));
+    QFile file(action->text().section(" | ", 1, 1));
+    if (file.exists())
+        openFile(file.fileName());
+    else
+    {
+        deleteRecentFile(file.fileName());
+
+    }
+
 }
 
 void MainWindow::updateRecentFiles()
@@ -137,6 +171,16 @@ void MainWindow::clearRecentFiles()
     settings.setValue("recentFiles", QVariant());
     updateRecentFiles();
 }
+
+void MainWindow::deleteRecentFile(QString filename)
+{
+    QStringList fileList = settings.value("recentFiles").toStringList();
+    fileList.removeOne(filename);
+    settings.setValue("recentFiles", fileList);
+    updateRecentFiles();
+}
+
+
 
 // graphics view
 void MainWindow::createSceneAndView()
@@ -194,10 +238,33 @@ void MainWindow::createConnections()
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomOut()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomOut()));
 
-    connect(this, &MainWindow::sigFileOpened, [this]() {actionGroupExport->setEnabled(true);});
-    connect(this, &MainWindow::sigFileClosed, [this]() {actionGroupExport->setEnabled(false);});
+    connect(this, &MainWindow::sigFileOpened,
+            [this](QString filename)
+            {
+                actionGroupFile->setEnabled(true);
+                actionGroupExport->setEnabled(true);
+                actionGroupGOperate->setEnabled(true);
+                actionGroup2D->setEnabled(true);
+                actionGroup3D->setEnabled(true);
+                actionGroupZoom->setEnabled(true);
 
-    connect(this, SIGNAL(sigFileOpened(QString)), this, SLOT(addRecentFiles(QString)));
+
+                addRecentFiles(filename);
+                setWindowTitle(filename + " - " + App_Name_CN);
+            });
+
+    connect(this, &MainWindow::sigFileClosed,
+            [this]()
+            {
+                actionGroupFile->setEnabled(false);
+                actionGroupExport->setEnabled(false);
+                actionGroupGOperate->setEnabled(false);
+                actionGroup2D->setEnabled(false);
+                actionGroup3D->setEnabled(false);
+                actionGroupZoom->setEnabled(false);
+
+                setWindowTitle(App_Name_CN);
+            });
 }
 
 
@@ -211,30 +278,12 @@ void MainWindow::openFile(QString filename)
     {
         on_actionClose_triggered();
     }
-    setWindowTitle(filename + " - " + App_Name_CN);
-
 
     if (!handler->openDatabase(filename))
         return;
 
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     emit updatePrjInfo(prjInfo);
-
-    ui->actionClose->setEnabled(true);
-    ui->actionSave->setEnabled(true);
-
-    ui->actionAnyShape->setEnabled(true);
-    ui->actionCross->setEnabled(true);
-    ui->actionRectangle->setEnabled(true);
-    ui->actionTextbox->setEnabled(true);
-    ui->actionSlitWidth->setEnabled(true);
-    ui->actionShift->setEnabled(true);
-    ui->actionOccurrence->setEnabled(true);
-
-    ui->actionZoomIn->setEnabled(true);
-    ui->actionZoomOut->setEnabled(true);
-
-    ui->actionProjectInfo->setEnabled(true);
 
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
@@ -257,28 +306,8 @@ void MainWindow::on_actionClose_triggered()
     emit clearScene();
     emit clearPrjInfo();
 
-
-    setWindowTitle(App_Name_CN);
-
     if (handler->isOpened())
         handler->closeDatabase();
-
-
-    ui->actionClose->setEnabled(false);
-    ui->actionSave->setEnabled(false);
-
-    ui->actionAnyShape->setEnabled(false);
-    ui->actionCross->setEnabled(false);
-    ui->actionRectangle->setEnabled(false);
-    ui->actionTextbox->setEnabled(false);
-    ui->actionSlitWidth->setEnabled(false);
-    ui->actionShift->setEnabled(false);
-    ui->actionOccurrence->setEnabled(false);
-
-    ui->actionZoomIn->setEnabled(false);
-    ui->actionZoomOut->setEnabled(false);
-
-    ui->actionProjectInfo->setEnabled(false);
 
     QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
@@ -865,3 +894,20 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 //        }
 //    }
 //}
+
+
+
+void MainWindow::on_actionCopy_triggered()
+{
+
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+
+}

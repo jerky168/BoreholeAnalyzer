@@ -50,6 +50,7 @@ void GraphicsScene::clearScene()
     GraphicsSettings::instance()->setRatio(1.0, 1.0);
     setCurMode(MoveItem);
     clearItemData();
+    update();
 }
 
 

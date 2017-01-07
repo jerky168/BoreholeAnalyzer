@@ -9,11 +9,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
 #include <QUuid>
-#include <qmath.h>
+#include <QtMath>
+#include <QMap>
 
-#include "GraphicsSettings.h"
-
-
+#include "type.h"
 #include "GraphicsSettings.h"
 #include "GraphicsTextItem.h"
 #include "GraphicsLineItem.h"
@@ -21,9 +20,7 @@
 #include "GraphicsAnyshape.h"
 #include "GraphicsOccurance.h"
 
-#include "type.h"
 
-#include <QMap>
 
 
 #define Border          200
@@ -93,10 +90,11 @@ public slots:
     void updateItemRemark(int row, QString remark);
 
 
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void drawBackground(QPainter * painter, const QRectF & rect);
+    void drawBackground(QPainter *painter, const QRectF &rect);
 
 private:
     bool showInfo;  // 实时信息栏是否显示鼠标当前位置
@@ -115,7 +113,6 @@ private:
     void addItemData(QUuid uuid, QGraphicsItem *item, bool saved = false);
     void deleteItemData(QUuid uuid);
     void clearItemData();
-
 
 
 signals:

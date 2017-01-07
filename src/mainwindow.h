@@ -14,14 +14,17 @@
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
 #include "DbHandler.h"
-#include "QWord.h"
-#include "QExcel.h"
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
 #include "RollWidget.h"
 #include "app.h"
 #include "ShiftDialog.h"
 #include "ExportImageDialog.h"
+
+#ifdef Q_OS_WIN32
+#include "QWord.h"
+#include "QExcel.h"
+#endif
 
 
 namespace Ui {
@@ -74,6 +77,13 @@ private slots:
     void openRecentFile();
     void updateRecentFiles();
     void clearRecentFiles();
+    void deleteRecentFile(QString filename);
+
+    void on_actionCopy_triggered();
+
+    void on_actionPaste_triggered();
+
+    void on_actionDelete_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -81,11 +91,14 @@ private:
     GraphicsScene *scene;
     PrjInfoDialog *infoDialog;
 
-    QActionGroup *actionGroupExport;    // 导出操作
-    QActionGroup *actionGroupMode;      // 2D, 3D模式切换
-    QActionGroup *actionGroup2D;        // 2D模式下的操作
-    QActionGroup *actionGroup3D;        // 3D模式下的操作
-    QActionGroup *actionGroupSpin;      // 旋转操作
+    QActionGroup *actionGroupFile;          // 文件操作
+    QActionGroup *actionGroupExport;        // 导出操作
+    QActionGroup *actionGroupGOperate;      // 全局操作
+    QActionGroup *actionGroupMode;          // 2D, 3D模式切换
+    QActionGroup *actionGroup2D;            // 2D模式下的操作
+    QActionGroup *actionGroup3D;            // 3D模式下的操作
+    QActionGroup *actionGroupSpin;          // 旋转操作
+    QActionGroup *actionGroupZoom;          // 放大缩小操作
 
 
     QSettings settings;
