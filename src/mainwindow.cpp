@@ -429,6 +429,7 @@ QString MainWindow::getWordString(quint16 index)
 
 void MainWindow::on_actionExportWord_triggered()
 {
+#ifdef Q_OS_WIN
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     QWord word;
 
@@ -510,12 +511,17 @@ void MainWindow::on_actionExportWord_triggered()
     }
 
     word.save();
+#else
+    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+#endif
 }
 
 
 
 void MainWindow::on_actionExportExcel_triggered()
-{   
+{
+#ifdef Q_OS_WIN
+
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     QAxObject excel;
@@ -581,6 +587,9 @@ void MainWindow::on_actionExportExcel_triggered()
     excel.dynamicCall("Quit(void)");
 
     CoUninitialize();
+#else
+    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+#endif
 }
 
 void MainWindow::on_actionProjectInfo_triggered()
