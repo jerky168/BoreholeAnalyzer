@@ -24,7 +24,7 @@
 #include "DeleteDialog.h"
 
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 #include "QWord.h"
 #include "QExcel.h"
 #endif

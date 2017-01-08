@@ -558,7 +558,7 @@ void MainWindow::on_actionExportWord_triggered()
 
     word.save();
 #else
-    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+    QMessageBox::warning(this, tr("Unsupported operation"), tr("This operation is not support on this platform."));
 #endif
 }
 
@@ -640,7 +640,7 @@ void MainWindow::on_actionExportExcel_triggered()
 
     CoUninitialize();
 #else
-    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+    QMessageBox::warning(this, tr("Unsupported operation"), tr("This operation is not support on this platform."));
 #endif
 }
 

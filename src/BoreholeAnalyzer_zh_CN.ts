@@ -914,75 +914,82 @@
         <translation type="obsolete">导出图片</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="484"/>
+        <location filename="mainwindow.cpp" line="485"/>
         <source>Export report failed</source>
         <translation type="unfinished">导出报告失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="485"/>
+        <location filename="mainwindow.cpp" line="486"/>
         <source>Export report failed, please confirm if the computer has installed Microsoft Word!</source>
         <translation type="unfinished">导出报告失败，请确认计算机安装了Word软件！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="496"/>
+        <location filename="mainwindow.cpp" line="497"/>
         <source>Name</source>
         <translation type="unfinished">工程名称</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="501"/>
+        <location filename="mainwindow.cpp" line="502"/>
         <source>Number</source>
         <translation type="unfinished">测控编号</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="503"/>
+        <location filename="mainwindow.cpp" line="504"/>
         <source>Site</source>
         <translation type="unfinished">测试地点</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="505"/>
+        <location filename="mainwindow.cpp" line="506"/>
         <source>Time</source>
         <translation type="unfinished">测试时间</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="508"/>
+        <location filename="mainwindow.cpp" line="509"/>
         <source>Diameter</source>
         <translation type="unfinished">测孔直径</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="510"/>
+        <location filename="mainwindow.cpp" line="511"/>
         <source>Depth</source>
         <translation type="unfinished">测试深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="512"/>
+        <location filename="mainwindow.cpp" line="513"/>
         <source>StartDepth</source>
         <translation type="unfinished">始测深度</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="520"/>
-        <location filename="mainwindow.cpp" line="523"/>
+        <location filename="mainwindow.cpp" line="521"/>
+        <location filename="mainwindow.cpp" line="524"/>
         <source>Position</source>
         <translation type="unfinished">位置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="521"/>
-        <location filename="mainwindow.cpp" line="524"/>
+        <location filename="mainwindow.cpp" line="522"/>
+        <location filename="mainwindow.cpp" line="525"/>
         <source>Image</source>
         <translation type="unfinished">展开图</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="522"/>
-        <location filename="mainwindow.cpp" line="525"/>
+        <location filename="mainwindow.cpp" line="523"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>Remarks</source>
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="571"/>
+        <location filename="mainwindow.cpp" line="561"/>
+        <location filename="mainwindow.cpp" line="643"/>
+        <source>Unsupported operation</source>
+        <oldsource>unsupported operation</oldsource>
+        <translation type="unfinished">不支持的操作</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="577"/>
         <source>Export table failed</source>
         <translation type="unfinished">导出表格失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="572"/>
+        <location filename="mainwindow.cpp" line="578"/>
         <source>Export table failed, please confirm if the computer has installed Microsoft Excel!</source>
         <translation type="unfinished">导出表格失败，请确认计算机安装了Excel软件！</translation>
     </message>
@@ -1003,24 +1010,24 @@
         <translation type="obsolete">数据项2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="650"/>
+        <location filename="mainwindow.cpp" line="659"/>
         <source>Unsave changes</source>
         <oldsource>Unsave items</oldsource>
         <translation type="unfinished">未保存的更改</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="651"/>
+        <location filename="mainwindow.cpp" line="660"/>
         <source>You have unsaved changes, switching index will discard theses changes!</source>
         <translation type="unfinished">你有未保存的更改，切换页面会丢弃这些更改！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="654"/>
+        <location filename="mainwindow.cpp" line="663"/>
         <source>Discard</source>
         <translation type="unfinished">丢弃</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="407"/>
-        <location filename="mainwindow.cpp" line="655"/>
+        <location filename="mainwindow.cpp" line="664"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
@@ -1053,39 +1060,45 @@
         <translation type="unfinished">确认</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="586"/>
+        <location filename="mainwindow.cpp" line="561"/>
+        <location filename="mainwindow.cpp" line="643"/>
+        <source>This operation is not support on this platform.</source>
+        <translation type="unfinished">这个操作在本平台上不支持。</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="592"/>
         <source>Serial number</source>
         <translation type="unfinished">序号</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="588"/>
+        <location filename="mainwindow.cpp" line="594"/>
         <source>Index</source>
         <translation type="unfinished">索引</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="591"/>
+        <location filename="mainwindow.cpp" line="597"/>
         <source>Type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="594"/>
+        <location filename="mainwindow.cpp" line="600"/>
         <source>Description</source>
         <translation type="unfinished">描述</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="597"/>
+        <location filename="mainwindow.cpp" line="603"/>
         <source>Remark</source>
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="720"/>
+        <location filename="mainwindow.cpp" line="729"/>
         <source>Image is shifting...</source>
         <translatorcomment>处理中...</translatorcomment>
         <translation type="unfinished">图像偏移中...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="408"/>
-        <location filename="mainwindow.cpp" line="721"/>
+        <location filename="mainwindow.cpp" line="730"/>
         <source>In progress...</source>
         <translation type="unfinished">处理中...</translation>
     </message>
