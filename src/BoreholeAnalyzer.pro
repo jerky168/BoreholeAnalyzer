@@ -104,8 +104,5 @@ DISTFILES += \
     ../doc/README.MD \
     changelog
 
-unix{
-    LIBS += -lglut -lGLU
-}
 
 

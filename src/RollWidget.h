@@ -6,7 +6,13 @@
 #include <QCloseEvent>
 #include <QTimer>
 
+#ifdef Q_OS_WIN
 #include <GL/glu.h>
+#endif
+
+#ifdef Q_OS_OSX
+#include <OpenGL/glu.h>
+#endif
 
 class RollWidget : public QGLWidget
 {
