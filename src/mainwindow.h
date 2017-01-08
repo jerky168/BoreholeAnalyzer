@@ -20,6 +20,9 @@
 #include "app.h"
 #include "ShiftDialog.h"
 #include "ExportImageDialog.h"
+#include "CopyAndPasteDialog.h"
+#include "DeleteDialog.h"
+
 
 #ifdef Q_OS_WIN32
 #include "QWord.h"
@@ -79,17 +82,15 @@ private slots:
     void clearRecentFiles();
     void deleteRecentFile(QString filename);
 
-    void on_actionCopy_triggered();
-
-    void on_actionPaste_triggered();
-
+    void on_actionCopyAndPaste_triggered();
     void on_actionDelete_triggered();
+
+
 
 private:
     Ui::MainWindow *ui;
     DbHandler *handler;
     GraphicsScene *scene;
-    PrjInfoDialog *infoDialog;
 
     QActionGroup *actionGroupFile;          // 文件操作
     QActionGroup *actionGroupExport;        // 导出操作
@@ -100,6 +101,7 @@ private:
     QActionGroup *actionGroupSpin;          // 旋转操作
     QActionGroup *actionGroupZoom;          // 放大缩小操作
 
+    PrjInfoDialog *infoDialog;              // 工程信息对话框
 
     QSettings settings;
 

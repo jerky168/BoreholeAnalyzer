@@ -94,8 +94,7 @@
     <property name="title">
      <string>编辑(&amp;E)</string>
     </property>
-    <addaction name="actionCopy"/>
-    <addaction name="actionPaste"/>
+    <addaction name="actionCopyAndPaste"/>
     <addaction name="actionDelete"/>
     <addaction name="actionShift"/>
     <addaction name="separator"/>
@@ -181,8 +180,7 @@
    <addaction name="actionExportWord"/>
    <addaction name="actionExportExcel"/>
    <addaction name="separator"/>
-   <addaction name="actionCopy"/>
-   <addaction name="actionPaste"/>
+   <addaction name="actionCopyAndPaste"/>
    <addaction name="actionDelete"/>
    <addaction name="actionShift"/>
    <addaction name="separator"/>
@@ -345,7 +343,7 @@
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="actionPaste">
+  <action name="actionCopyAndPaste">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -354,10 +352,10 @@
      <normaloff>:/res/images/paste.png</normaloff>:/res/images/paste.png</iconset>
    </property>
    <property name="text">
-    <string>粘贴(&amp;P)</string>
+    <string>复制粘贴(&amp;P)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+V</string>
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionDelete">

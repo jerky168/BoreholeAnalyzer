@@ -41,7 +41,9 @@ SOURCES +=  main.cpp\
             items/GraphicsTextItem.cpp \
     ShiftDialog.cpp \
     ExportImageDialog.cpp \
-    TextInputDialog.cpp
+    TextInputDialog.cpp \
+    CopyAndPasteDialog.cpp \
+    DeleteDialog.cpp
 
 
 
@@ -65,7 +67,9 @@ HEADERS  += mainwindow.h \
             app.h \
     ShiftDialog.h \
     ExportImageDialog.h \
-    TextInputDialog.h
+    TextInputDialog.h \
+    CopyAndPasteDialog.h \
+    DeleteDialog.h
 
 
 INCLUDEPATH += items
@@ -77,7 +81,9 @@ FORMS    += mainwindow.ui \
             AboutDialog.ui \
     ShiftDialog.ui \
     ExportImageDialog.ui \
-    TextInputDialog.ui
+    TextInputDialog.ui \
+    CopyAndPasteDialog.ui \
+    DeleteDialog.ui
 
 
 RESOURCES += \

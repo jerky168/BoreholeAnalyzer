@@ -56,8 +56,7 @@ void MainWindow::createActionGroups()
     actionGroupExport->setEnabled(false);
 
     // add global operation together
-    actionGroupGOperate->addAction(ui->actionCopy);
-    actionGroupGOperate->addAction(ui->actionPaste);
+    actionGroupGOperate->addAction(ui->actionCopyAndPaste);
     actionGroupGOperate->addAction(ui->actionDelete);
     actionGroupGOperate->addAction(ui->actionShift);
     actionGroupGOperate->setExclusive(false);
@@ -216,11 +215,6 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
     QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 
-    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
-    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
-    QObject::connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
-    QObject::connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
-
     connect(ui->actionCross, SIGNAL(triggered(bool)), ui->graphicsView, SLOT(handleCrossMouse(bool)));
 
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
@@ -238,6 +232,11 @@ void MainWindow::createConnections()
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomOut()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomOut()));
 
+    connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
+    connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
+
     connect(this, &MainWindow::sigFileOpened,
             [this](QString filename)
             {
@@ -247,7 +246,6 @@ void MainWindow::createConnections()
                 actionGroup2D->setEnabled(true);
                 actionGroup3D->setEnabled(true);
                 actionGroupZoom->setEnabled(true);
-
 
                 addRecentFiles(filename);
                 setWindowTitle(filename + " - " + App_Name_CN);
@@ -896,18 +894,16 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 //}
 
 
-
-void MainWindow::on_actionCopy_triggered()
+void MainWindow::on_actionCopyAndPaste_triggered()
 {
-
-}
-
-void MainWindow::on_actionPaste_triggered()
-{
-
+//    CopyAndPasteDialog *dialog = new CopyAndPasteDialog();
+//    dialog->exec();
 }
 
 void MainWindow::on_actionDelete_triggered()
 {
-
+    DeleteDialog *dialog = new DeleteDialog(ImageWidget::index, ImageWidget::index + 1, this);
+    dialog->exec();
 }
+
+
