@@ -98,8 +98,5 @@ win32 {
 DISTFILES += \
     ../doc/README.MD
 
-unix{
-    LIBS += -lglut -lGLU
-}
 
 

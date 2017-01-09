@@ -14,8 +14,6 @@
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
 #include "DbHandler.h"
-#include "QWord.h"
-#include "QExcel.h"
 #include "PrjInfoDialog.h"
 #include "AboutDialog.h"
 #include "RollWidget.h"
