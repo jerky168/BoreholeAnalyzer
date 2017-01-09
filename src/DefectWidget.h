@@ -37,6 +37,8 @@ private:
     QStandardItemModel *model;
     QHeaderView *headerView;
 
+    QVector<GraphicsScene::TableData> datas;
+
     void initModel();
 
 private slots:
@@ -45,8 +47,8 @@ private slots:
     void itemChanged(QStandardItem *item);
 
 signals:
-    void deleteItem(int row);
-    void updateItemRemark(int row, QString remark);
+    void deleteItem(QUuid uuid);
+    void updateItemRemark(QUuid uuid, QString remark);
 
 };
 

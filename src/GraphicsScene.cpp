@@ -420,7 +420,7 @@ QVector<GraphicsScene::TableData> GraphicsScene::getSavedTableData()
     {
         TableData tableData;
         QGraphicsItem *savedItem = savedItems.values().at(i);
-        tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
+        tableData.depth = getItemDepth(savedItem);
         tableData.data = getShowString(savedItem);
         tableData.isSaved = tr("Yes");
         switch(savedItem->type())
@@ -667,30 +667,6 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             break;
         }
 
-//        case Angle:
-//        {
-//            GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
-//            QPointF p1 = i->polygon().at(0);
-//            QPointF p2 = i->polygon().at(1);
-//            QPointF p3 = i->polygon().at(2);
-//            QPointF pos1 = scene2Real(p1);
-//            QPointF pos2 = scene2Real(p2);
-//            QPointF pos3 = scene2Real(p3);
-//            QLineF lineA(p1, p2), lineB(p2, p3);
-
-//            qreal lineALength = lineA.length();
-//            qreal lineBLength = lineB.length();
-//            qreal lineCLength = QLineF(p1, p3).length();
-//            qreal angle = qAcos((pow(lineALength, 2) + qPow(lineBLength, 2) - qPow(lineCLength, 2))/(2*lineALength*lineBLength));
-//            angle = angle * 180 / M_PI;
-
-//            str += QString::number(pos1.y(), 'f', 3) + "m  ";
-//            str += tr("Angle:  ") + QString::number(angle, 'f', 2) + "°\n";
-//            str += tr("Vertex A:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
-//            str += tr("Vertex B:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + "\n";
-//            str += tr("Vertex C:  ") + QString::number(pos3.y(), 'f', 3) + "m  " + getAngleString(pos3.x());
-//            break;
-//        }
 
         default:
             break;
@@ -795,58 +771,80 @@ void GraphicsScene::updateTable()
     {
         TableData tableData;
         QGraphicsItem *newItem = newItems.values().at(i);
-        tableData.depth = QString::number(scene2Real(newItem->pos()).y(), 'f', 3) + "m";
+        tableData.uuid = QUuid(newItems.keys().at(i));
+        tableData.depth = getItemDepth(newItem);
         tableData.data = getShowString(newItem);
         tableData.isSaved = tr("No");
         switch(newItem->type())
         {
             case Rect:
             {
+                GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(newItem);
+                tableData.remark = i->getRemark();
                 tableData.type = tr("Rectangle");
                 break;
             }
 
             case AnyShape:
             {
+                GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(newItem);
+                tableData.remark = i->getRemark();
                 tableData.type = tr("AnyShape");
                 break;
             }
 
             case Ruler:
             {
+                GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(newItem);
+                tableData.remark = i->getRemark();
                 tableData.type = tr("Width");
                 break;
             }
 
             case Occurance:
             {
+                GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(newItem);
+                tableData.remark = i->getRemark();
                 tableData.type = tr("Occurance");
                 break;
             }
 
             case Text:
             {
+                GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(newItem);
+                tableData.remark = i->getRemark();
                 tableData.type = tr("Text");
-                break;
-            }
-
-            case Angle:
-            {
-                tableData.type = tr("Angle");
                 break;
             }
 
             default:
                 break;
         }
-        tableDatas.append(tableData);
+        if (tableDatas.isEmpty())
+            tableDatas.append(tableData);
+        else
+        {
+            int count = tableDatas.count();
+            for (int j = 0; j < count; j++)
+            {
+                if (tableData.depth < tableDatas.at(j).depth)
+                {
+                    tableDatas.insert(j, tableData);
+                    break;
+                }
+                else if (tableDatas.count() - 1 == j)
+                    tableDatas.append(tableData);
+            }
+        }
+
     }
 
     for (int i = 0; i < savedItems.count(); i++)
     {
         TableData tableData;
         QGraphicsItem *savedItem = savedItems.values().at(i);
-        tableData.depth = QString::number(scene2Real(savedItem->pos()).y(), 'f', 3) + "m";
+        tableData.uuid = QUuid(savedItems.keys().at(i));
+        tableData.depth = getItemDepth(savedItem);
         tableData.data = getShowString(savedItem);
         tableData.isSaved = tr("Yes");
         switch(savedItem->type())
@@ -894,29 +892,32 @@ void GraphicsScene::updateTable()
             default:
                 break;
         }
-        tableDatas.append(tableData);
+        if (tableDatas.isEmpty())
+            tableDatas.append(tableData);
+        else
+        {
+            int count = tableDatas.count();
+            for (int j = 0; j < count; j++)
+            {
+                if (tableData.depth < tableDatas.at(j).depth)
+                {
+                    tableDatas.insert(j, tableData);
+                    break;
+                }
+                else if (tableDatas.count() - 1 == j)
+                    tableDatas.append(tableData);
+            }
+        }
     }
     emit emitTableData(tableDatas);
 }
 
-void GraphicsScene::deleteItem(int row)
-{
-    if (row < newItems.count())
-    {
-        deleteItemData(QUuid(newItems.keys().at(row)));
-    }
-    else
-    {
-        deleteItemData(QUuid(savedItems.keys().at(row-newItems.count())));
-    }
-}
 
-// 更新备注
-void GraphicsScene::updateItemRemark(int row, QString remark)
+void GraphicsScene::updateItemRemark(QUuid uuid, QString remark)
 {
-    if (row < newItems.count())
+    if (newItems.contains(uuid.toString()))
     {
-        QGraphicsItem *item = newItems.values().at(row);
+        QGraphicsItem *item = newItems.value(uuid.toString());
         switch (item->type())
         {
             case AnyShape:
@@ -957,9 +958,9 @@ void GraphicsScene::updateItemRemark(int row, QString remark)
             }
         }
     }
-    else
+    else if (savedItems.contains(uuid.toString()))
     {
-        QGraphicsItem *item = savedItems.values().at(row-newItems.count());
+        QGraphicsItem *item = savedItems.value(uuid.toString());
         switch (item->type())
         {
             case AnyShape:
@@ -999,7 +1000,7 @@ void GraphicsScene::updateItemRemark(int row, QString remark)
                 break;
             }
         }
-        emit updateSavedItemRemark(savedItems.keys().at(row-newItems.count()), remark);
+        emit updateSavedItemRemark(uuid, remark);
     }
 }
 
@@ -1009,7 +1010,121 @@ QStringList GraphicsScene::getAllItemString()
     QStringList strList;
     for (int i = 0; i < savedItems.count(); i++)
     {
-        strList << getShowString(savedItems.values().at(i));
+        QString remark;
+        QGraphicsItem *item = savedItems.values().at(i);
+        switch (item->type())
+        {
+            case AnyShape:
+            {
+                GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+                remark = i->getRemark();
+                break;
+            }
+            case Ruler:
+            {
+                GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+                remark = i->getRemark();
+                break;
+            }
+            case Occurance:
+            {
+                GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+                remark = i->getRemark();
+                break;
+            }
+            case Rect:
+            {
+                GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+                remark = i->getRemark();
+                break;
+            }
+
+            case Text:
+            {
+                GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+                remark = i->getRemark();
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+
+        QString content = QString::number(i+1) + ": " + getShowString(savedItems.values().at(i)).section("\n", 0, 0);
+        if (!remark.isEmpty())
+            content += " " + tr("remark: ") + remark +"\n";
+        else
+            content += "\n";
+
+        strList << content;
     }
     return strList;
+}
+
+
+qreal GraphicsScene::getItemDepth(QGraphicsItem *item)
+{
+    qreal depth = 0.0;
+
+    switch (item->type())
+    {
+        case AnyShape:
+        {
+            GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+            QPolygonF polygon = i->polygon();
+            qreal min = scene2Real(polygon.at(0)).y();
+            qreal max = scene2Real(polygon.at(0)).y();
+            for (int j = 1; j < polygon.count(); j++)
+            {
+                min = (min < scene2Real(polygon.at(j)).y()) ? min : scene2Real(polygon.at(j)).y();
+                max = (max > scene2Real(polygon.at(j)).y()) ? max : scene2Real(polygon.at(j)).y();
+            }
+            depth = min;
+            break;
+        }
+        case Ruler:
+        {
+            GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+            QPointF pos1 = scene2Real(i->line().p1());
+            QPointF pos2 = scene2Real(i->line().p2());
+            if (pos1.y() < pos2.y())
+                depth = pos1.y();
+            else
+                depth = pos2.y();
+            break;
+        }
+        case Occurance:
+        {
+            GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+            QPointF pos1 = scene2Real(i->line().p1());
+            QPointF pos2 = scene2Real(i->line().p2());
+            if (pos1.y() < pos2.y())
+                depth = pos1.y();
+            else
+                depth = pos2.y();
+            break;
+        }
+        case Rect:
+        {
+            GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+            depth = scene2Real(i->rect().topLeft()).y();
+            break;
+        }
+
+        case Text:
+        {
+            GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+            depth = scene2Real(i->scenePos()).y();
+            break;
+        }
+
+        default:
+        {
+            break;
+        }
+    }
+
+    return depth;
 }

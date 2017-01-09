@@ -43,11 +43,12 @@ public:
 
     typedef struct
     {
-        QString depth;
+        qreal depth;
         QString type;
         QString isSaved;
         QString data;
         QString remark;
+        QUuid uuid;
     }TableData;
 
 
@@ -85,9 +86,9 @@ public:
 public slots:
     void clearScene();
     void updateIndexData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
-    void deleteItem(int row);
+    void deleteItemData(QUuid uuid);
 
-    void updateItemRemark(int row, QString remark);
+    void updateItemRemark(QUuid uuid, QString remark);
 
 
 
@@ -111,9 +112,11 @@ private:
 
     QMap<QString, QGraphicsItem *> newItems, savedItems;    // 用于保存新添加的items和已经保存的items
     void addItemData(QUuid uuid, QGraphicsItem *item, bool saved = false);
-    void deleteItemData(QUuid uuid);
+
     void clearItemData();
 
+
+    qreal getItemDepth(QGraphicsItem *item);
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode);

@@ -345,7 +345,7 @@
   </action>
   <action name="actionCopyAndPaste">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">
@@ -360,7 +360,7 @@
   </action>
   <action name="actionDelete">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="res.qrc">

@@ -112,6 +112,7 @@ private:
     void resetActions();
 
     void openFile(QString filename);
+    void saveFile(quint16 itemIndex);
 
 
     QImage getSceneImage(quint16 index);

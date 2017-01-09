@@ -219,8 +219,8 @@ void MainWindow::createConnections()
 
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
 
-    connect(ui->defectWidget, SIGNAL(deleteItem(int)), scene, SLOT(deleteItem(int)));
-    connect(ui->defectWidget, SIGNAL(updateItemRemark(int,QString)), scene, SLOT(updateItemRemark(int,QString)));
+    connect(ui->defectWidget, SIGNAL(deleteItem(QUuid)), scene, SLOT(deleteItemData(QUuid)));
+    connect(ui->defectWidget, SIGNAL(updateItemRemark(QUuid,QString)), scene, SLOT(updateItemRemark(QUuid,QString)));
     connect(scene, SIGNAL(deleteSavedItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
     connect(scene, SIGNAL(updateSavedItemRemark(QUuid,QString)), handler, SLOT(updateItemremark(QUuid,QString)));
 
@@ -301,6 +301,35 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
     emit clearScene();
     emit clearPrjInfo();
 
@@ -317,68 +346,102 @@ void MainWindow::on_actionSave_triggered()
 {
     if (scene->hasNewItem())
     {
-        QMap<QString, QGraphicsItem *> items = scene->getNewItems();
-        QStringList keys = items.keys();
-        for (int i = 0; i < keys.count(); i++)
-        {
-            QUuid uuid = QUuid(keys.at(i));
-            quint16 index = ImageWidget::index;
-            QGraphicsItem *item = items.value(uuid.toString());
-            quint8 type = item->type();
-            QString dataStr, remark;
-            switch (item->type())
-            {
-                case AnyShape:
-                {
-                    GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
-                    dataStr = i->getDataString();
-                    remark = i->getRemark();
-                    break;
-                }
-                case Ruler:
-                {
-                    GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
-                    dataStr = i->getDataString();
-                    remark = i->getRemark();
-                    break;
-                }
-                case Occurance:
-                {
-                    GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
-                    dataStr = i->getDataString();
-                    remark = i->getRemark();
-                    break;
-                }
-                case Rect:
-                {
-                    GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
-                    dataStr = i->getDataString();
-                    remark = i->getRemark();
-                    break;
-                }
-
-                case Text:
-                {
-                    GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
-                    dataStr = i->getDataString();
-                    remark = i->getRemark();
-                    break;
-                }
-
-                default:
-                {
-                    break;
-                }
-            }
-            handler->saveItem(uuid, index, type, dataStr, remark);
-        }
-        scene->saveNewItems();
+        saveFile(ImageWidget::index);
     }
+}
+
+void MainWindow::saveFile(quint16 itemIndex)
+{
+    QMap<QString, QGraphicsItem *> items = scene->getNewItems();
+    QStringList keys = items.keys();
+    for (int i = 0; i < keys.count(); i++)
+    {
+        QUuid uuid = QUuid(keys.at(i));
+        quint16 index = itemIndex;
+        QGraphicsItem *item = items.value(uuid.toString());
+        quint8 type = item->type();
+        QString dataStr, remark;
+        switch (item->type())
+        {
+            case AnyShape:
+            {
+                GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Ruler:
+            {
+                GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Occurance:
+            {
+                GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Rect:
+            {
+                GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+
+            case Text:
+            {
+                GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+        handler->saveItem(uuid, index, type, dataStr, remark);
+    }
+    scene->saveNewItems();
 }
 
 
 void MainWindow::on_actionExportImage_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
     ExportImageDialog *dialog = new ExportImageDialog(this);
     if (!dialog->exec())
     {
@@ -386,18 +449,21 @@ void MainWindow::on_actionExportImage_triggered()
         return;
     }
 
+    quint16 count = 0;
 
     if (dialog->getForm())
     {
         QString filename = dialog->getPath();
-        QImage image = scene->getSceneImage();
+        DbHandler::IndexData indexData = handler->getIndexData(ImageWidget::index);
+        QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
         image.save(filename);
 
         QDir dir(dialog->getPath());
         dir.cdUp();
         settings.setValue("lastExportImage", dir.absolutePath());
 
-        QString str = QString(tr("Export %1 images successfully.")).arg(1);
+        count++;
+        QString str = QString(tr("Export %1 images successfully.")).arg(count);
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
         messageBox.exec();
@@ -407,7 +473,6 @@ void MainWindow::on_actionExportImage_triggered()
         QProgressDialog progress(tr("Exporting images..."), tr("Cancel"), 0, ImageWidget::maxIndex+1, this);
         progress.setWindowTitle(tr("In progress..."));
         progress.setModal(true);
-        progress.setAutoReset(false);
         progress.setValue(0);
         for (int i = 0; i <= ImageWidget::maxIndex; i++)
         {
@@ -432,6 +497,7 @@ void MainWindow::on_actionExportImage_triggered()
             progress.setLabelText(status);
             image.save(filename);
             progress.setValue(i+1);
+            count++;
             if (progress.wasCanceled())
                 break;
         }
@@ -441,7 +507,7 @@ void MainWindow::on_actionExportImage_triggered()
         dir.cdUp();
         settings.setValue("lastExportImage", dir.absolutePath());
 
-        QString str = QString(tr("Export %1 images successfully.")).arg(progress.value());
+        QString str = QString(tr("Export %1 images successfully.")).arg(count);
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
         messageBox.exec();
@@ -475,6 +541,35 @@ QString MainWindow::getWordString(quint16 index)
 
 void MainWindow::on_actionExportWord_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
 #ifdef Q_OS_WIN
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     QWord word;
@@ -566,6 +661,35 @@ void MainWindow::on_actionExportWord_triggered()
 
 void MainWindow::on_actionExportExcel_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
 #ifdef Q_OS_WIN
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -657,17 +781,31 @@ void MainWindow::switchImage(quint16 index)
     if (scene->hasNewItem())
     {
         QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
-                               tr("You have unsaved changes, switching index will discard theses changes!"),
-                               QMessageBox::Discard | QMessageBox::Cancel, this);
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
         messageBox.setDefaultButton(QMessageBox::Cancel);
-        messageBox.setButtonText (QMessageBox::Discard, tr("Discard"));
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
         messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
-        if (QMessageBox::Cancel == messageBox.exec())
+        switch(messageBox.exec())
         {
-            ui->imageWidget->cancelSwitch();
-            return;
+            case QMessageBox::Yes:
+            {
+                saveFile(ImageWidget::lastIndex);
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                ui->imageWidget->cancelSwitch();
+                return;
+            }
+            default:
+                break;
         }
-
     }
 
     DbHandler::IndexData indexData = handler->getIndexData(index);

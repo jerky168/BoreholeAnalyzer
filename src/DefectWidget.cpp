@@ -42,6 +42,8 @@ void DefectWidget::showRealInfo(QString info)
 
 void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
 {
+    datas = tableDatas;
+
     model->removeRows(0, model->rowCount());
     for (int i = 0; i < tableDatas.count(); i++)
     {
@@ -73,6 +75,8 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
 
 void DefectWidget::clearTableData()
 {
+    datas.clear();
+
     model->removeRows(0, model->rowCount());
     update();
 
@@ -84,12 +88,12 @@ void DefectWidget::on_deleteButton_clicked()
 {
     int row = ui->tableView->currentIndex().row();
     if (row >= 0)
-        emit deleteItem(row);
+        emit deleteItem(datas.at(row).uuid);
 }
 
 
 void DefectWidget::itemChanged(QStandardItem *item)
 {
     if (item->index().column() == 2)
-        emit updateItemRemark(item->index().row(), item->text());
+        emit updateItemRemark(datas.at(item->index().row()).uuid, item->text());
 }
