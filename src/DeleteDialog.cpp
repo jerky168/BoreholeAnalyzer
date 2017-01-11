@@ -1,11 +1,14 @@
 #include "DeleteDialog.h"
 #include "ui_DeleteDialog.h"
 
-DeleteDialog::DeleteDialog(qreal currentStart, qreal currentEnd, QWidget *parent) :
+DeleteDialog::DeleteDialog(qreal totalStart, qreal totalEnd, qreal currentStart, qreal currentEnd, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DeleteDialog)
 {
     ui->setupUi(this);
+
+    ui->totalStartEdit->setText(QString::number(totalStart, 'f', 3) + " m");
+    ui->totalEndEdit->setText(QString::number(totalEnd, 'f', 3) + " m");
 
     ui->currentStartEdit->setText(QString::number(currentStart, 'f', 3) + " m");
     ui->currentEndEdit->setText(QString::number(currentEnd, 'f', 3) + " m");
@@ -22,6 +25,12 @@ DeleteDialog::DeleteDialog(qreal currentStart, qreal currentEnd, QWidget *parent
 DeleteDialog::~DeleteDialog()
 {
     delete ui;
+}
+
+
+QPointF DeleteDialog::getSection()
+{
+    return QPointF(ui->deleteStartSBox->value(), ui->deleteEndSBox->value());
 }
 
 

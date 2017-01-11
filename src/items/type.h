@@ -4,7 +4,8 @@
 
 typedef enum
 {
-    Angle = 1,
+    NoType = 0,
+    Angle,
     AnyShape,
     Ruler,
     Occurance,

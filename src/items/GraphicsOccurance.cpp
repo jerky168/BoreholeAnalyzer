@@ -55,14 +55,6 @@ void GraphicsOccurance::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 
 
-GraphicsOccurance::Data GraphicsOccurance::getData()
-{
-    Data data;
-    data.points[0] = this->line().p1();
-    data.points[1] = this->line().p2();
-    return data;
-}
-
 
 QString GraphicsOccurance::getDataString()
 {
@@ -91,3 +83,5 @@ GraphicsOccurance * GraphicsOccurance::loadFromString(QString data)
     GraphicsOccurance *item = new GraphicsOccurance(QLineF(pos1, pos2));
     return item;
 }
+
+

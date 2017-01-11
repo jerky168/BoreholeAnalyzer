@@ -74,8 +74,19 @@ public:
 
 
 
-    BigImage getBigImage(quint16 index);
+    BigImage getBigImage(qint32 index);
     void setBigImage(qreal start, qreal end, QImage image);
+
+    void appendImage(qreal start, qreal end, QImage image);
+    void deleteLastImage();
+    void deleteImage(qreal start, qreal end);
+
+    void updateImage(qreal start, qreal end, QImage image);
+    void updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd);
+    void updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd, QImage image);
+
+
+
 
     typedef struct {
         QUuid uuid;
@@ -90,8 +101,8 @@ public:
     }IndexData;
 
 
-    void saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr, QString remark);
-    IndexData getIndexData(quint16 index);
+    void saveItem(QUuid uuid, qint32 index, quint8 type, QString dataStr, QString remark);
+    IndexData getIndexData(qint32 index);
 
 public slots:
     void setPrjInfo(DbHandler::PrjInfo prjInfo);

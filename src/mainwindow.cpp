@@ -206,7 +206,7 @@ void MainWindow::createConnections()
     connect(ui->actionAutoLeftSpin, &QAction::triggered, ui->widget3D, &RollWidget::startLeftSpin);
     connect(ui->actionAutoRightSpin, &QAction::triggered, ui->widget3D, &RollWidget::startRightSpin);
 
-    QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(quint16)), this, SLOT(switchImage(quint16)));
+    QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(qint32)), this, SLOT(switchImage(qint32)));
 
     QObject::connect(this, SIGNAL(clearScene()), scene, SLOT(clearScene()));
     QObject::connect(scene, SIGNAL(modeChanged(GraphicsScene::Mode)), this, SLOT(handleModeChanged(GraphicsScene::Mode)));
@@ -350,14 +350,14 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
-void MainWindow::saveFile(quint16 itemIndex)
+void MainWindow::saveFile(qint32 itemIndex)
 {
     QMap<QString, QGraphicsItem *> items = scene->getNewItems();
     QStringList keys = items.keys();
     for (int i = 0; i < keys.count(); i++)
     {
         QUuid uuid = QUuid(keys.at(i));
-        quint16 index = itemIndex;
+        qint32 index = itemIndex;
         QGraphicsItem *item = items.value(uuid.toString());
         quint8 type = item->type();
         QString dataStr, remark;
@@ -449,7 +449,7 @@ void MainWindow::on_actionExportImage_triggered()
         return;
     }
 
-    quint16 count = 0;
+    qint32 count = 0;
 
     if (dialog->getForm())
     {
@@ -523,7 +523,7 @@ QImage handleImage(QImage image)
 
 
 
-QString MainWindow::getWordString(quint16 index)
+QString MainWindow::getWordString(qint32 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     GraphicsScene *scene = new GraphicsScene();
@@ -776,7 +776,7 @@ void MainWindow::on_actionProjectInfo_triggered()
 }
 
 
-void MainWindow::switchImage(quint16 index)
+void MainWindow::switchImage(qint32 index)
 {
     if (scene->hasNewItem())
     {
@@ -814,16 +814,6 @@ void MainWindow::switchImage(quint16 index)
 
 
 
-void MainWindow::on_actionUndo_triggered()
-{
-
-}
-
-void MainWindow::on_actionRedo_triggered()
-{
-
-}
-
 QImage shiftImage(QImage img, qreal angle)
 {
     if (angle > 180 || angle < -180)
@@ -857,6 +847,147 @@ QImage shiftImage(QImage img, qreal angle)
 
     return img;
 }
+
+void MainWindow::on_actionCopyAndPaste_triggered()
+{
+    DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
+
+    qreal totalStart = prjInfo.startHeight;
+    qreal totalEnd = prjInfo.endHeight;
+
+    qreal currentStart = (ImageWidget::index > totalStart) ? ImageWidget::index : totalStart;
+    qreal currentEnd = (ImageWidget::index + 1 < totalEnd) ? ImageWidget::index + 1 : totalEnd;
+
+    CopyAndPasteDialog dialog(totalStart, totalEnd, currentStart, currentEnd, this);
+    if (QDialog::Accepted == dialog.exec())
+    {
+//        qDebug() << dialog.getSection() << dialog.getDepth();
+//        DbHandler::BigImage bigImage = handler->getBigImage(ImageWidget::index);
+//        qDebug() << bigImage.pixmap.width() << bigImage.pixmap.height();
+    }
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
+
+    qreal totalStart = prjInfo.startHeight;
+    qreal totalEnd = prjInfo.endHeight;
+
+    qreal currentStart = (ImageWidget::index > totalStart) ? ImageWidget::index : totalStart;
+    qreal currentEnd = (ImageWidget::index + 1 < totalEnd) ? ImageWidget::index + 1 : totalEnd;
+
+    DeleteDialog dialog(totalStart, totalEnd, currentStart, currentEnd, this);
+    if (QDialog::Accepted == dialog.exec())
+    {
+        qint32 currentIndex = ImageWidget::index;
+        qint32 endIndex = ImageWidget::maxIndex;
+
+        DbHandler::BigImage bigImage = handler->getBigImage(currentIndex);
+        qreal deleteDepth = dialog.getSection().y() - dialog.getSection().x();
+        qreal currentDepth = bigImage.end - bigImage.start;
+
+
+        // 如果全部删除
+        if (deleteDepth >= currentDepth)
+        {
+            handler->deleteImage(currentIndex, currentIndex+1);
+            emit updatePrjInfo(handler->getPrjInfo());
+            ui->imageWidget->setIndex(currentIndex-1);
+            return;
+        }
+
+        // 如果部分删除
+        qint32 startHeight = bigImage.pixmap.height() * (dialog.getSection().x() - qFloor(dialog.getSection().x())) / currentDepth;
+        qint32 endHeight = bigImage.pixmap.height() * (dialog.getSection().y() - qFloor(dialog.getSection().y())) / currentDepth;
+
+        if (endHeight == 0)
+            endHeight = bigImage.pixmap.height();
+
+        {
+            QImage newImage(bigImage.pixmap.width(), bigImage.pixmap.height() - (endHeight - startHeight), QImage::Format_RGB32);
+            QPainter painter(&newImage);
+            painter.drawImage(QRect(0, 0, newImage.width(), startHeight), bigImage.pixmap.toImage(),
+                              QRect(0, 0, bigImage.pixmap.width(), startHeight));
+            painter.drawImage(QRect(0, startHeight, newImage.width(), newImage.height()-startHeight), bigImage.pixmap.toImage(),
+                              QRect(0, endHeight, bigImage.pixmap.width(), bigImage.pixmap.height() - endHeight));
+            handler->updateImage(currentIndex, currentIndex+1, newImage);
+        }
+
+
+        if (currentIndex == endIndex)
+        {
+            handler->updateImage(currentIndex, currentIndex+1, bigImage.start, bigImage.end - deleteDepth);
+            emit updatePrjInfo(handler->getPrjInfo());
+            ui->imageWidget->setIndex(currentIndex);
+            return;
+        }
+        else
+        {
+            QProgressDialog progress(tr("Image is processing..."), QString(), 0, endIndex - currentIndex, this);
+            progress.setWindowTitle(tr("In progress..."));
+            progress.setWindowModality(Qt::WindowModal);
+            progress.setValue(0);
+
+            qint32 value = 0;
+
+            for (int i = currentIndex; i < endIndex; i++)
+            {
+                DbHandler::BigImage thisBigImage = handler->getBigImage(i);
+                DbHandler::BigImage nextBigImage = handler->getBigImage(i+1);
+                qreal nextDepth = nextBigImage.end - nextBigImage.start;
+                qint32 selectHeight = nextBigImage.pixmap.height() * deleteDepth / (nextBigImage.end - nextBigImage.start);
+
+                if (nextDepth <= deleteDepth)
+                {
+                    qint32 totalHeight = thisBigImage.pixmap.height() / (thisBigImage.end - thisBigImage.start - deleteDepth) ;
+                    qint32 realHeight = totalHeight * (thisBigImage.end - thisBigImage.start - deleteDepth + nextDepth);
+
+                    QImage newImage(thisBigImage.pixmap.width(), realHeight, QImage::Format_RGB32);
+                    QPainter painter(&newImage);
+                    painter.drawImage(QRect(0, 0, newImage.width(), thisBigImage.pixmap.height()),
+                                      thisBigImage.pixmap.toImage());
+                    painter.drawImage(QRect(0, thisBigImage.pixmap.height(), newImage.width(), realHeight - thisBigImage.pixmap.height()),
+                                      nextBigImage.pixmap.toImage());
+                    handler->updateImage(i, i+1, i, thisBigImage.end - deleteDepth + nextDepth, newImage);
+                    handler->deleteLastImage();
+                }
+                else
+                {
+                    {
+                        qint32 realHeight = thisBigImage.pixmap.height() / (thisBigImage.end - thisBigImage.start - deleteDepth);
+                        QImage newImage(thisBigImage.pixmap.width(), realHeight, QImage::Format_RGB32);
+                        QPainter painter(&newImage);
+                        painter.drawImage(QRect(0, 0, newImage.width(), thisBigImage.pixmap.height()),
+                                          thisBigImage.pixmap.toImage());
+                        painter.drawImage(QRect(0, thisBigImage.pixmap.height(), newImage.width(), realHeight - thisBigImage.pixmap.height()),
+                                          nextBigImage.pixmap.toImage(),
+                                          QRect(0, 0, newImage.width(), selectHeight));
+                        handler->updateImage(i, i+1, newImage);
+                    }
+                    {
+                        QImage newImage(nextBigImage.pixmap.width(), nextBigImage.pixmap.height() - selectHeight, QImage::Format_RGB32);
+                        QPainter painter(&newImage);
+                        painter.drawImage(newImage.rect(), nextBigImage.pixmap.toImage(),
+                                          QRect(0, selectHeight, nextBigImage.pixmap.width(), nextBigImage.pixmap.height() - selectHeight));
+                        handler->updateImage(i+1, i+2, newImage);
+                    }
+
+                    if (i+1 == endIndex)
+                    {
+                        handler->updateImage(i+1, i+2, i+1, nextBigImage.end - deleteDepth);
+                    }
+                }
+                progress.setValue(value++);
+            }
+            emit updatePrjInfo(handler->getPrjInfo());
+            ui->imageWidget->setIndex(currentIndex);
+            return;
+        }
+    }
+}
+
+
 
 
 void MainWindow::on_actionShift_triggered()
@@ -948,14 +1079,14 @@ void MainWindow::showStatus(QString message)
 }
 
 
-QImage MainWindow::getSceneImage(quint16 index)
+QImage MainWindow::getSceneImage(qint32 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
 
 
-QImage MainWindow::getPixmapImage(quint16 index)
+QImage MainWindow::getPixmapImage(qint32 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
@@ -1041,16 +1172,6 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 //}
 
 
-void MainWindow::on_actionCopyAndPaste_triggered()
-{
-//    CopyAndPasteDialog *dialog = new CopyAndPasteDialog();
-//    dialog->exec();
-}
 
-void MainWindow::on_actionDelete_triggered()
-{
-    DeleteDialog *dialog = new DeleteDialog(ImageWidget::index, ImageWidget::index + 1, this);
-    dialog->exec();
-}
 
 

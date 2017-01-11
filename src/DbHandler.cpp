@@ -133,9 +133,7 @@ void DbHandler::setPrjInfo(PrjInfo prjInfo)
 }
 
 
-
-
-DbHandler::BigImage DbHandler::getBigImage(quint16 index)
+DbHandler::BigImage DbHandler::getBigImage(qint32 index)
 {
     QSqlQuery query(database);
     query.prepare("select * from bigImages where id > ? and id <= ?");
@@ -146,7 +144,7 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
 
     BigImage bigImage;
     bigImage.start = index;
-    bigImage.end = (qreal)query.value(0).toInt() / 10000.0;
+    bigImage.end = query.value(0).toInt() / 10 / 1000.0;
     QByteArray imgData = query.value(1).toByteArray();
     bigImage.pixmap.loadFromData(imgData);
 
@@ -166,14 +164,141 @@ void DbHandler::setBigImage(qreal start, qreal end, QImage image)
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "JPG");
+
+    qint32 I_end = end * 10000;
+
     query.bindValue(":data", ba);
-    query.bindValue(":id", end * 10000);
+    query.bindValue(":id", I_end);
+    query.exec();
+}
+
+
+void DbHandler::appendImage(qreal start, qreal end, QImage image)
+{
+    QSqlQuery query(database);
+    query.prepare("insert into bigImages (id, data) values (:id, :data)");
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "JPG");
+
+    qint32 I_end = end * 10000;
+
+    query.bindValue(":id", I_end);
+    query.bindValue(":data", ba);
+    query.exec();
+}
+
+void DbHandler::updateImage(qreal start, qreal end, QImage image)
+{
+    QSqlQuery query(database);
+    query.prepare("update bigImages set data = :data where id > :start and id <= :end");
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "JPG");
+
+    qint32 I_start = start * 10000;
+    qint32 I_end = end * 10000;
+
+    query.bindValue(":data", ba);
+    query.bindValue(":start", I_start);
+    query.bindValue(":end", I_end);
     query.exec();
 }
 
 
 
-void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr, QString remark)
+void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd)
+{
+    QSqlQuery query(database);
+    query.prepare("update bigImages set id = :newId where id > :oldStart and id <= :oldEnd");
+
+    qint32 I_newEnd = newEnd * 10000;
+    qint32 I_oldStart = oldStart * 10000;
+    qint32 I_oldEnd = oldEnd * 10000;
+
+    query.bindValue(":newId", I_newEnd);
+    query.bindValue(":oldStart", I_oldStart);
+    query.bindValue(":oldEnd", I_oldEnd);
+    query.exec();
+}
+
+
+
+void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd, QImage image)
+{
+    QSqlQuery query(database);
+    query.prepare("update bigImages set id = :newId, data = :newData where id > :oldStart and id <= :oldEnd");
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "JPG");
+
+    qint32 I_newEnd = newEnd * 10000;
+    qint32 I_oldStart = oldStart * 10000;
+    qint32 I_oldEnd = oldEnd * 10000;
+
+    query.bindValue(":newId", I_newEnd);
+    query.bindValue(":newData", ba);
+    query.bindValue(":oldStart", I_oldStart);
+    query.bindValue(":oldEnd", I_oldEnd);
+    query.exec();
+}
+
+
+
+void DbHandler::deleteLastImage()
+{
+    QSqlQuery query(database);
+    query.exec("select * from bigImages");
+    if (query.last())
+    {
+        qint32 depth = query.value("id").toInt();
+        query.prepare("delete from bigImages where id = :id");
+        query.bindValue(":id", depth);
+        query.exec();
+    }
+}
+
+
+// 删除照片 同时修改之后的所有id
+void DbHandler::deleteImage(qreal start, qreal end)
+{
+    QSqlQuery query(database);
+    query.prepare("select * from bigImages where id > :start");
+    query.bindValue(":start", start * 10000);
+    query.exec();
+
+    qint32 I_start = start * 10000;
+    qint32 I_end = end * 10000;
+
+    if (query.next())
+    {
+        QSqlQuery query1(database);
+        query1.prepare("delete from bigImages where id > :start and id <= :end");
+        query1.bindValue(":start", I_start);
+        query1.bindValue(":end", I_end);
+        query1.exec();
+
+
+        while (query.next())
+        {
+            query1.prepare("update bigImages set id = :newId where id = :oldId");
+            query1.bindValue(":oldId", query.value("id"));
+            query1.bindValue(":newId", query.value("id").toInt()-10000);
+            query1.exec();
+        }
+    }
+}
+
+
+
+
+void DbHandler::saveItem(QUuid uuid, qint32 index, quint8 type, QString dataStr, QString remark)
 {
     QSqlQuery query(database);
     query.prepare("INSERT INTO items (uuid, number, type, data, remark) VALUES (:uuid, :number, :type, :data, :remark)");
@@ -206,7 +331,7 @@ void DbHandler::updateItemremark(QUuid uuid, QString remark)
 }
 
 
-DbHandler::IndexData DbHandler::getIndexData(quint16 index)
+DbHandler::IndexData DbHandler::getIndexData(qint32 index)
 {
     IndexData indexData;
     indexData.image = getBigImage(index);

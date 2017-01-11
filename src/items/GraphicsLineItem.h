@@ -5,9 +5,7 @@
 #include <QDebug>
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
-#include <qmath.h>
-
-#include <QGraphicsSimpleTextItem>
+#include <QtMath>
 
 #include "GraphicsScene.h"
 #include "GraphicsSettings.h"
@@ -25,18 +23,10 @@ public:
     static QPainterPath shapeFromPath(const QPainterPath&,const QPen&);
 
 
-    typedef struct
-    {
-        QPointF points[2];
-    }Data;
-
     int type() const
     {
         return Ruler;
     }
-
-    Data getData();
-    QString getContent() {return content;}
 
     QString getDataString();
     static GraphicsLineItem *loadFromString(QString data);
@@ -47,6 +37,7 @@ public:
     QString getRemark() {return remarkContent;}
     void setRemark(QString remark) {remarkContent = remark;}
 
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
@@ -54,6 +45,5 @@ protected:
 
 private:
     bool hasDrawed;
-    QString content;
     QString remarkContent;
 };

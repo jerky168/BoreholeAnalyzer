@@ -81,13 +81,6 @@ void GraphicsRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 }
 
-GraphicsRectItem::Data GraphicsRectItem::getData()
-{
-    Data data;
-    data.points[0] = this->rect().topLeft();
-    data.points[1] = this->rect().bottomRight();
-    return data;
-}
 
 QString GraphicsRectItem::getDataString()
 {
@@ -116,4 +109,5 @@ GraphicsRectItem * GraphicsRectItem::loadFromString(QString data)
     GraphicsRectItem *item = new GraphicsRectItem(QRectF(pos1, pos2));
     return item;
 }
+
 

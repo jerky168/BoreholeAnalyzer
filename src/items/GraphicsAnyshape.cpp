@@ -2,8 +2,7 @@
 
 GraphicsAnyshape::GraphicsAnyshape(QPointF pos, QGraphicsItem *parent) :
     QGraphicsPolygonItem(parent),
-    hasDrawed(false),
-    content(QString())
+    hasDrawed(false)
 {
     addPoint(pos);
 
@@ -48,8 +47,8 @@ void GraphicsAnyshape::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
         hasDrawed = true;
         GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-        content = QString::number(calcArea(), 'f', 2).append("cm2");
-        scene->itemFinished(content);
+        //content = QString::number(calcArea(), 'f', 2).append("cm2");
+        scene->itemFinished(QString());
 
         return;
     }
@@ -125,18 +124,6 @@ void GraphicsAnyshape::clearPoints()
 }
 
 
-GraphicsAnyshape::Data GraphicsAnyshape::getData()
-{
-    Data data = {this->polygon()};
-    return data;
-}
-
-
-QString GraphicsAnyshape::getContent()
-{
-    return content;
-}
-
 QString GraphicsAnyshape::getDataString()
 {
     QString data = QString::number(this->polygon().count());
@@ -171,3 +158,6 @@ GraphicsAnyshape * GraphicsAnyshape::loadFromString(QString data)
 
     return item;
 }
+
+
+

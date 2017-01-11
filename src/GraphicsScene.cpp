@@ -1128,3 +1128,4 @@ qreal GraphicsScene::getItemDepth(QGraphicsItem *item)
 
     return depth;
 }
+

@@ -6,7 +6,6 @@
 
 #include "GraphicsSettings.h"
 #include "GraphicsScene.h"
-
 #include "type.h"
 
 class GraphicsAnyshape : public QGraphicsPolygonItem
@@ -15,18 +14,10 @@ public:
     GraphicsAnyshape(QPointF pos, QGraphicsItem *parent = Q_NULLPTR);
     ~GraphicsAnyshape();
 
-    typedef struct
-    {
-        QPolygonF polygon;
-    }Data;
-
     int type() const
     {
         return AnyShape;
     }
-    Data getData();
-
-    QString getContent();
 
     QString getDataString();
     static GraphicsAnyshape *loadFromString(QString data);
@@ -46,7 +37,6 @@ protected:
 
 private:
     bool hasDrawed;
-    QString content;
 
     QString remarkContent;
 

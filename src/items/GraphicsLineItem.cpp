@@ -150,14 +150,6 @@ bool GraphicsLineItem::sceneEvent(QEvent *event)
 }
 
 
-GraphicsLineItem::Data GraphicsLineItem::getData()
-{
-    Data data;
-    data.points[0] = this->line().p1();
-    data.points[1] = this->line().p2();
-    return data;
-}
-
 
 QString GraphicsLineItem::getDataString()
 {
@@ -186,4 +178,5 @@ GraphicsLineItem *GraphicsLineItem::loadFromString(QString data)
     GraphicsLineItem *item = new GraphicsLineItem(QLineF(pos1, pos2));
     return item;
 }
+
 

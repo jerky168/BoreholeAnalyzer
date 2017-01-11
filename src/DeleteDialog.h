@@ -13,11 +13,10 @@ class DeleteDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DeleteDialog(qreal currentStart, qreal currentEnd, QWidget *parent = Q_NULLPTR);
+    explicit DeleteDialog(qreal totalStart, qreal totalEnd, qreal currentStart, qreal currentEnd, QWidget *parent = Q_NULLPTR);
     ~DeleteDialog();
 
-public slots:
-
+    QPointF getSection();
 
 private slots:
     void on_deleteStartSBox_valueChanged(double value);

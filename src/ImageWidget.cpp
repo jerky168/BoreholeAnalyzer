@@ -2,9 +2,9 @@
 #include "ui_imagewidget.h"
 
 
-quint16 ImageWidget::lastIndex = 0;
-quint16 ImageWidget::index = 0;
-quint16 ImageWidget::maxIndex = 0;
+qint32 ImageWidget::lastIndex = 0;
+qint32 ImageWidget::index = 0;
+qint32 ImageWidget::maxIndex = 0;
 
 
 
@@ -23,7 +23,7 @@ ImageWidget::~ImageWidget()
 
 void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
 {
-    maxIndex = prjInfo.endHeight;
+    maxIndex = qCeil(prjInfo.endHeight) - 1;
     index = 0;
     lastIndex = 0;
     emit sigSwitchImage(index);
@@ -33,7 +33,7 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
     ui->currentPartEdit->setText(QString::number(index+1));
     ui->totalLengthEdit->setText(QString::number(prjInfo.endHeight - prjInfo.startHeight, 'f', 3).append(" m"));
-    ui->totalPartEdit->setText(QString::number(maxIndex+1));
+    ui->totalPartEdit->setText(QString::number(qCeil(prjInfo.endHeight)));
 
     ui->switchEdit->setEnabled(true);
     ui->switchButton->setEnabled(true);
@@ -88,7 +88,7 @@ void ImageWidget::on_nextButton_clicked()
     lastIndex = index;
     index++;
     emit sigSwitchImage(index);
-    ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
+    ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
     ui->currentPartEdit->setText(QString::number(index+1));
 }
 
@@ -102,7 +102,7 @@ void ImageWidget::on_switchButton_clicked()
     if (ok && index >= 0 && index <= maxIndex)
     {
         emit sigSwitchImage(index);
-        ui->currentDepthEdit->setText(QString::number(index+1).append("m"));
+        ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
         ui->currentPartEdit->setText(QString::number(index+1));
     }
     else
@@ -110,7 +110,7 @@ void ImageWidget::on_switchButton_clicked()
         index = lastIndex;
         QMessageBox messageBox(QMessageBox::Warning,
                                tr("Input error"),
-                               tr("Please input a valid index! ") + "(0-" + QString::number(maxIndex+1) + ")",
+                               tr("Please input a valid index! ") + "(1-" + QString::number(maxIndex+1) + ")",
                                QMessageBox::Ok,
                                this
                                );
@@ -120,3 +120,19 @@ void ImageWidget::on_switchButton_clicked()
 
     ui->switchEdit->clear();
 }
+
+
+void ImageWidget::setIndex(qint32 newIndex)
+{
+    if (newIndex < 0 || newIndex > maxIndex)
+        return;
+
+    index = newIndex;
+    lastIndex = newIndex;
+
+    ui->currentDepthEdit->setText(QString::number(index+1).append(" m"));
+    ui->currentPartEdit->setText(QString::number(index+1));
+
+    emit sigSwitchImage(index);
+}
+

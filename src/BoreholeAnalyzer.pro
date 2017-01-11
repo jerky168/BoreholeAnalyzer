@@ -38,12 +38,12 @@ SOURCES +=  main.cpp\
             items/GraphicsAnyshape.cpp \
             items/GraphicsOccurance.cpp \
             items/GraphicsLineItem.cpp \
-            items/GraphicsTextItem.cpp \
-    ShiftDialog.cpp \
-    ExportImageDialog.cpp \
-    TextInputDialog.cpp \
-    CopyAndPasteDialog.cpp \
-    DeleteDialog.cpp
+            items/GraphicsTextItem.cpp \ 
+            ShiftDialog.cpp \
+            ExportImageDialog.cpp \
+            TextInputDialog.cpp \
+            CopyAndPasteDialog.cpp \
+            DeleteDialog.cpp
 
 
 
@@ -65,11 +65,13 @@ HEADERS  += mainwindow.h \
             items/GraphicsLineItem.h \
             items/type.h \
             app.h \
-    ShiftDialog.h \
-    ExportImageDialog.h \
-    TextInputDialog.h \
-    CopyAndPasteDialog.h \
-    DeleteDialog.h
+            ShiftDialog.h \
+            ExportImageDialog.h \
+            TextInputDialog.h \
+            CopyAndPasteDialog.h \
+            DeleteDialog.h
+
+
 
 
 INCLUDEPATH += items
@@ -79,11 +81,11 @@ FORMS    += mainwindow.ui \
             DefectWidget.ui \
             ImageWidget.ui \
             AboutDialog.ui \
-    ShiftDialog.ui \
-    ExportImageDialog.ui \
-    TextInputDialog.ui \
-    CopyAndPasteDialog.ui \
-    DeleteDialog.ui
+            ShiftDialog.ui \
+            ExportImageDialog.ui \
+            TextInputDialog.ui \
+            CopyAndPasteDialog.ui \
+            DeleteDialog.ui
 
 
 RESOURCES += \

@@ -115,50 +115,6 @@ void GraphicsTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 
 
-//void GraphicsTextItem::showTextDialog(QFont font)
-//{
-//    TextDialog *dialog = new TextDialog(font);
-//    dialog->setText(this->text());
-//    dialog->setWindowTitle("输入文本");
-//    dialog->exec();
-
-//    if (dialog->getCloseFlag())
-//    {
-//        textDialogCloseFlag = true;
-//    }
-//    else
-//    {
-//        delete dialog;
-//        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-//        scene->itemAborted();
-//        return;
-//    }
-
-//    if (!dialog->getText().isEmpty())
-//    {
-//        this->setText(dialog->getText());
-//    }
-//    else
-//    {
-//        delete dialog;
-//        GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-//        scene->itemAborted();
-//        return;
-//    }
-
-//    this->setFont(dialog->getFont());
-//    delete dialog;
-
-//    GraphicsScene *scene = dynamic_cast<GraphicsScene *>(this->scene());
-//    scene->itemFinished(text());
-//}
-
-
-
-
-
-
-
 
 
 QString GraphicsTextItem::getDataString()
@@ -185,4 +141,5 @@ GraphicsTextItem * GraphicsTextItem::loadFromString(QString data)
 
     return item;
 }
+
 

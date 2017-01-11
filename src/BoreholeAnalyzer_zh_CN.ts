@@ -24,7 +24,7 @@
     <message>
         <location filename="CopyAndPasteDialog.ui" line="46"/>
         <location filename="CopyAndPasteDialog.ui" line="80"/>
-        <location filename="CopyAndPasteDialog.ui" line="117"/>
+        <location filename="CopyAndPasteDialog.ui" line="120"/>
         <source>-</source>
         <translation type="unfinished"></translation>
     </message>
@@ -35,13 +35,13 @@
     </message>
     <message>
         <location filename="CopyAndPasteDialog.ui" line="104"/>
-        <location filename="CopyAndPasteDialog.ui" line="127"/>
-        <location filename="CopyAndPasteDialog.ui" line="144"/>
+        <location filename="CopyAndPasteDialog.ui" line="130"/>
+        <location filename="CopyAndPasteDialog.ui" line="150"/>
         <source> m</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="CopyAndPasteDialog.ui" line="134"/>
+        <location filename="CopyAndPasteDialog.ui" line="140"/>
         <source>插入范围：</source>
         <translation type="unfinished"></translation>
     </message>
@@ -56,14 +56,52 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="CopyAndPasteDialog.cpp" line="10"/>
+        <location filename="CopyAndPasteDialog.cpp" line="24"/>
+        <location filename="CopyAndPasteDialog.cpp" line="75"/>
         <source>Ok</source>
         <translation type="unfinished">确认</translation>
     </message>
     <message>
-        <location filename="CopyAndPasteDialog.cpp" line="11"/>
+        <location filename="CopyAndPasteDialog.cpp" line="25"/>
+        <location filename="CopyAndPasteDialog.cpp" line="64"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="54"/>
+        <source>Confirm</source>
+        <translation type="unfinished">确认</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="55"/>
+        <source>The section selected is: </source>
+        <translation type="unfinished">被选择的区间是：</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="58"/>
+        <source>The depth to insert selected section is: </source>
+        <oldsource>The point to insert selected section is: </oldsource>
+        <translation type="unfinished">将要插入选中的区间的深度是： </translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="60"/>
+        <source>Are you sure to proceed?</source>
+        <translation type="unfinished">你确定继续么？</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="63"/>
+        <source>Yes</source>
+        <translation type="unfinished">是</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="71"/>
+        <source>Note</source>
+        <translation type="unfinished">提示</translation>
+    </message>
+    <message>
+        <location filename="CopyAndPasteDialog.cpp" line="72"/>
+        <source>Selected section is empty.</source>
+        <translation type="unfinished">选择的区间为空。</translation>
     </message>
 </context>
 <context>
@@ -139,72 +177,72 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.ui" line="33"/>
+        <location filename="DeleteDialog.ui" line="26"/>
         <source>总深度范围：</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.ui" line="53"/>
+        <location filename="DeleteDialog.ui" line="60"/>
         <source>当前深度范围：</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.ui" line="89"/>
-        <location filename="DeleteDialog.ui" line="112"/>
-        <location filename="DeleteDialog.ui" line="135"/>
+        <location filename="DeleteDialog.ui" line="46"/>
+        <location filename="DeleteDialog.ui" line="80"/>
+        <location filename="DeleteDialog.ui" line="120"/>
         <source>-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.ui" line="26"/>
+        <location filename="DeleteDialog.ui" line="94"/>
         <source>删除深度范围：</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.ui" line="43"/>
-        <location filename="DeleteDialog.ui" line="63"/>
+        <location filename="DeleteDialog.ui" line="104"/>
+        <location filename="DeleteDialog.ui" line="130"/>
         <source> m</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="18"/>
-        <location filename="DeleteDialog.cpp" line="57"/>
+        <location filename="DeleteDialog.cpp" line="21"/>
+        <location filename="DeleteDialog.cpp" line="66"/>
         <source>Ok</source>
         <translation type="unfinished">确认</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="19"/>
-        <location filename="DeleteDialog.cpp" line="46"/>
+        <location filename="DeleteDialog.cpp" line="22"/>
+        <location filename="DeleteDialog.cpp" line="55"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="38"/>
+        <location filename="DeleteDialog.cpp" line="47"/>
         <source>Confirm</source>
         <translation type="unfinished">确认</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="39"/>
+        <location filename="DeleteDialog.cpp" line="48"/>
         <source>The section to be deleted is: </source>
         <translation type="unfinished">将要删除的区间是：</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="42"/>
+        <location filename="DeleteDialog.cpp" line="51"/>
         <source>Are you sure to delete?</source>
         <translation type="unfinished">确定删除么？</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="45"/>
+        <location filename="DeleteDialog.cpp" line="54"/>
         <source>Yes</source>
         <translation type="unfinished">是</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="53"/>
+        <location filename="DeleteDialog.cpp" line="62"/>
         <source>Note</source>
         <translation type="unfinished">提示</translation>
     </message>
     <message>
-        <location filename="DeleteDialog.cpp" line="54"/>
+        <location filename="DeleteDialog.cpp" line="63"/>
         <source>Delete section is empty.</source>
         <translation type="unfinished">删除区间为空。</translation>
     </message>
@@ -1134,14 +1172,20 @@
         <translation type="unfinished">备注</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="867"/>
+        <location filename="mainwindow.cpp" line="927"/>
+        <source>Image is processing...</source>
+        <translation type="unfinished">图片处理中...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="997"/>
         <source>Image is shifting...</source>
         <translatorcomment>处理中...</translatorcomment>
         <translation type="unfinished">图像偏移中...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="474"/>
-        <location filename="mainwindow.cpp" line="868"/>
+        <location filename="mainwindow.cpp" line="928"/>
+        <location filename="mainwindow.cpp" line="998"/>
         <source>In progress...</source>
         <translation type="unfinished">处理中...</translation>
     </message>

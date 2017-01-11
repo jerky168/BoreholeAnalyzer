@@ -103,6 +103,9 @@
      <property name="suffix">
       <string> m</string>
      </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
     </widget>
    </item>
    <item row="2" column="2">
@@ -126,6 +129,9 @@
      <property name="suffix">
       <string> m</string>
      </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
     </widget>
    </item>
    <item row="3" column="0">
@@ -143,6 +149,9 @@
      <property name="suffix">
       <string> m</string>
      </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
     </widget>
    </item>
    <item row="4" column="0" colspan="4">
@@ -159,22 +168,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>CopyAndPasteDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>

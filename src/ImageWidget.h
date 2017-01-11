@@ -1,8 +1,10 @@
 #pragma once
 
+
 #include <QWidget>
 #include <QMessageBox>
 #include "DbHandler.h"
+#include <QtMath>
 
 namespace Ui {
 class ImageWidget;
@@ -19,7 +21,13 @@ public:
     void cancelSwitch();
 
 
-    static quint16 lastIndex, index, maxIndex;
+    static qint32 lastIndex, index, maxIndex;
+
+
+    static bool isStart() {return (index == 0);}
+    static bool isEnd() {return (index == maxIndex);}
+
+    void setIndex(qint32 newIndex);
 
 
 public slots:
@@ -38,7 +46,7 @@ private:
 
 
 signals:
-    void sigSwitchImage(quint16 index);
+    void sigSwitchImage(qint32 index);
 
 };
 
