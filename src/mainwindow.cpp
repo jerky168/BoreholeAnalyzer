@@ -861,9 +861,60 @@ void MainWindow::on_actionCopyAndPaste_triggered()
     CopyAndPasteDialog dialog(totalStart, totalEnd, currentStart, currentEnd, this);
     if (QDialog::Accepted == dialog.exec())
     {
-//        qDebug() << dialog.getSection() << dialog.getDepth();
-//        DbHandler::BigImage bigImage = handler->getBigImage(ImageWidget::index);
-//        qDebug() << bigImage.pixmap.width() << bigImage.pixmap.height();
+        qint32 currentIndex = ImageWidget::index;
+        qint32 endIndex = ImageWidget::maxIndex;
+
+        DbHandler::BigImage bigImage = handler->getBigImage(currentIndex);
+        qreal copyDepth = dialog.getSection().y() - dialog.getSection().x();
+        qreal currentDepth = bigImage.end - bigImage.start;
+        qint32 startHeight = bigImage.pixmap.height() * (dialog.getSection().x() - qFloor(dialog.getSection().x())) / currentDepth;
+        qint32 endHeight = bigImage.pixmap.height() * (dialog.getSection().y() - qFloor(dialog.getSection().y())) / currentDepth;
+        if (0 == endHeight)
+            endHeight = bigImage.pixmap.height();
+
+        QImage copyImage(bigImage.pixmap.width(), endHeight-startHeight, QImage::Format_RGB32);
+        QPainter painter(&copyImage);
+        painter.drawImage(copyImage.rect(), bigImage.pixmap.toImage(),
+                          QRect(startHeight, 0, bigImage.pixmap.width(), endHeight - startHeight));
+
+
+
+        qreal insertDepth = dialog.getDepth();
+        qint32 insertIndex = qFloor(insertDepth);
+        // 如果复制了整个页面 且在节点粘贴
+        if (copyDepth >= 1 && insertDepth == insertIndex)
+        {
+            handler->insertImage(insertIndex, copyImage);
+            emit updatePrjInfo(handler->getPrjInfo());
+            ui->imageWidget->setIndex(currentIndex);
+            return;
+        }
+
+        DbHandler::BigImage insertBigImage = handler->getBigImage(insertIndex);
+        qreal afterDepth = insertBigImage.end - insertBigImage.start + copyDepth;
+
+        if (afterDepth <= 1)
+        {
+            qint32 realHeight = insertBigImage.pixmap.height() / (insertBigImage.end - insertBigImage.start);
+            qint32 startHeight = insertBigImage.pixmap.height() * (insertDepth - insertIndex) / (insertBigImage.end - insertBigImage.start);
+
+            QImage newImage(insertBigImage.pixmap.width(), realHeight * afterDepth, QImage::Format_RGB32);
+            QPainter painter(&newImage);
+            painter.drawImage(QRect(0, 0, newImage.width(), startHeight),
+                              insertBigImage.pixmap.toImage(),
+                              QRect(0, 0, newImage.width(), startHeight));
+            painter.drawImage(QRect(0, startHeight, newImage.width(), copyDepth * realHeight),
+                              copyImage);
+            painter.drawImage(QRect(0, startHeight + copyDepth * realHeight, newImage.width(), insertBigImage.pixmap.height() - (startHeight + copyDepth * realHeight)),
+                              insertBigImage.pixmap.toImage(),
+                              QRect(0, startHeight, newImage.width(), insertBigImage.pixmap.height() - startHeight));
+            handler->updateImage(insertIndex, insertIndex+1, insertIndex, (qreal)insertIndex+afterDepth, newImage);
+            emit updatePrjInfo(handler->getPrjInfo());
+            ui->imageWidget->setIndex(currentIndex);
+            return;
+        }
+
+
     }
 }
 
@@ -886,7 +937,6 @@ void MainWindow::on_actionDelete_triggered()
         DbHandler::BigImage bigImage = handler->getBigImage(currentIndex);
         qreal deleteDepth = dialog.getSection().y() - dialog.getSection().x();
         qreal currentDepth = bigImage.end - bigImage.start;
-
 
         // 如果全部删除
         if (deleteDepth >= currentDepth)

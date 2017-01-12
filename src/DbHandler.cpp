@@ -190,6 +190,39 @@ void DbHandler::appendImage(qreal start, qreal end, QImage image)
     query.exec();
 }
 
+void DbHandler::insertImage(qint32 index, QImage image)
+{
+    QSqlQuery query(database);
+    query.prepare("select * from bigImages where id >= :id order by id desc");
+
+    qint32 I_index = (index+1) * 10000;
+
+    query.bindValue(":id", I_index);
+    query.exec();
+
+    while (query.next())
+    {
+        QSqlQuery query1(database);
+        query1.prepare("update bigImages set id = :newId, data = :data where id = :oldId");
+        query1.bindValue(":newId", query.value("id").toInt() + 10000);
+        query1.bindValue(":data", query.value("data"));
+        query1.bindValue(":oldId", query.value("id"));
+        query1.exec();
+    }
+
+    query.prepare("insert into bigImages (id, data) values (:id, :data)");
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "JPG");
+
+    query.bindValue(":id", I_index);
+    query.bindValue(":data", ba);
+    query.exec();
+}
+
+
 void DbHandler::updateImage(qreal start, qreal end, QImage image)
 {
     QSqlQuery query(database);
@@ -294,6 +327,9 @@ void DbHandler::deleteImage(qreal start, qreal end)
         }
     }
 }
+
+
+
 
 
 

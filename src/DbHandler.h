@@ -1,5 +1,4 @@
-#ifndef DBHANDLER_H
-#define DBHANDLER_H
+#pragma once
 
 #include <QObject>
 
@@ -78,6 +77,8 @@ public:
     void setBigImage(qreal start, qreal end, QImage image);
 
     void appendImage(qreal start, qreal end, QImage image);
+    void insertImage(qint32 index, QImage image);
+
     void deleteLastImage();
     void deleteImage(qreal start, qreal end);
 
@@ -119,4 +120,4 @@ private:
 
 };
 
-#endif // DBHANDLER_H
+
