@@ -18,13 +18,14 @@ public:
     void setIsDrawing(bool isDrawing);
     void setFont(QFont);
     void setColor(QColor color);
-    void setRatio(qreal ratio);
+    void setRatio(qreal xRatio, qreal yRatio);
 
     inline const QColor& getPenColor(){return penColor;}
     inline int getPenWidth(){return penWidth;}
     inline bool getIsDrawingFlag(){return isDrawingFlag;}
     inline QFont getFont() {return penFont;}
-    inline qreal getRatio() {return imageRatio;}
+    inline qreal getXRatio() {return imageXRatio;}
+    inline qreal getYRatio() {return imageYRatio;}
 
 protected:
     GraphicsSettings();
@@ -35,7 +36,7 @@ private:
     QFont penFont;
     QColor penColor;
 
-    qreal imageRatio;
+    qreal imageXRatio, imageYRatio;
 
 
     static GraphicsSettings* GraphicsSettingInstance;

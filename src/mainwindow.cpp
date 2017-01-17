@@ -11,11 +11,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     handler(new DbHandler(this)),
     scene(new GraphicsScene(this)),
+    actionGroupFile(new QActionGroup(this)),
     actionGroupExport(new QActionGroup(this)),
+    actionGroupGOperate(new QActionGroup(this)),
     actionGroupMode(new QActionGroup(this)),
     actionGroup2D(new QActionGroup(this)),
     actionGroup3D(new QActionGroup(this)),
     actionGroupSpin(new QActionGroup(this)),
+    actionGroupZoom(new QActionGroup(this)),
     infoDialog(new PrjInfoDialog(this))
 {
     ui->setupUi(this);
@@ -42,6 +45,13 @@ void MainWindow::createActionGroups()
     ui->menuView->addAction(ui->dockWidgetImage->toggleViewAction());
     ui->menuView->addAction(ui->dockWidgetDefect->toggleViewAction());
 
+    // add file action together
+    actionGroupFile->addAction(ui->actionSave);
+    actionGroupFile->addAction(ui->actionClose);
+    actionGroupFile->addAction(ui->actionProjectInfo);
+    actionGroupFile->setExclusive(false);
+    actionGroupFile->setEnabled(false);
+
     // add export action together
     actionGroupExport->addAction(ui->actionExportImage);
     actionGroupExport->addAction(ui->actionExportWord);
@@ -49,30 +59,45 @@ void MainWindow::createActionGroups()
     actionGroupExport->setExclusive(false);
     actionGroupExport->setEnabled(false);
 
+    // add global operation together
+    actionGroupGOperate->addAction(ui->actionCopyAndPaste);
+    actionGroupGOperate->addAction(ui->actionDelete);
+    actionGroupGOperate->addAction(ui->actionShift);
+    actionGroupGOperate->setExclusive(false);
+    actionGroupGOperate->setEnabled(false);
+
     // make the 2D view and 3D view exclusive
     actionGroupMode->addAction(ui->action2DView);
     actionGroupMode->addAction(ui->action3DView);
+    actionGroupMode->setExclusive(true);
+    actionGroupMode->setEnabled(true);
 
     // make edit action exlusive
-    //actionGroup2D->addAction(ui->actionShift);
     actionGroup2D->addAction(ui->actionSlitWidth);
     actionGroup2D->addAction(ui->actionRectangle);
     actionGroup2D->addAction(ui->actionAnyShape);
     actionGroup2D->addAction(ui->actionOccurrence);
     actionGroup2D->addAction(ui->actionTextbox);
+    actionGroup2D->setExclusive(true);
+    actionGroup2D->setEnabled(false);
 
-    // add all 3D action together
-    actionGroup3D->setExclusive(false);
+    // add all 3D action together 
     actionGroup3D->addAction(ui->actionLeftSpin);
     actionGroup3D->addAction(ui->actionRightSpin);
-
-    actionGroup2D->setEnabled(true);
+    actionGroup3D->setExclusive(false);
     actionGroup3D->setEnabled(false);
 
     // make auto spin exlusive
     actionGroupSpin->addAction(ui->actionAutoLeftSpin);
     actionGroupSpin->addAction(ui->actionAutoRightSpin);
+    actionGroupSpin->setExclusive(true);
     actionGroupSpin->setEnabled(false);
+
+    // add zoomin and zoomout together
+    actionGroupZoom->addAction(ui->actionZoomIn);
+    actionGroupZoom->addAction(ui->actionZoomOut);
+    actionGroupZoom->setExclusive(false);
+    actionGroupZoom->setEnabled(false);
 }
 
 
@@ -101,15 +126,27 @@ void MainWindow::addRecentFiles(QString filename)
     fileList.append(filename);
     if (fileList.count() > 8)
         fileList.removeFirst();
-    settings.setValue("recentFiles", QVariant(fileList));
+    settings.setValue("recentFiles", fileList);
     updateRecentFiles();
+
+    QDir dir(filename);
+    dir.cdUp();
+    settings.setValue("lastOpen", dir.absolutePath());
 }
 
 
 void MainWindow::openRecentFile()
 {
     QAction *action = (QAction *)sender();
-    openFile(action->text().section(" | ", 1, 1));
+    QFile file(action->text().section(" | ", 1, 1));
+    if (file.exists())
+        openFile(file.fileName());
+    else
+    {
+        deleteRecentFile(file.fileName());
+
+    }
+
 }
 
 void MainWindow::updateRecentFiles()
@@ -137,6 +174,16 @@ void MainWindow::clearRecentFiles()
     settings.setValue("recentFiles", QVariant());
     updateRecentFiles();
 }
+
+void MainWindow::deleteRecentFile(QString filename)
+{
+    QStringList fileList = settings.value("recentFiles").toStringList();
+    fileList.removeOne(filename);
+    settings.setValue("recentFiles", fileList);
+    updateRecentFiles();
+}
+
+
 
 // graphics view
 void MainWindow::createSceneAndView()
@@ -172,17 +219,14 @@ void MainWindow::createConnections()
     QObject::connect(scene, SIGNAL(emitTableData(QVector<GraphicsScene::TableData>)), ui->defectWidget, SLOT(updateTableData(QVector<GraphicsScene::TableData>)));
     QObject::connect(scene, SIGNAL(update3DImage(QImage,qreal,qreal)), ui->widget3D, SLOT(setImage(QImage,qreal,qreal)));
 
-    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
-    QObject::connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
-    QObject::connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
-    QObject::connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
-
     connect(ui->actionCross, SIGNAL(triggered(bool)), ui->graphicsView, SLOT(handleCrossMouse(bool)));
 
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
 
-    connect(ui->defectWidget, SIGNAL(deleteItem(int)), scene, SLOT(deleteItem(int)));
-    connect(scene, SIGNAL(deleteSaveItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+    connect(ui->defectWidget, SIGNAL(deleteItem(QUuid)), scene, SLOT(deleteItemData(QUuid)));
+    connect(ui->defectWidget, SIGNAL(updateItemRemark(QUuid,QString)), scene, SLOT(updateItemRemark(QUuid,QString)));
+    connect(scene, SIGNAL(deleteSavedItem(QUuid)), handler, SLOT(deleteItem(QUuid)));
+    connect(scene, SIGNAL(updateSavedItemRemark(QUuid,QString)), handler, SLOT(updateItemremark(QUuid,QString)));
 
 
     connect(ui->actionLeftSpin, SIGNAL(triggered()), ui->widget3D, SLOT(handleLeftSpin()));
@@ -192,10 +236,37 @@ void MainWindow::createConnections()
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->graphicsView, SLOT(handleZoomOut()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), ui->widget3D, SLOT(handleZoomOut()));
 
-    connect(this, &MainWindow::sigFileOpened, [this]() {actionGroupExport->setEnabled(true);});
-    connect(this, &MainWindow::sigFileClosed, [this]() {actionGroupExport->setEnabled(false);});
+    connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    connect(this, SIGNAL(updatePrjInfo(DbHandler::PrjInfo)), infoDialog, SLOT(updatePrjInfo(DbHandler::PrjInfo)));
+    connect(this, SIGNAL(clearPrjInfo()), ui->imageWidget, SLOT(clearPrjInfo()));
+    connect(this, SIGNAL(clearPrjInfo()), infoDialog, SLOT(clearPrjInfo()));
 
-    connect(this, SIGNAL(sigFileOpened(QString)), this, SLOT(addRecentFiles(QString)));
+    connect(this, &MainWindow::sigFileOpened,
+            [this](QString filename)
+            {
+                actionGroupFile->setEnabled(true);
+                actionGroupExport->setEnabled(true);
+                actionGroupGOperate->setEnabled(true);
+                actionGroup2D->setEnabled(true);
+                actionGroup3D->setEnabled(true);
+                actionGroupZoom->setEnabled(true);
+
+                addRecentFiles(filename);
+                setWindowTitle(filename + " - " + App_Name_CN);
+            });
+
+    connect(this, &MainWindow::sigFileClosed,
+            [this]()
+            {
+                actionGroupFile->setEnabled(false);
+                actionGroupExport->setEnabled(false);
+                actionGroupGOperate->setEnabled(false);
+                actionGroup2D->setEnabled(false);
+                actionGroup3D->setEnabled(false);
+                actionGroupZoom->setEnabled(false);
+
+                setWindowTitle(App_Name_CN);
+            });
 }
 
 
@@ -209,30 +280,12 @@ void MainWindow::openFile(QString filename)
     {
         on_actionClose_triggered();
     }
-    setWindowTitle(filename + " - " + App_Name_CN);
-
 
     if (!handler->openDatabase(filename))
         return;
 
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     emit updatePrjInfo(prjInfo);
-
-    ui->actionClose->setEnabled(true);
-    ui->actionSave->setEnabled(true);
-
-    ui->actionAnyShape->setEnabled(true);
-    ui->actionCross->setEnabled(true);
-    ui->actionRectangle->setEnabled(true);
-    ui->actionTextbox->setEnabled(true);
-    ui->actionSlitWidth->setEnabled(true);
-    ui->actionShift->setEnabled(true);
-    ui->actionOccurrence->setEnabled(true);
-
-    ui->actionZoomIn->setEnabled(true);
-    ui->actionZoomOut->setEnabled(true);
-
-    ui->actionProjectInfo->setEnabled(true);
 
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
@@ -242,37 +295,50 @@ void MainWindow::openFile(QString filename)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), Default_Folder, tr("Project file (*.ylink)"));
+    QString dir = Default_Folder;
+    if (settings.contains("lastOpen"))
+        dir = settings.value("lastOpen").toString();
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), dir, tr("Project file (*.ylink)"));
     openFile(filename);
 }
 
 void MainWindow::on_actionClose_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
     emit clearScene();
     emit clearPrjInfo();
 
-
-    setWindowTitle(App_Name_CN);
-
     if (handler->isOpened())
         handler->closeDatabase();
-
-
-    ui->actionClose->setEnabled(false);
-    ui->actionSave->setEnabled(false);
-
-    ui->actionAnyShape->setEnabled(false);
-    ui->actionCross->setEnabled(false);
-    ui->actionRectangle->setEnabled(false);
-    ui->actionTextbox->setEnabled(false);
-    ui->actionSlitWidth->setEnabled(false);
-    ui->actionShift->setEnabled(false);
-    ui->actionOccurrence->setEnabled(false);
-
-    ui->actionZoomIn->setEnabled(false);
-    ui->actionZoomOut->setEnabled(false);
-
-    ui->actionProjectInfo->setEnabled(false);
 
     QObject::disconnect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
@@ -284,70 +350,102 @@ void MainWindow::on_actionSave_triggered()
 {
     if (scene->hasNewItem())
     {
-        QMap<QString, QGraphicsItem *> items = scene->getNewItems();
-        QStringList keys = items.keys();
-        for (int i = 0; i < keys.count(); i++)
-        {
-            QUuid uuid = QUuid(keys.at(i));
-            quint16 index = ImageWidget::index;
-            QGraphicsItem *item = items.value(uuid.toString());
-            quint8 type = item->type();
-            QString dataStr;
-            switch (item->type())
-            {
-                case Angle:
-                {
-                    GraphicsAngleItem *i = dynamic_cast<GraphicsAngleItem *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-
-                case AnyShape:
-                {
-                    GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-                case Ruler:
-                {
-                    GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-                case Occurance:
-                {
-                    GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-                case Rect:
-                {
-                    GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-
-                case Text:
-                {
-                    GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
-                    dataStr = i->getDataString();
-                    break;
-                }
-
-                default:
-                {
-                    break;
-                }
-            }
-            handler->saveItem(uuid, index, type, dataStr);
-        }
-        scene->saveNewItems();
+        saveFile(ImageWidget::index);
     }
+}
+
+void MainWindow::saveFile(quint16 itemIndex)
+{
+    QMap<QString, QGraphicsItem *> items = scene->getNewItems();
+    QStringList keys = items.keys();
+    for (int i = 0; i < keys.count(); i++)
+    {
+        QUuid uuid = QUuid(keys.at(i));
+        quint16 index = itemIndex;
+        QGraphicsItem *item = items.value(uuid.toString());
+        quint8 type = item->type();
+        QString dataStr, remark;
+        switch (item->type())
+        {
+            case AnyShape:
+            {
+                GraphicsAnyshape *i = dynamic_cast<GraphicsAnyshape *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Ruler:
+            {
+                GraphicsLineItem *i = dynamic_cast<GraphicsLineItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Occurance:
+            {
+                GraphicsOccurance *i = dynamic_cast<GraphicsOccurance *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+            case Rect:
+            {
+                GraphicsRectItem *i = dynamic_cast<GraphicsRectItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+
+            case Text:
+            {
+                GraphicsTextItem *i = dynamic_cast<GraphicsTextItem *>(item);
+                dataStr = i->getDataString();
+                remark = i->getRemark();
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+        handler->saveItem(uuid, index, type, dataStr, remark);
+    }
+    scene->saveNewItems();
 }
 
 
 void MainWindow::on_actionExportImage_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
     ExportImageDialog *dialog = new ExportImageDialog(this);
     if (!dialog->exec())
     {
@@ -355,13 +453,21 @@ void MainWindow::on_actionExportImage_triggered()
         return;
     }
 
+    quint16 count = 0;
 
     if (dialog->getForm())
     {
         QString filename = dialog->getPath();
-        QImage image = scene->getSceneImage();
+        DbHandler::IndexData indexData = handler->getIndexData(ImageWidget::index);
+        QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
         image.save(filename);
-        QString str = QString(tr("Export %1 images successfully.")).arg(1);
+
+        QDir dir(dialog->getPath());
+        dir.cdUp();
+        settings.setValue("lastExportImage", dir.absolutePath());
+
+        count++;
+        QString str = QString(tr("Export %1 images successfully.")).arg(count);
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
         messageBox.exec();
@@ -371,13 +477,12 @@ void MainWindow::on_actionExportImage_triggered()
         QProgressDialog progress(tr("Exporting images..."), tr("Cancel"), 0, ImageWidget::maxIndex+1, this);
         progress.setWindowTitle(tr("In progress..."));
         progress.setModal(true);
-        progress.setAutoReset(false);
         progress.setValue(0);
         for (int i = 0; i <= ImageWidget::maxIndex; i++)
         {
             QString filename = dialog->getPath();
             DbHandler::IndexData indexData = handler->getIndexData(i);
-            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+            QImage image = GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
             switch (dialog->getIndexForm()) {
             case 0:
                 filename.replace("to-be-filled", QString::number(i+1));
@@ -396,10 +501,17 @@ void MainWindow::on_actionExportImage_triggered()
             progress.setLabelText(status);
             image.save(filename);
             progress.setValue(i+1);
+            count++;
             if (progress.wasCanceled())
                 break;
         }
-        QString str = QString(tr("Export %1 images successfully.")).arg(progress.value());
+
+        QDir dir(dialog->getPath());
+        dir.cdUp();
+        dir.cdUp();
+        settings.setValue("lastExportImage", dir.absolutePath());
+
+        QString str = QString(tr("Export %1 images successfully.")).arg(count);
         QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
         messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
         messageBox.exec();
@@ -419,7 +531,7 @@ QString MainWindow::getWordString(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
     GraphicsScene *scene = new GraphicsScene();
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
     QString str;
     QStringList strList = scene->getAllItemString();
     for (int i = 0; i < strList.count(); i++)
@@ -433,6 +545,35 @@ QString MainWindow::getWordString(quint16 index)
 
 void MainWindow::on_actionExportWord_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
 #ifdef Q_OS_WIN
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     QWord word;
@@ -516,7 +657,7 @@ void MainWindow::on_actionExportWord_triggered()
 
     word.save();
 #else
-    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+    QMessageBox::warning(this, tr("Unsupported operation"), tr("This operation is not support on this platform."));
 #endif
 }
 
@@ -524,6 +665,35 @@ void MainWindow::on_actionExportWord_triggered()
 
 void MainWindow::on_actionExportExcel_triggered()
 {
+    if (scene->hasNewItem())
+    {
+        QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+        messageBox.setDefaultButton(QMessageBox::Cancel);
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
+        messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+        switch(messageBox.exec())
+        {
+            case QMessageBox::Yes:
+            {
+                on_actionSave_triggered();
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                return;
+            }
+            default:
+                break;
+        }
+    }
+
 #ifdef Q_OS_WIN
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -547,36 +717,42 @@ void MainWindow::on_actionExportExcel_triggered()
 
     quint32 itemCount = 2;
     QAxObject *range = worksheet->querySubObject("Cells(int,int)", 1, 1);
-    range->dynamicCall("SetValue(const QString&)", tr("index"));
-    range->setProperty("HorizontalAlignment", -4108);
+    range->dynamicCall("SetValue(const QString&)", tr("Serial number"));
     range = worksheet->querySubObject("Cells(int,int)", 1, 2);
-    range->dynamicCall("SetValue(const QString&)", tr("type"));
+    range->dynamicCall("SetValue(const QString&)", tr("Index"));
     range->setProperty("HorizontalAlignment", -4108);
     range = worksheet->querySubObject("Cells(int,int)", 1, 3);
-    range->dynamicCall("SetValue(const QString&)", tr("data1"));
+    range->dynamicCall("SetValue(const QString&)", tr("Type"));
     range->setProperty("HorizontalAlignment", -4108);
     range = worksheet->querySubObject("Cells(int,int)", 1, 4);
-    range->dynamicCall("SetValue(const QString&)", tr("data2"));
+    range->dynamicCall("SetValue(const QString&)", tr("Description"));
+    range->setProperty("HorizontalAlignment", -4108);
+    range = worksheet->querySubObject("Cells(int,int)", 1, 5);
+    range->dynamicCall("SetValue(const QString&)", tr("Remark"));
     range->setProperty("HorizontalAlignment", -4108);
 
 
-    for (int i = 0; i <= ImageWidget::maxIndex; i++)
+    for (int i = 0, number = 1; i <= ImageWidget::maxIndex; i++)
     {
         DbHandler::IndexData indexData = handler->getIndexData(i);
-        QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
-        for (int j = 0; j < tableDatas.count(); j++)
+        QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
+        for (int j = 0; j < tableDatas.count(); j++, number++)
         {
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 1);
-            range->dynamicCall("SetValue(const QString&)", QString::number(i+1));
+            range->dynamicCall("SetValue(const QString&)", QString::number(number));
             range->setProperty("HorizontalAlignment", -4108);
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 2);
-            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).type);
+            range->dynamicCall("SetValue(const QString&)", QString::number(i+1));
             range->setProperty("HorizontalAlignment", -4108);
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 3);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).type);
+            range->setProperty("HorizontalAlignment", -4108);
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 4);
             range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 0, 0));
             range->setProperty("HorizontalAlignment", -4131);
-            range = worksheet->querySubObject("Cells(int,int)", itemCount, 4);
-            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 1).replace("\n", "  "));
+            range = worksheet->querySubObject("Cells(int,int)", itemCount, 5);
+            range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).remark);
+            //range->dynamicCall("SetValue(const QString&)", tableDatas.at(j).data.section('\n', 1).replace("\n", "  "));
             range->setProperty("HorizontalAlignment", -4131);
             itemCount++;
         }
@@ -592,7 +768,7 @@ void MainWindow::on_actionExportExcel_triggered()
 
     CoUninitialize();
 #else
-    QMessageBox::warning(this, "unsupported operation", "This operation is not support on this platform");
+    QMessageBox::warning(this, tr("Unsupported operation"), tr("This operation is not support on this platform."));
 #endif
 }
 
@@ -609,21 +785,35 @@ void MainWindow::switchImage(quint16 index)
     if (scene->hasNewItem())
     {
         QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
-                               tr("You have unsaved changes, switching index will discard theses changes!"),
-                               QMessageBox::Discard | QMessageBox::Cancel, this);
+                               tr("You have unsaved changes, whether to save?"),
+                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
         messageBox.setDefaultButton(QMessageBox::Cancel);
-        messageBox.setButtonText (QMessageBox::Discard, tr("Discard"));
+        messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+        messageBox.setButtonText (QMessageBox::No, tr("No"));
         messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
-        if (QMessageBox::Cancel == messageBox.exec())
+        switch(messageBox.exec())
         {
-            ui->imageWidget->cancelSwitch();
-            return;
+            case QMessageBox::Yes:
+            {
+                saveFile(ImageWidget::lastIndex);
+                break;
+            }
+            case QMessageBox::No:
+            {
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                ui->imageWidget->cancelSwitch();
+                return;
+            }
+            default:
+                break;
         }
-
     }
 
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
 
 
@@ -765,16 +955,15 @@ void MainWindow::showStatus(QString message)
 QImage MainWindow::getSceneImage(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    return GraphicsScene::getImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
 
 
 QImage MainWindow::getPixmapImage(quint16 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, index2Item(indexData));
+    return GraphicsScene::getPixmapImageFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
 }
-
 
 
 
@@ -786,18 +975,13 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
         QUuid uuid = indexData.itemDatas.at(i).uuid;
         qint32 type = indexData.itemDatas.at(i).type;
         QString dataStr = indexData.itemDatas.at(i).dataStr;
+        QString remark = indexData.itemDatas.at(i).remark;
         switch (type)
         {
-            case Angle:
-            {
-                GraphicsAngleItem *item = GraphicsAngleItem::loadFromString(dataStr);
-                item->setFinished();
-                items.insert(uuid.toString(), item);
-                break;
-            }
             case AnyShape:
             {
                 GraphicsAnyshape *item = GraphicsAnyshape::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -805,6 +989,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Ruler:
             {
                 GraphicsLineItem *item = GraphicsLineItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -812,6 +997,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Occurance:
             {
                 GraphicsOccurance *item = GraphicsOccurance::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -819,6 +1005,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Rect:
             {
                 GraphicsRectItem *item = GraphicsRectItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -826,6 +1013,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
             case Text:
             {
                 GraphicsTextItem *item = GraphicsTextItem::loadFromString(dataStr);
+                item->setRemark(remark);
                 item->setFinished();
                 items.insert(uuid.toString(), item);
                 break;
@@ -855,3 +1043,18 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 //        }
 //    }
 //}
+
+
+void MainWindow::on_actionCopyAndPaste_triggered()
+{
+//    CopyAndPasteDialog *dialog = new CopyAndPasteDialog();
+//    dialog->exec();
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    DeleteDialog *dialog = new DeleteDialog(ImageWidget::index, ImageWidget::index + 1, this);
+    dialog->exec();
+}
+
+

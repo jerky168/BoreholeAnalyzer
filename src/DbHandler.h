@@ -28,7 +28,7 @@ public:
         bool isUp2Down;
         qreal startHeight;
         qreal endHeight;
-        qint32 diameter;
+        qreal diameter;
         QString projectName;
         QString projectTime;
         QString projectSite;
@@ -46,12 +46,11 @@ public:
 
 
     typedef struct {
+        qreal diameter;
         qreal start;
         qreal end;
         QPixmap pixmap;
     }BigImage;
-
-
 
 
 
@@ -82,6 +81,7 @@ public:
         QUuid uuid;
         qint32 type;
         QString dataStr;
+        QString remark;
     }ItemData;
 
     typedef struct {
@@ -90,13 +90,15 @@ public:
     }IndexData;
 
 
-    void saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr);
+    void saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr, QString remark);
     IndexData getIndexData(quint16 index);
 
 public slots:
     void setPrjInfo(DbHandler::PrjInfo prjInfo);
 
     void deleteItem(QUuid uuid);
+
+    void updateItemremark(QUuid uuid, QString remark);
 
 private:
     QSqlDatabase database;

@@ -23,8 +23,10 @@ void DefectWidget::initModel()
     model = new QStandardItemModel(0, 3, this);
     headerView = new QHeaderView(Qt::Horizontal);
 
+    connect(model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(itemChanged(QStandardItem*)));
+
     QStringList headers;
-    headers << tr("Type") << tr("Data1") << tr("Data2");
+    headers << tr("Type") << tr("Description") << tr("Remark");
     model->setHorizontalHeaderLabels(headers);
     ui->tableView->setModel(model);
 }
@@ -40,6 +42,8 @@ void DefectWidget::showRealInfo(QString info)
 
 void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
 {
+    datas = tableDatas;
+
     model->removeRows(0, model->rowCount());
     for (int i = 0; i < tableDatas.count(); i++)
     {
@@ -54,7 +58,9 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
         QString data = tableDatas.at(i).data;
         item = new QStandardItem(data.section('\n', 0, 0));
         items.append(item);
-        item = new QStandardItem(data.section('\n', 1).replace("\n", "  "));
+//        item = new QStandardItem(data.section('\n', 1).replace("\n", "  "));
+//        items.append(item);
+        item = new QStandardItem(tableDatas.at(i).remark);
         items.append(item);
         model->appendRow(items);
 
@@ -69,6 +75,8 @@ void DefectWidget::updateTableData(QVector<GraphicsScene::TableData> tableDatas)
 
 void DefectWidget::clearTableData()
 {
+    datas.clear();
+
     model->removeRows(0, model->rowCount());
     update();
 
@@ -80,5 +88,12 @@ void DefectWidget::on_deleteButton_clicked()
 {
     int row = ui->tableView->currentIndex().row();
     if (row >= 0)
-        emit deleteItem(row);
+        emit deleteItem(datas.at(row).uuid);
+}
+
+
+void DefectWidget::itemChanged(QStandardItem *item)
+{
+    if (item->index().column() == 2)
+        emit updateItemRemark(datas.at(item->index().row()).uuid, item->text());
 }

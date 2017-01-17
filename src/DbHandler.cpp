@@ -63,7 +63,11 @@ bool DbHandler::openDatabase(QString filepath)
 
     if (!query.exec("select * from items"))
     {
-        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, type INT NOT NULL, data TEXT);");
+        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, type INT NOT NULL, data TEXT, remark TEXT);");
+    }
+    else if (!query.exec("select remark from bigImages"))
+    {
+        query.exec("alter table items add remark TEXT");
     }
 
     return true;
@@ -94,7 +98,7 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
         prjInfo.isUp2Down = true;
     else
         prjInfo.isUp2Down = false;
-    prjInfo.diameter = query.value("diameter").toInt();
+    prjInfo.diameter = query.value("diameter").toInt() / 10000.0;
     prjInfo.startHeight = query.value("startHeight").toDouble() / 10000;
     prjInfo.projectName = query.value("projectName").toString();
     prjInfo.projectTime = query.value("date").toString();
@@ -146,6 +150,10 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
     QByteArray imgData = query.value(1).toByteArray();
     bigImage.pixmap.loadFromData(imgData);
 
+    query.exec("select diameter from ProjectInfo");
+    query.first();
+    bigImage.diameter = query.value("diameter").toInt() / 10000.0;
+
     return bigImage;
 }
 
@@ -165,14 +173,15 @@ void DbHandler::setBigImage(qreal start, qreal end, QImage image)
 
 
 
-void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr)
+void DbHandler::saveItem(QUuid uuid, quint16 index, quint8 type, QString dataStr, QString remark)
 {
     QSqlQuery query(database);
-    query.prepare("INSERT INTO items (uuid, number, type, data) VALUES (:uuid, :number, :type, :data)");
+    query.prepare("INSERT INTO items (uuid, number, type, data, remark) VALUES (:uuid, :number, :type, :data, :remark)");
     query.bindValue(":uuid", uuid.toString());
     query.bindValue(":number", index);
     query.bindValue(":type", type);
     query.bindValue(":data", dataStr);
+    query.bindValue(":remark", remark);
     query.exec();
 }
 
@@ -187,13 +196,23 @@ void DbHandler::deleteItem(QUuid uuid)
 }
 
 
+void DbHandler::updateItemremark(QUuid uuid, QString remark)
+{
+    QSqlQuery query(database);
+    query.prepare("update items set remark = :remark where uuid = :uuid");
+    query.bindValue(":remark", remark);
+    query.bindValue(":uuid", uuid.toString());
+    query.exec();
+}
+
+
 DbHandler::IndexData DbHandler::getIndexData(quint16 index)
 {
     IndexData indexData;
     indexData.image = getBigImage(index);
 
     QSqlQuery query(database);
-    query.prepare("SELECT uuid, type, data FROM items WHERE number = :number");
+    query.prepare("SELECT * FROM items WHERE number = :number");
     query.bindValue(":number", index);
     query.exec();
 
@@ -203,6 +222,7 @@ DbHandler::IndexData DbHandler::getIndexData(quint16 index)
         itemData.uuid = QUuid(query.value("uuid").toString());
         itemData.type = query.value("type").toInt();
         itemData.dataStr = query.value("data").toString();
+        itemData.remark = query.value("remark").toString();
         indexData.itemDatas.append(itemData);
     }
 

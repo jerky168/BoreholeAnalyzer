@@ -5,8 +5,7 @@
 
 #include "GraphicsScene.h"
 #include "GraphicsSettings.h"
-#include "TextDialog.h"
-
+#include "TextInputDialog.h"
 #include "type.h"
 
 class GraphicsTextItem : public QGraphicsSimpleTextItem
@@ -15,34 +14,26 @@ public:
     GraphicsTextItem(const QPointF& position, const QString& text = QString(), QGraphicsItem *parent = Q_NULLPTR);
     ~GraphicsTextItem();
 
-    bool getTextDialogCloseFlag();
-
-
     int type() const
     {
         return Text;
     }
 
-    typedef struct
-    {
-        QPointF point;
-        QString content;
-    }Data;
-    Data getData();
-
-
     QString getDataString();
     static GraphicsTextItem *loadFromString(QString data);
-
     void setFinished() {hasDrawed = true;}
 
+
+    QString getRemark() {return remarkContent;}
+    void setRemark(QString remark) {remarkContent = remark;}
+
 protected:
-    //bool sceneEvent(QEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     bool hasDrawed;
+    TextInputDialog::Color currentColor;
+    QString remarkContent;
 
-    void showTextDialog(QFont font);
-    bool textDialogCloseFlag;
 };

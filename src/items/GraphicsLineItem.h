@@ -43,6 +43,10 @@ public:
 
     void setFinished() {hasDrawed = true;}
 
+
+    QString getRemark() {return remarkContent;}
+    void setRemark(QString remark) {remarkContent = remark;}
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
@@ -51,5 +55,5 @@ protected:
 private:
     bool hasDrawed;
     QString content;
-
+    QString remarkContent;
 };

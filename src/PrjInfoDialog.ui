@@ -128,16 +128,16 @@
       <string> mm</string>
      </property>
      <property name="minimum">
-      <number>100</number>
+      <number>10</number>
      </property>
      <property name="maximum">
-      <number>10000</number>
+      <number>1000</number>
      </property>
      <property name="singleStep">
-      <number>100</number>
+      <number>10</number>
      </property>
      <property name="value">
-      <number>100</number>
+      <number>10</number>
      </property>
     </widget>
    </item>

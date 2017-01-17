@@ -1,7 +1,10 @@
 #pragma once
 
 #include <QDialog>
-
+#include <QPushButton>
+#include "app.h"
+#include <QFile>
+#include <QDebug>
 
 namespace Ui {
 class AboutDialog;

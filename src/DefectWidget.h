@@ -37,13 +37,18 @@ private:
     QStandardItemModel *model;
     QHeaderView *headerView;
 
+    QVector<GraphicsScene::TableData> datas;
+
     void initModel();
 
 private slots:
     void on_deleteButton_clicked();
 
+    void itemChanged(QStandardItem *item);
+
 signals:
-    void deleteItem(int row);
+    void deleteItem(QUuid uuid);
+    void updateItemRemark(QUuid uuid, QString remark);
 
 };
 
