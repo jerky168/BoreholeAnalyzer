@@ -152,7 +152,7 @@ DbHandler::BigImage DbHandler::getBigImage(quint16 index)
 
     query.exec("select diameter from ProjectInfo");
     query.first();
-    bigImage.diameter = query.value("diameter").toInt() / 10000.0;
+    bigImage.diameter = query.value("diameter").toDouble();
 
     return bigImage;
 }

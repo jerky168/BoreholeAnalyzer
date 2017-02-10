@@ -6,7 +6,7 @@
 
 #define     Major_Version_Number    "1"
 #define     Minor_Version_Number    "2"
-#define     Revision_Number         "0"
+#define     Revision_Number         "1"
 
 #define     App_Name_CN         QObject::tr("BoreholeAnalyzer")
 #define     App_Name_EN         "BoreholeAnalyzer"
