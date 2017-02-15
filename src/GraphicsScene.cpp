@@ -389,8 +389,8 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
     }
     painter->drawLines(lines);
 
-    painter->drawText(QPointF(Border - Interval, Interval + 3*Segment), QString::number(0));
-    painter->drawText(QPointF(pixmap_width, Interval + 3*Segment), QString::number(pixmap_diameter * M_PI, 'f', 3));
+//    painter->drawText(QPointF(Border - Interval, Interval + 3*Segment), QString::number(0));
+//    painter->drawText(QPointF(pixmap_width, Interval + 3*Segment), QString::number(pixmap_diameter * M_PI, 'f', 3));
 }
 
 

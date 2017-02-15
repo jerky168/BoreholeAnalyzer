@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#ifdef Q_OS_WIN
+#include "qword.h"
+#include "qexcel.h"
+#endif
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -586,11 +590,11 @@ void MainWindow::on_actionExportWord_triggered()
     word.setPageOrientation(0);
     word.setWordPageView(3);
     word.setMargin(72, 72, 54, 54);
+    word.setParagraphAlignment(0);
 
-    word.insertTable(1, 2);
-
-    word.setCellString(1, 1, tr("Name"));
-    word.setCellString(1, 2, prjInfo.projectName);
+    word.insertTable(1, 1);
+    word.setCellString(1, 1, tr("Name") + prjInfo.projectName);
+    word.setCellFontBold(1, 1, true);
     word.moveForEnd();
 
     word.insertTable(2, 6);
