@@ -98,7 +98,7 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
         prjInfo.isUp2Down = true;
     else
         prjInfo.isUp2Down = false;
-    prjInfo.diameter = query.value("diameter").toInt() / 10000.0;
+    prjInfo.diameter = query.value("diameter").toDouble();
     prjInfo.startHeight = query.value("startHeight").toDouble() / 10000;
     prjInfo.projectName = query.value("projectName").toString();
     prjInfo.projectTime = query.value("date").toString();
@@ -150,7 +150,7 @@ DbHandler::BigImage DbHandler::getBigImage(qint32 index)
 
     query.exec("select diameter from ProjectInfo");
     query.first();
-    bigImage.diameter = query.value("diameter").toInt() / 10000.0;
+    bigImage.diameter = query.value("diameter").toDouble();
 
     return bigImage;
 }
