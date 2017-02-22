@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     actionGroup3D(new QActionGroup(this)),
     actionGroupSpin(new QActionGroup(this)),
     actionGroupZoom(new QActionGroup(this)),
-    infoDialog(new PrjInfoDialog(this))
+    infoDialog(new PrjInfoDialog(this)),
+    appStatus(IDLE)
 {
     ui->setupUi(this);
 
@@ -284,6 +285,10 @@ void MainWindow::openFile(QString filename)
     if (!handler->openDatabase(filename))
         return;
 
+    // 正式打开文件
+    appStatus = OPENED;
+
+
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     emit updatePrjInfo(prjInfo);
 
@@ -333,6 +338,9 @@ void MainWindow::on_actionClose_triggered()
                 break;
         }
     }
+
+    // 正式关闭文件
+    appStatus = IDLE;
 
     emit clearScene();
     emit clearPrjInfo();
@@ -852,75 +860,140 @@ QImage shiftImage(QImage img, qreal angle)
     return img;
 }
 
+
+typedef struct{
+    bool over;
+    qreal insertDepth;
+    QImage newImage;
+    QImage overImage;
+}Images;
+
+Images getProcessedImage(QImage origin, QImage copy, qreal startDepth, qreal endDepth, qreal insertDepth, qreal copyDepth)
+{
+    qint32 insertHeight = origin.height() * (insertDepth - startDepth) / (endDepth - startDepth);
+    qint32 copyHeight = origin.height() * copyDepth / (endDepth - startDepth);
+
+    qreal end;
+    if (qFloor(endDepth) == endDepth)
+        end = endDepth;
+    else
+        end = qFloor(endDepth) + 1;
+
+    Images images;
+
+
+    QImage image(origin.width(), origin.height() + copyHeight, QImage::Format_RGB32);
+    QPainter painter(&image);
+    painter.drawImage(QRect(0, 0, origin.width(), insertHeight), origin.copy(0, 0, origin.width(), insertHeight));
+    painter.drawImage(QRect(0, insertHeight, origin.width(), copyHeight), copy);
+    painter.drawImage(QRect(0, insertHeight + copyHeight, origin.width(), image.height()-insertHeight-copyHeight),
+                      origin.copy(0, insertHeight, origin.width(), origin.height() - insertHeight));
+
+    if (endDepth + copyDepth <= end)
+    {
+        images.over = false;
+        images.insertDepth = endDepth + copyDepth;
+        images.newImage = image;
+        images.overImage = QImage();
+    }
+    else
+    {
+        qint32 height = origin.height() / (endDepth - startDepth);
+        images.over = true;
+        images.insertDepth = end;
+        images.newImage = image.copy(0, 0, image.width(), height);
+        images.overImage = image.copy(0, height, image.width(), image.height() - height);
+    }
+
+
+    return images;
+}
+
+
+// 复制粘贴
 void MainWindow::on_actionCopyAndPaste_triggered()
 {
+    // 获取工程信息
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
 
+    // 起始深度和终止深度
     qreal totalStart = prjInfo.startHeight;
     qreal totalEnd = prjInfo.endHeight;
 
+    // 当前段的起始深度和终止深度
     qreal currentStart = (ImageWidget::index > totalStart) ? ImageWidget::index : totalStart;
     qreal currentEnd = (ImageWidget::index + 1 < totalEnd) ? ImageWidget::index + 1 : totalEnd;
 
+    // 获取复制和粘贴的范围
     CopyAndPasteDialog dialog(totalStart, totalEnd, currentStart, currentEnd, this);
+
     if (QDialog::Accepted == dialog.exec())
     {
         qint32 currentIndex = ImageWidget::index;
         qint32 endIndex = ImageWidget::maxIndex;
 
+        // 获取当前段的图片
         DbHandler::BigImage bigImage = handler->getBigImage(currentIndex);
-        qreal copyDepth = dialog.getSection().y() - dialog.getSection().x();
+
+        // 获取当前段的总段长
         qreal currentDepth = bigImage.end - bigImage.start;
+
+        // 获取复制的总深度
+        qreal copyDepth = dialog.getSection().y() - dialog.getSection().x();
+        qint32 copyHeight = bigImage.pixmap.height() * copyDepth / currentDepth;
         qint32 startHeight = bigImage.pixmap.height() * (dialog.getSection().x() - qFloor(dialog.getSection().x())) / currentDepth;
-        qint32 endHeight = bigImage.pixmap.height() * (dialog.getSection().y() - qFloor(dialog.getSection().y())) / currentDepth;
-        if (0 == endHeight)
-            endHeight = bigImage.pixmap.height();
 
-        QImage copyImage(bigImage.pixmap.width(), endHeight-startHeight, QImage::Format_RGB32);
-        QPainter painter(&copyImage);
-        painter.drawImage(copyImage.rect(), bigImage.pixmap.toImage(),
-                          QRect(startHeight, 0, bigImage.pixmap.width(), endHeight - startHeight));
-
-
-
+        // 获取插入的地方
         qreal insertDepth = dialog.getDepth();
-        qint32 insertIndex = qFloor(insertDepth);
-        // 如果复制了整个页面 且在节点粘贴
-        if (copyDepth >= 1 && insertDepth == insertIndex)
+        qint32 insertHeight = bigImage.pixmap.height() * (insertDepth-qFloor(insertDepth)) / currentDepth;
+
+        Images images;
+        images.over = true;
+        images.overImage = bigImage.pixmap.toImage().copy(0, startHeight, bigImage.pixmap.width(), copyHeight);
+        images.insertDepth = insertDepth;
+
+        QProgressDialog progress(tr("Image is processing..."), QString(), 0, endIndex - currentIndex + 1, this);
+        progress.setWindowTitle(tr("In progress..."));
+        progress.setWindowModality(Qt::WindowModal);
+        progress.setValue(0);
+
+        int value = 1;
+        for (int i = currentIndex; i <= endIndex; i++)
         {
-            handler->insertImage(insertIndex, copyImage);
-            emit updatePrjInfo(handler->getPrjInfo());
-            ui->imageWidget->setIndex(currentIndex);
-            return;
+
+
+            DbHandler::BigImage imageData = handler->getIndexData(i).image;
+            images = getProcessedImage(imageData.pixmap.toImage(),
+                                       images.overImage,
+                                       imageData.start,
+                                       imageData.end,
+                                       images.insertDepth,
+                                       copyDepth
+                                       );
+            if (images.over)
+            {
+                handler->updateImage(i, i+1, i, i+1, images.newImage);
+                if (i == endIndex)
+                    handler->appendImage(i+1, imageData.end + copyDepth, images.overImage);
+            }
+            else
+                handler->updateImage(i, i+1, i, imageData.end + copyDepth, images.newImage);
+
+            progress.setValue(value++);
         }
 
-        DbHandler::BigImage insertBigImage = handler->getBigImage(insertIndex);
-        qreal afterDepth = insertBigImage.end - insertBigImage.start + copyDepth;
-
-        if (afterDepth <= 1)
-        {
-            qint32 realHeight = insertBigImage.pixmap.height() / (insertBigImage.end - insertBigImage.start);
-            qint32 startHeight = insertBigImage.pixmap.height() * (insertDepth - insertIndex) / (insertBigImage.end - insertBigImage.start);
-
-            QImage newImage(insertBigImage.pixmap.width(), realHeight * afterDepth, QImage::Format_RGB32);
-            QPainter painter(&newImage);
-            painter.drawImage(QRect(0, 0, newImage.width(), startHeight),
-                              insertBigImage.pixmap.toImage(),
-                              QRect(0, 0, newImage.width(), startHeight));
-            painter.drawImage(QRect(0, startHeight, newImage.width(), copyDepth * realHeight),
-                              copyImage);
-            painter.drawImage(QRect(0, startHeight + copyDepth * realHeight, newImage.width(), insertBigImage.pixmap.height() - (startHeight + copyDepth * realHeight)),
-                              insertBigImage.pixmap.toImage(),
-                              QRect(0, startHeight, newImage.width(), insertBigImage.pixmap.height() - startHeight));
-            handler->updateImage(insertIndex, insertIndex+1, insertIndex, (qreal)insertIndex+afterDepth, newImage);
-            emit updatePrjInfo(handler->getPrjInfo());
-            ui->imageWidget->setIndex(currentIndex);
-            return;
-        }
 
 
+        emit updatePrjInfo(handler->getPrjInfo());
+        ui->imageWidget->setIndex(currentIndex);
+        return;
     }
 }
+
+
+
+
+
 
 void MainWindow::on_actionDelete_triggered()
 {
@@ -1226,6 +1299,60 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 //}
 
 
-
-
-
+// 退出程序 需要根据当前状态判定
+void MainWindow::on_actionExit_triggered()
+{
+    qDebug() << appStatus;
+    switch(appStatus)
+    {
+        // 如果当前没有打开的文件 直接退出程序
+        case IDLE:
+        {
+            this->close();
+            break;
+        }
+        // 如果当前有打开的文件 则进行是否保存的判断 根据结果判断
+        case OPENED:
+        {
+            // 如果有未保存的内容
+            if (scene->hasNewItem())
+            {
+                QMessageBox messageBox(QMessageBox::Warning, tr("Unsave changes"),
+                                       tr("You have unsaved changes, whether to save?"),
+                                       QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
+                messageBox.setDefaultButton(QMessageBox::Cancel);
+                messageBox.setButtonText (QMessageBox::Yes, tr("Yes"));
+                messageBox.setButtonText (QMessageBox::No, tr("No"));
+                messageBox.setButtonText (QMessageBox::Cancel, tr("Cancel"));
+                switch(messageBox.exec())
+                {
+                    case QMessageBox::Yes:
+                    {
+                        on_actionSave_triggered();
+                        this->close();
+                        break;
+                    }
+                    case QMessageBox::No:
+                    {
+                        this->close();
+                        break;
+                    }
+                    case QMessageBox::Cancel:
+                    {
+                        return;
+                    }
+                    default:
+                        break;
+                }
+            }
+            // 如果没有未保存的内容
+            else
+            {
+                this->close();
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}

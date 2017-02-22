@@ -4,9 +4,6 @@
 #include <QColor>
 #include <QFont>
 
-#include "GraphicsScene.h"
-
-
 class GraphicsSettings
 {
 public:

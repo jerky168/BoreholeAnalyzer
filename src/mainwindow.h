@@ -23,7 +23,6 @@
 #include "CopyAndPasteDialog.h"
 #include "DeleteDialog.h"
 
-
 #ifdef Q_OS_WIN
 #include "QWord.h"
 #include "QExcel.h"
@@ -86,7 +85,15 @@ private slots:
 
 
 
+    void on_actionExit_triggered();
+
 private:
+
+    enum AppStatus{
+        IDLE = 0,
+        OPENED = 1
+    }appStatus;
+
     Ui::MainWindow *ui;
     DbHandler *handler;
     GraphicsScene *scene;
