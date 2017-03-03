@@ -55,7 +55,7 @@ bool DbHandler::openDatabase(QString filepath)
 
     if (!query.exec("select * from items"))
     {
-        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, type INT NOT NULL, data TEXT, remark TEXT);");
+        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, depth INT NOT NULL, type INT NOT NULL, data TEXT, remark TEXT);");
     }
     else if (!query.exec("select remark from BigImages"))
     {
@@ -119,7 +119,7 @@ void DbHandler::setPrjInfo(PrjInfo prjInfo)
                   "orificeNumber = :orificeNumber, date = :date, projectSite = :projectSite");
 
     query.bindValue(":startHeight", prjInfo.startHeight * 10000);
-    query.bindValue(":diameter", prjInfo.diameter);
+    query.bindValue(":diameter", prjInfo.diameter / 1000.0);
     query.bindValue(":projectName", prjInfo.projectName);
     query.bindValue(":orificeNumber", prjInfo.orificeNumber);
     query.bindValue(":date", prjInfo.projectTime);
@@ -332,12 +332,13 @@ void DbHandler::deleteImage(qreal start, qreal end)
 
 
 
-void DbHandler::saveItem(QUuid uuid, qint32 index, quint8 type, QString dataStr, QString remark)
+void DbHandler::saveItem(QUuid uuid, qint32 index, qint32 depth, quint8 type, QString dataStr, QString remark)
 {
     QSqlQuery query(database);
-    query.prepare("INSERT INTO items (uuid, number, type, data, remark) VALUES (:uuid, :number, :type, :data, :remark)");
+    query.prepare("INSERT INTO items (uuid, number, depth, type, data, remark) VALUES (:uuid, :number, :depth, :type, :data, :remark)");
     query.bindValue(":uuid", uuid.toString());
     query.bindValue(":number", index);
+    query.bindValue(":depth", depth);
     query.bindValue(":type", type);
     query.bindValue(":data", dataStr);
     query.bindValue(":remark", remark);
@@ -371,7 +372,7 @@ DbHandler::IndexData DbHandler::getIndexData(qint32 index)
     indexData.image = getBigImage(index);
 
     QSqlQuery query(database);
-    query.prepare("SELECT * FROM items WHERE number = :number");
+    query.prepare("SELECT * FROM items WHERE number = :number ORDER by depth ASC");
     query.bindValue(":number", index);
     query.exec();
 

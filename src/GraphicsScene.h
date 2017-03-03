@@ -83,6 +83,8 @@ public:
 
     void updateTable();
 
+    qreal getItemDepth(QGraphicsItem *item);
+
 public slots:
     void clearScene();
     void updateIndexData(QPixmap pixmap, qreal start, qreal end, qreal diameter, QMap<QString, QGraphicsItem *> items);
@@ -115,8 +117,6 @@ private:
 
     void clearItemData();
 
-
-    qreal getItemDepth(QGraphicsItem *item);
 
 signals:
     void modeChanged(GraphicsScene::Mode curMode);

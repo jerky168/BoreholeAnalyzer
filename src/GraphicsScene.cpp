@@ -468,7 +468,22 @@ QVector<GraphicsScene::TableData> GraphicsScene::getSavedTableData()
             default:
                 break;
         }
-        tableDatas.append(tableData);
+        if (tableDatas.isEmpty())
+            tableDatas.append(tableData);
+        else
+        {
+            int count = tableDatas.count();
+            for (int j = 0; j < count; j++)
+            {
+                if (tableData.depth < tableDatas.at(j).depth)
+                {
+                    tableDatas.insert(j, tableData);
+                    break;
+                }
+                else if (tableDatas.count() - 1 == j)
+                    tableDatas.append(tableData);
+            }
+        }
     }
     return tableDatas;
 }
@@ -1012,6 +1027,7 @@ QStringList GraphicsScene::getAllItemString()
     {
         QString remark;
         QGraphicsItem *item = savedItems.values().at(i);
+        qint32 depth = getItemDepth(item);
         switch (item->type())
         {
             case AnyShape:
@@ -1057,6 +1073,7 @@ QStringList GraphicsScene::getAllItemString()
             content += " " + tr("remark: ") + remark +"\n";
         else
             content += "\n";
+
 
         strList << content;
     }

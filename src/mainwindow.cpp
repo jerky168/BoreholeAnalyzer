@@ -597,6 +597,7 @@ void MainWindow::saveFile(qint32 itemIndex)
         qint32 index = itemIndex;
         QGraphicsItem *item = items.value(uuid.toString());
         quint8 type = item->type();
+        qint32 depth = scene->getItemDepth(item) * 10000;
         QString dataStr, remark;
         switch (item->type())
         {
@@ -642,7 +643,7 @@ void MainWindow::saveFile(qint32 itemIndex)
                 break;
             }
         }
-        handler->saveItem(uuid, index, type, dataStr, remark);
+        handler->saveItem(uuid, index, depth, type, dataStr, remark);
     }
     scene->saveNewItems();
 }
@@ -763,16 +764,14 @@ QImage handleImage(QImage image)
 QString MainWindow::getWordString(qint32 index)
 {
     DbHandler::IndexData indexData = handler->getIndexData(index);
-    GraphicsScene *scene = new GraphicsScene();
-    scene->updateIndexData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
-    QString str;
-    QStringList strList = scene->getAllItemString();
-    for (int i = 0; i < strList.count(); i++)
+    QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
+
+    QString str = "\n";
+    for (int i = 0; i < tableDatas.count(); i++)
     {
-        str += strList.at(i) + "\n";
+        str += tableDatas.at(i).data.section('\n', 0, 0) + "\n\n";
     }
     str.chop(2);
-    delete scene;
     return str;
 }
 
@@ -970,6 +969,7 @@ void MainWindow::on_actionExportExcel_triggered()
     {
         DbHandler::IndexData indexData = handler->getIndexData(i);
         QVector<GraphicsScene::TableData> tableDatas = GraphicsScene::getTableDataFromData(indexData.image.pixmap, indexData.image.start, indexData.image.end, indexData.image.diameter, index2Item(indexData));
+
         for (int j = 0; j < tableDatas.count(); j++, number++)
         {
             range = worksheet->querySubObject("Cells(int,int)", itemCount, 1);
@@ -1464,7 +1464,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
                 GraphicsAnyshape *item = GraphicsAnyshape::loadFromString(dataStr);
                 item->setRemark(remark);
                 item->setFinished();
-                items.insert(uuid.toString(), item);
+                items.insert(items.constEnd(), uuid.toString(), item);
                 break;
             }
             case Ruler:
@@ -1472,7 +1472,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
                 GraphicsLineItem *item = GraphicsLineItem::loadFromString(dataStr);
                 item->setRemark(remark);
                 item->setFinished();
-                items.insert(uuid.toString(), item);
+                items.insert(items.constEnd(), uuid.toString(), item);
                 break;
             }
             case Occurance:
@@ -1480,7 +1480,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
                 GraphicsOccurance *item = GraphicsOccurance::loadFromString(dataStr);
                 item->setRemark(remark);
                 item->setFinished();
-                items.insert(uuid.toString(), item);
+                items.insert(items.constEnd(), uuid.toString(), item);
                 break;
             }
             case Rect:
@@ -1488,7 +1488,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
                 GraphicsRectItem *item = GraphicsRectItem::loadFromString(dataStr);
                 item->setRemark(remark);
                 item->setFinished();
-                items.insert(uuid.toString(), item);
+                items.insert(items.constEnd(), uuid.toString(), item);
                 break;
             }
             case Text:
@@ -1496,7 +1496,7 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
                 GraphicsTextItem *item = GraphicsTextItem::loadFromString(dataStr);
                 item->setRemark(remark);
                 item->setFinished();
-                items.insert(uuid.toString(), item);
+                items.insert(items.constEnd(), uuid.toString(), item);
                 break;
             }
             default:

@@ -104,7 +104,7 @@ public:
     }IndexData;
 
 
-    void saveItem(QUuid uuid, qint32 index, quint8 type, QString dataStr, QString remark);
+    void saveItem(QUuid uuid, qint32 index, qint32 depth, quint8 type, QString dataStr, QString remark);
     IndexData getIndexData(qint32 index);
 
 public slots:
