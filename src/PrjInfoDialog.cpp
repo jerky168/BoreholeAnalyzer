@@ -27,6 +27,8 @@ void PrjInfoDialog::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     ui->endDepthSpinBox->setValue(prjInfo.endHeight);
     ui->testTimeEdit->setText(prjInfo.projectTime);
     ui->testSiteEdit->setText(prjInfo.projectSite);
+
+    ui->startDepthSpinBox->setMaximum(prjInfo.endHeight);
 }
 
 
@@ -68,6 +70,9 @@ void PrjInfoDialog::on_buttonBox_accepted()
 //        QMessageBox::warning(this, tr("Input error"), tr("Please input valid number!"));
 //        return;
 //    }
+
+
+
     emit savePrjInfo(info);
     QMessageBox::information(this, tr("Success"), tr("Save project information successfully."), tr("Ok"));
     clearPrjInfo();

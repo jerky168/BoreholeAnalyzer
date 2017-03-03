@@ -70,6 +70,63 @@ bool DbHandler::openDatabase(QString filepath)
         query.exec("alter table items add remark TEXT");
     }
 
+    // 检查所有段图片的高度并统一高度 暂时不加
+    if (query.exec("select * from bigImages"))
+    {
+
+//        query.next();
+//        qreal start = 0.0, end = 0.0;
+//        QPixmap pixmap;
+//        pixmap.loadFromData(query.value(1).toByteArray());
+//        end = query.value(0).toInt() / 10 / 1000.0;
+//        if (qFloor(end) == end)
+//            start = end - 1;
+//        else
+//            start = qFloor(end);
+
+//        qint32 totalHeight = pixmap.height() / (end - start);
+//        qDebug() << start << end << pixmap.height() << totalHeight;
+
+//        while(query.next())
+//        {
+//            QPixmap newPixmap;
+//            qreal newStart = 0.0, newEnd = 0.0;
+
+//            newPixmap.loadFromData(query.value(1).toByteArray());
+//            newEnd = query.value(0).toInt() / 10 / 1000.0;
+//            if (qFloor(newEnd) == newEnd)
+//                newStart = newEnd - 1;
+//            else
+//                newStart = qFloor(newEnd);
+//            qint32 newHeight = totalHeight * (newEnd - newStart);
+
+//            qDebug() << newStart << newEnd << newPixmap.height() << newHeight;
+
+//            QImage newImage(pixmap.width(), newHeight, QImage::Format_RGB32);
+//            QPainter painter(&newImage);
+//            painter.drawImage(newImage.rect(), newPixmap.toImage());
+
+//            QSqlQuery query1(database);
+//            query1.prepare("update bigImages set data = :newData where id > :start and id <= :end");
+
+//            QByteArray ba;
+//            QBuffer buffer(&ba);
+//            buffer.open(QIODevice::WriteOnly);
+//            newImage.save(&buffer, "JPG");
+
+//            qint32 I_newStart = newStart * 10000;
+//            qint32 I_newEnd = (newStart + 1) * 10000;
+
+//            query1.bindValue(":newData", ba);
+//            query1.bindValue(":start", I_newStart);
+//            query1.bindValue(":end", I_newEnd);
+
+//            query1.exec();
+
+//        }
+    }
+
+
     return true;
 }
 

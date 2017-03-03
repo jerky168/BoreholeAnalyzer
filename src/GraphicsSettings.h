@@ -35,6 +35,9 @@ private:
 
     qreal imageXRatio, imageYRatio;
 
+    // 用于存储第一段图应有的高度和宽度
+    // 用于校正每张图片的高度
+    qint32 imageHeight, imageWidth;
 
     static GraphicsSettings* GraphicsSettingInstance;
 };

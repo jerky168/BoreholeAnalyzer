@@ -44,7 +44,7 @@
       <widget class="QWidget" name="page3d">
        <layout class="QHBoxLayout" name="layout3D">
         <item>
-         <widget class="RollWidget" name="widget3D" native="true"/>
+         <widget class="Widget3D" name="widget3D" native="true"/>
         </item>
        </layout>
       </widget>
@@ -725,9 +725,9 @@
    <header>GraphicsView.h</header>
   </customwidget>
   <customwidget>
-   <class>RollWidget</class>
+   <class>Widget3D</class>
    <extends>QWidget</extends>
-   <header>RollWidget.h</header>
+   <header>Widget3D.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

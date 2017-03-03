@@ -26,7 +26,9 @@ GraphicsSettings::GraphicsSettings() :
     penFont(QApplication::font()),
     penColor(Qt::black),
     imageXRatio(1.0),
-    imageYRatio(1.0)
+    imageYRatio(1.0),
+    imageHeight(1000),
+    imageWidth(1000)
 {
     penFont.setPointSize(50);
 }

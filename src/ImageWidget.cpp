@@ -41,6 +41,13 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
     ui->nextButton->setEnabled(true);
 }
 
+void ImageWidget::updateStartDepth(DbHandler::PrjInfo prjInfo)
+{
+    ui->startHeightEdit->setText(QString::number(prjInfo.startHeight, 'f', 3).append(" m"));
+}
+
+
+
 void ImageWidget::clearPrjInfo()
 {
     maxIndex = 0;

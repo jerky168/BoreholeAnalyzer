@@ -208,8 +208,8 @@ void MainWindow::createConnections()
     connect(ui->action3DView, &QAction::triggered, actionGroupSpin, &QActionGroup::setEnabled);
 
     connect(actionGroup3D, &QActionGroup::triggered, [this]() {ui->actionAutoLeftSpin->setChecked(false);ui->actionAutoRightSpin->setChecked(false);ui->widget3D->stopAutoSpin();});
-    connect(ui->actionAutoLeftSpin, &QAction::triggered, ui->widget3D, &RollWidget::startLeftSpin);
-    connect(ui->actionAutoRightSpin, &QAction::triggered, ui->widget3D, &RollWidget::startRightSpin);
+    connect(ui->actionAutoLeftSpin, &QAction::triggered, ui->widget3D, &Widget3D::startLeftSpin);
+    connect(ui->actionAutoRightSpin, &QAction::triggered, ui->widget3D, &Widget3D::startRightSpin);
 
     QObject::connect(ui->imageWidget, SIGNAL(sigSwitchImage(qint32)), this, SLOT(switchImage(qint32)));
 
@@ -223,6 +223,7 @@ void MainWindow::createConnections()
     connect(ui->actionCross, SIGNAL(triggered(bool)), ui->graphicsView, SLOT(handleCrossMouse(bool)));
 
     connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), handler, SLOT(setPrjInfo(DbHandler::PrjInfo)));
+    connect(infoDialog, SIGNAL(savePrjInfo(DbHandler::PrjInfo)), ui->imageWidget, SLOT(updateStartDepth(DbHandler::PrjInfo)));
 
     connect(ui->defectWidget, SIGNAL(deleteItem(QUuid)), scene, SLOT(deleteItemData(QUuid)));
     connect(ui->defectWidget, SIGNAL(updateItemRemark(QUuid,QString)), scene, SLOT(updateItemRemark(QUuid,QString)));
@@ -288,9 +289,16 @@ void MainWindow::openFile(QString filename)
     // 正式打开文件
     appStatus = OPENED;
 
-
+    // 获取工程属性
     DbHandler::PrjInfo prjInfo = handler->getPrjInfo();
     emit updatePrjInfo(prjInfo);
+
+    // 获取第一段图片的所有信息
+    DbHandler::BigImage firstImage = handler->getBigImage(0);
+    qreal startDepth = firstImage.start;
+    qreal endDepth = firstImage.end;
+    qint32 imageHeight = firstImage.pixmap.height() / (endDepth - startDepth);
+    qint32 imageWidth = firstImage.pixmap.width();
 
     QObject::connect(scene, SIGNAL(showStatus(QString)), this, SLOT(showStatus(QString)));
 
@@ -475,10 +483,10 @@ void MainWindow::on_actionExportImage_triggered()
         settings.setValue("lastExportImage", dir.absolutePath());
 
         count++;
-        QString str = QString(tr("Export %1 images successfully.")).arg(count);
-        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
-        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
-        messageBox.exec();
+//        QString str = QString(tr("Export %1 images successfully.")).arg(count);
+//        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+//        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+//        messageBox.exec();
     }
     else
     {
@@ -519,10 +527,10 @@ void MainWindow::on_actionExportImage_triggered()
         dir.cdUp();
         settings.setValue("lastExportImage", dir.absolutePath());
 
-        QString str = QString(tr("Export %1 images successfully.")).arg(count);
-        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
-        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
-        messageBox.exec();
+//        QString str = QString(tr("Export %1 images successfully.")).arg(count);
+//        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+//        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+//        messageBox.exec();
     }
     delete dialog;
 }
@@ -546,6 +554,7 @@ QString MainWindow::getWordString(qint32 index)
     {
         str += strList.at(i) + "\n";
     }
+    str.chop(2);
     delete scene;
     return str;
 }
@@ -601,8 +610,9 @@ void MainWindow::on_actionExportWord_triggered()
     word.setParagraphAlignment(0);
 
     word.insertTable(1, 1);
-    word.setCellString(1, 1, tr("Name") + prjInfo.projectName);
+    word.setCellString(1, 1, prjInfo.projectName + "\n" + tr("Borehole Test Report"));
     word.setCellFontBold(1, 1, true);
+    word.setCellFontSize(1, 1, 10);
     word.moveForEnd();
 
     word.insertTable(2, 6);
@@ -645,7 +655,7 @@ void MainWindow::on_actionExportWord_triggered()
         image.setDotsPerMeterY(image.width() / 0.05);
         image.save(QDir::temp().filePath("temp.jpg"));
         word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
-        word.setCellFontSize(i + 5, 3, 5);
+        word.setCellFontSize(i + 5, 3, 8);
         word.setCellString(i + 5, 3, getWordString(2*i));
 
         if ((ImageWidget::maxIndex + 1) % 2 != 1 || (i != rows - 1))
@@ -655,7 +665,7 @@ void MainWindow::on_actionExportWord_triggered()
             image.setDotsPerMeterY(image.width() / 0.05);
             image.save(QDir::temp().filePath("temp.jpg"));
             word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
-            word.setCellFontSize(i + 5, 6, 5);
+            word.setCellFontSize(i + 5, 6, 8);
             word.setCellString(i + 5, 6, getWordString(2*i+1));
         }
 
@@ -668,7 +678,6 @@ void MainWindow::on_actionExportWord_triggered()
     QMessageBox::warning(this, tr("Unsupported operation"), tr("This operation is not support on this platform."));
 #endif
 }
-
 
 
 void MainWindow::on_actionExportExcel_triggered()
@@ -1177,6 +1186,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionManual_triggered()
 {
+
 }
 
 void MainWindow::on_actionContact_triggered()

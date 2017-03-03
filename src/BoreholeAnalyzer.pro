@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT  += core gui opengl sql
+QT  += core gui sql opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,7 +31,6 @@ SOURCES +=  main.cpp\
             PrjInfoDialog.cpp \
             ToolBar.cpp \
             AboutDialog.cpp \
-            RollWidget.cpp \
             GraphicsScene.cpp \ 
             GraphicsView.cpp \
             items/GraphicsRectItem.cpp \
@@ -43,7 +42,8 @@ SOURCES +=  main.cpp\
             ExportImageDialog.cpp \
             TextInputDialog.cpp \
             CopyAndPasteDialog.cpp \
-            DeleteDialog.cpp
+            DeleteDialog.cpp \
+    Widget3D.cpp
 
 
 
@@ -55,7 +55,6 @@ HEADERS  += mainwindow.h \
             PrjInfoDialog.h \
             ToolBar.h \
             AboutDialog.h \
-            RollWidget.h \
             GraphicsScene.h \
             GraphicsView.h \
             items/GraphicsRectItem.h \
@@ -69,7 +68,8 @@ HEADERS  += mainwindow.h \
             ExportImageDialog.h \
             TextInputDialog.h \
             CopyAndPasteDialog.h \
-            DeleteDialog.h
+            DeleteDialog.h \
+    Widget3D.h
 
 
 
@@ -99,7 +99,6 @@ win32 {
     INCLUDEPATH += 3rd
 
     LIBS += -lopengl32 -lglu32
-
 }
 
 DISTFILES += \

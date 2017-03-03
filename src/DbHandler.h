@@ -14,6 +14,8 @@
 #include <QBuffer>
 #include <QUuid>
 
+#include <QtMath>
+#include <QPainter>
 class DbHandler : public QObject
 {
     Q_OBJECT

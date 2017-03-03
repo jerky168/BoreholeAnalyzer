@@ -1052,7 +1052,7 @@ QStringList GraphicsScene::getAllItemString()
             }
         }
 
-        QString content = QString::number(i+1) + ": " + getShowString(savedItems.values().at(i)).section("\n", 0, 0);
+        QString content = getShowString(savedItems.values().at(i)).section("\n", 0, 0);
         if (!remark.isEmpty())
             content += " " + tr("remark: ") + remark +"\n";
         else

@@ -32,6 +32,7 @@ public:
 
 public slots:
     void updatePrjInfo(DbHandler::PrjInfo prjInfo);
+    void updateStartDepth(DbHandler::PrjInfo prjInfo);
     void clearPrjInfo();
 
 
