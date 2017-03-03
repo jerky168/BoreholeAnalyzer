@@ -38,5 +38,6 @@
         <file>res/images/save-table.png</file>
         <file>BoreholeAnalyzer_zh_CN.qm</file>
         <file>res/images/IDT.png</file>
+        <file>res/images/import.png</file>
     </qresource>
 </RCC>

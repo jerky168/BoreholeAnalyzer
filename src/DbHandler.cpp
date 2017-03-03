@@ -23,7 +23,6 @@ DbHandler::~DbHandler()
 
 
 
-
 bool DbHandler::openDatabase(QString filepath)
 {
     if (database.isOpen())
@@ -46,84 +45,21 @@ bool DbHandler::openDatabase(QString filepath)
         errorCode = NoProjectInfo;
         return false;
     }
-    // 检查表中是否有所有的字段 没有则添加
-    else if (!query.exec("select projectSite from ProjectInfo"))
-    {
-        query.exec("alter table ProjectInfo add projectSite TEXT");
-    }
 
-
-    if (!query.exec("select * from bigImages") || !query.first())
+    if (!query.exec("select * from BigImages") || !query.first())
     {
         qDebug() << query.lastError().text();
         errorCode = NoBigImages;
         return false;
     }
 
-
     if (!query.exec("select * from items"))
     {
         query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, type INT NOT NULL, data TEXT, remark TEXT);");
     }
-    else if (!query.exec("select remark from bigImages"))
+    else if (!query.exec("select remark from BigImages"))
     {
         query.exec("alter table items add remark TEXT");
-    }
-
-    // 检查所有段图片的高度并统一高度 暂时不加
-    if (query.exec("select * from bigImages"))
-    {
-
-//        query.next();
-//        qreal start = 0.0, end = 0.0;
-//        QPixmap pixmap;
-//        pixmap.loadFromData(query.value(1).toByteArray());
-//        end = query.value(0).toInt() / 10 / 1000.0;
-//        if (qFloor(end) == end)
-//            start = end - 1;
-//        else
-//            start = qFloor(end);
-
-//        qint32 totalHeight = pixmap.height() / (end - start);
-//        qDebug() << start << end << pixmap.height() << totalHeight;
-
-//        while(query.next())
-//        {
-//            QPixmap newPixmap;
-//            qreal newStart = 0.0, newEnd = 0.0;
-
-//            newPixmap.loadFromData(query.value(1).toByteArray());
-//            newEnd = query.value(0).toInt() / 10 / 1000.0;
-//            if (qFloor(newEnd) == newEnd)
-//                newStart = newEnd - 1;
-//            else
-//                newStart = qFloor(newEnd);
-//            qint32 newHeight = totalHeight * (newEnd - newStart);
-
-//            qDebug() << newStart << newEnd << newPixmap.height() << newHeight;
-
-//            QImage newImage(pixmap.width(), newHeight, QImage::Format_RGB32);
-//            QPainter painter(&newImage);
-//            painter.drawImage(newImage.rect(), newPixmap.toImage());
-
-//            QSqlQuery query1(database);
-//            query1.prepare("update bigImages set data = :newData where id > :start and id <= :end");
-
-//            QByteArray ba;
-//            QBuffer buffer(&ba);
-//            buffer.open(QIODevice::WriteOnly);
-//            newImage.save(&buffer, "JPG");
-
-//            qint32 I_newStart = newStart * 10000;
-//            qint32 I_newEnd = (newStart + 1) * 10000;
-
-//            query1.bindValue(":newData", ba);
-//            query1.bindValue(":start", I_newStart);
-//            query1.bindValue(":end", I_newEnd);
-
-//            query1.exec();
-
-//        }
     }
 
 
@@ -156,15 +92,15 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
     else
         prjInfo.isUp2Down = false;
     prjInfo.diameter = query.value("diameter").toDouble();
-    prjInfo.startHeight = query.value("startHeight").toDouble() / 10000;
+    prjInfo.startHeight = query.value("startHeight").toDouble() / 10000.0;
     prjInfo.projectName = query.value("projectName").toString();
     prjInfo.projectTime = query.value("date").toString();
     prjInfo.orificeNumber = query.value("orificeNumber").toString();
     prjInfo.projectSite = query.value("projectSite").toString();
 
-    query.exec("select * from bigImages");
+    query.exec("select * from BigImages");
     query.last();
-    prjInfo.endHeight = query.value(0).toDouble() / 10000;
+    prjInfo.endHeight = query.value(0).toDouble() / 10000.0;
 
     return prjInfo;
 }
@@ -177,23 +113,28 @@ void DbHandler::setPrjInfo(PrjInfo prjInfo)
         return;
 
     QSqlQuery query(database);
-    query.exec("DELETE FROM ProjectInfo");
-    query.prepare("INSERT INTO ProjectInfo (diameter, startHeight, projectName, date, orificeNumber, projectSite) "
-                  "VALUES (:diameter, :startHeight, :projectName, :date, :orificeNumber, :projectSite)");
-    query.bindValue(":diameter", prjInfo.diameter);
+
+    query.prepare("UPDATE ProjectInfo "
+                  "SET startHeight = :startHeight, diameter = :diameter, projectName = :projectName, "
+                  "orificeNumber = :orificeNumber, date = :date, projectSite = :projectSite");
+
     query.bindValue(":startHeight", prjInfo.startHeight * 10000);
+    query.bindValue(":diameter", prjInfo.diameter);
     query.bindValue(":projectName", prjInfo.projectName);
-    query.bindValue(":date", prjInfo.projectTime);
     query.bindValue(":orificeNumber", prjInfo.orificeNumber);
+    query.bindValue(":date", prjInfo.projectTime);
     query.bindValue(":projectSite", prjInfo.projectSite);
-    query.exec();
+    if (!query.exec())
+        qDebug() << query.lastError().text();
+
+
 }
 
 
 DbHandler::BigImage DbHandler::getBigImage(qint32 index)
 {
     QSqlQuery query(database);
-    query.prepare("select * from bigImages where id > ? and id <= ?");
+    query.prepare("select * from BigImages where id > ? and id <= ?");
     query.bindValue(0, index * 10000);
     query.bindValue(1, (index + 1) * 10000);
     query.exec();
@@ -215,7 +156,7 @@ DbHandler::BigImage DbHandler::getBigImage(qint32 index)
 void DbHandler::setBigImage(qreal start, qreal end, QImage image)
 {
     QSqlQuery query(database);
-    query.prepare("UPDATE bigImages SET data = :data WHERE id = :id");
+    query.prepare("UPDATE BigImages SET data = :data WHERE id = :id");
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -233,7 +174,7 @@ void DbHandler::setBigImage(qreal start, qreal end, QImage image)
 void DbHandler::appendImage(qreal start, qreal end, QImage image)
 {
     QSqlQuery query(database);
-    query.prepare("insert into bigImages (id, data) values (:id, :data)");
+    query.prepare("insert into BigImages (id, data) values (:id, :data)");
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -250,7 +191,7 @@ void DbHandler::appendImage(qreal start, qreal end, QImage image)
 void DbHandler::insertImage(qint32 index, QImage image)
 {
     QSqlQuery query(database);
-    query.prepare("select * from bigImages where id >= :id order by id desc");
+    query.prepare("select * from BigImages where id >= :id order by id desc");
 
     qint32 I_index = (index+1) * 10000;
 
@@ -260,14 +201,14 @@ void DbHandler::insertImage(qint32 index, QImage image)
     while (query.next())
     {
         QSqlQuery query1(database);
-        query1.prepare("update bigImages set id = :newId, data = :data where id = :oldId");
+        query1.prepare("update BigImages set id = :newId, data = :data where id = :oldId");
         query1.bindValue(":newId", query.value("id").toInt() + 10000);
         query1.bindValue(":data", query.value("data"));
         query1.bindValue(":oldId", query.value("id"));
         query1.exec();
     }
 
-    query.prepare("insert into bigImages (id, data) values (:id, :data)");
+    query.prepare("insert into BigImages (id, data) values (:id, :data)");
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -283,7 +224,7 @@ void DbHandler::insertImage(qint32 index, QImage image)
 void DbHandler::updateImage(qreal start, qreal end, QImage image)
 {
     QSqlQuery query(database);
-    query.prepare("update bigImages set data = :data where id > :start and id <= :end");
+    query.prepare("update BigImages set data = :data where id > :start and id <= :end");
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -304,7 +245,7 @@ void DbHandler::updateImage(qreal start, qreal end, QImage image)
 void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd)
 {
     QSqlQuery query(database);
-    query.prepare("update bigImages set id = :newId where id > :oldStart and id <= :oldEnd");
+    query.prepare("update BigImages set id = :newId where id > :oldStart and id <= :oldEnd");
 
     qint32 I_newEnd = newEnd * 10000;
     qint32 I_oldStart = oldStart * 10000;
@@ -321,7 +262,7 @@ void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal 
 void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal newEnd, QImage image)
 {
     QSqlQuery query(database);
-    query.prepare("update bigImages set id = :newId, data = :newData where id > :oldStart and id <= :oldEnd");
+    query.prepare("update BigImages set id = :newId, data = :newData where id > :oldStart and id <= :oldEnd");
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -344,11 +285,11 @@ void DbHandler::updateImage(qreal oldStart, qreal oldEnd, qreal newStart, qreal 
 void DbHandler::deleteLastImage()
 {
     QSqlQuery query(database);
-    query.exec("select * from bigImages");
+    query.exec("select * from BigImages");
     if (query.last())
     {
         qint32 depth = query.value("id").toInt();
-        query.prepare("delete from bigImages where id = :id");
+        query.prepare("delete from BigImages where id = :id");
         query.bindValue(":id", depth);
         query.exec();
     }
@@ -359,7 +300,7 @@ void DbHandler::deleteLastImage()
 void DbHandler::deleteImage(qreal start, qreal end)
 {
     QSqlQuery query(database);
-    query.prepare("select * from bigImages where id > :start");
+    query.prepare("select * from BigImages where id > :start");
     query.bindValue(":start", start * 10000);
     query.exec();
 
@@ -369,7 +310,7 @@ void DbHandler::deleteImage(qreal start, qreal end)
     if (query.next())
     {
         QSqlQuery query1(database);
-        query1.prepare("delete from bigImages where id > :start and id <= :end");
+        query1.prepare("delete from BigImages where id > :start and id <= :end");
         query1.bindValue(":start", I_start);
         query1.bindValue(":end", I_end);
         query1.exec();
@@ -377,7 +318,7 @@ void DbHandler::deleteImage(qreal start, qreal end)
 
         while (query.next())
         {
-            query1.prepare("update bigImages set id = :newId where id = :oldId");
+            query1.prepare("update BigImages set id = :newId where id = :oldId");
             query1.bindValue(":oldId", query.value("id"));
             query1.bindValue(":newId", query.value("id").toInt()-10000);
             query1.exec();

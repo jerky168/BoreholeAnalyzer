@@ -114,6 +114,9 @@ void MainWindow::initRegistry()
         return;
     }
 
+    QStringList list = settings.value("recentFiles").toStringList();
+    settings.setValue("recentFiles", list.filter(".ylinkp"));
+
     updateRecentFiles();
 }
 
@@ -154,6 +157,7 @@ void MainWindow::updateRecentFiles()
 {
     ui->recentMenu->clear();
     QStringList filenameList = settings.value("recentFiles").toStringList();
+
     QList<QAction *> actions;
     for (int i = filenameList.count() - 1, j = 1; i >= 0; i--, j++)
     {
@@ -312,9 +316,222 @@ void MainWindow::on_actionOpen_triggered()
     if (settings.contains("lastOpen"))
         dir = settings.value("lastOpen").toString();
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), dir, tr("Project file (*.ylink)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open project file"), dir, tr("Project file (*.ylinkp)"));
     openFile(filename);
 }
+
+
+
+void MainWindow::importFile(QString filename)
+{
+    if (filename.isEmpty())
+        return;
+    QFile origFile(filename);
+    if (!origFile.exists())
+        return;
+
+    QFile newFile(filename.append('p'));
+    if (newFile.exists())
+    {
+        QMessageBox messagebox(QMessageBox::Warning, tr("Same filename"),
+                               tr("File") + " " + newFile.fileName().section('/', -1) + " " + tr("already exists."),
+                               QMessageBox::Ok, this);
+        messagebox.exec();
+        return;
+    }
+
+
+    if (!newFile.open(QIODevice::Append))
+        return;
+    else
+        newFile.close();
+
+
+    QSqlDatabase::addDatabase("QSQLITE", "origDb");
+    QSqlDatabase::addDatabase("QSQLITE", "newDb");
+
+    {
+        QSqlDatabase origDb = QSqlDatabase::database("origDb");
+        origDb.setDatabaseName(origFile.fileName());
+
+        QSqlDatabase newDb = QSqlDatabase::database("newDb");
+        newDb.setDatabaseName(newFile.fileName());
+
+        if (!origDb.open() || !newDb.open())
+        {
+            qDebug() << origDb.lastError().text() << newDb.lastError().text();
+            QSqlDatabase::removeDatabase("origDb");
+            QSqlDatabase::removeDatabase("newDb");
+            return;
+        }
+
+        QSqlQuery origQuery(origDb);
+        QSqlQuery newQuery(newDb);
+
+        qreal lastDepth = 0.0;
+        qreal endDepth = 0.0;
+        qint32 count = 0;
+
+        // diameters-->Diameters
+        newQuery.exec("CREATE TABLE Diameters("
+                      "startHeight INTEGER NOT NULL,"
+                      "diameter REAL NOT NULL"
+                      ")");
+        if (origQuery.exec("SELECT startHeight, diameter FROM diameters") && origQuery.next())
+        {
+            newQuery.prepare("INSERT INTO Diameters (startHeight, diameter) "
+                             "VALUES(:startHeight, :diameter)");
+            newQuery.bindValue(":startHeight", origQuery.value(0));
+            newQuery.bindValue(":diameter", origQuery.value(1));
+            newQuery.exec();
+        }
+
+        // ProjectInfo-->ProjectInfo
+        newQuery.exec("CREATE TABLE ProjectInfo("
+                      "direction TEXT NOT NULL,"
+                      "startHeight INTEGER NOT NULL,"
+                      "diameter INTEGER NOT NULL,"
+                      "projectName TEXT,"
+                      "orificeNumber TEXT,"
+                      "date TEXT,"
+                      "projectSite TEXT"
+                      ")");
+
+
+        if (origQuery.exec("SELECT direction, startHeight, diameter FROM ProjectInfo") && origQuery.next())
+        {
+            newQuery.prepare("INSERT INTO ProjectInfo (direction, startHeight, diameter) "
+                             "VALUES(:direction, :startHeight, :diameter)");
+            if (origQuery.value(0).toString().isEmpty())
+                newQuery.bindValue(":direction", "down");
+            else
+                newQuery.bindValue(":direction", origQuery.value(0));
+            newQuery.bindValue(":startHeight", origQuery.value(1));
+            newQuery.bindValue(":diameter", origQuery.value(2));
+            newQuery.exec();
+
+            lastDepth = origQuery.value(1).toInt() / 1000.0;
+
+
+            if (origQuery.exec("SELECT projectName FROM ProjectInfo") && origQuery.next())
+            {
+                newQuery.prepare("UPDATE ProjectInfo SET projectName = :projectName");
+                newQuery.bindValue(":projectName", origQuery.value(0));
+                newQuery.exec();
+            }
+            if (origQuery.exec("SELECT orificeNumber FROM ProjectInfo") && origQuery.next())
+            {
+                newQuery.prepare("UPDATE ProjectInfo SET orificeNumber = :orificeNumber");
+                newQuery.bindValue(":orificeNumber", origQuery.value(0));
+                newQuery.exec();
+            }
+            if (origQuery.exec("SELECT date FROM ProjectInfo") && origQuery.next())
+            {
+                newQuery.prepare("UPDATE ProjectInfo SET date = :date");
+                newQuery.bindValue(":date", origQuery.value(0));
+                newQuery.exec();
+            }
+            if (origQuery.exec("SELECT projectSite FROM ProjectInfo") && origQuery.next())
+            {
+                newQuery.prepare("UPDATE ProjectInfo SET projectSite = :projectSite");
+                newQuery.bindValue(":projectSite", origQuery.value(0));
+                newQuery.exec();
+            }
+        }
+
+
+        if (origQuery.exec("SELECT id FROM BigImages") && origQuery.last())
+        {
+            endDepth = origQuery.value(0).toInt() / 10000.0;
+
+            qint32 min = qFloor(lastDepth);
+            qint32 max = (qFloor(endDepth) == endDepth) ? qFloor(endDepth) : qCeil(endDepth);
+            count = max - min;
+        }
+
+
+        // bigImages-->BigImages
+        newQuery.exec("CREATE TABLE BigImages("
+                      "id INTEGER KEY NOT NULL,"
+                      "data BLOB NOT NULL"
+                      ")");
+        if (origQuery.exec("SELECT id, data FROM bigImages") && origQuery.next())
+        {
+            qreal endDepth = origQuery.value(0).toInt() / 10000.0;
+            QPixmap firstPixmap;
+            firstPixmap.loadFromData(origQuery.value(1).toByteArray());
+
+            qint32 imageHeight = firstPixmap.height() / (endDepth - lastDepth);
+            qint32 imageWidth = firstPixmap.width();
+
+            QProgressDialog progress(tr("Importing project..."), tr("Cancel"), 0, count, this);
+            progress.setWindowTitle(tr("In progress..."));
+            progress.setModal(true);
+            progress.setValue(0);
+
+            qint32 i = 0;
+
+            do
+            {
+                endDepth = origQuery.value(0).toInt() / 10000.0;
+
+                QPixmap pixmap;
+                pixmap.loadFromData(origQuery.value(1).toByteArray());
+                QImage newImage(imageWidth, imageHeight * (endDepth - lastDepth), QImage::Format_RGB32);
+                QPainter painter(&newImage);
+                painter.drawImage(newImage.rect(), pixmap.toImage());
+
+                QByteArray ba;
+                QBuffer buffer(&ba);
+                buffer.open(QIODevice::WriteOnly);
+                newImage.save(&buffer, "JPG");
+
+                newQuery.prepare("INSERT INTO BigImages (id, data) "
+                                 "VALUES(:id, :data)");
+                newQuery.bindValue(":id", origQuery.value(0));
+                newQuery.bindValue(":data", ba);
+                newQuery.exec();
+
+                lastDepth = endDepth;
+
+                i++;
+
+                QString status = QString(tr("Importing image %1 of %2")).arg(i).arg(count);
+                progress.setLabelText(status);
+                progress.setValue(i);
+                if (progress.wasCanceled())
+                    break;
+
+            }while(origQuery.next());
+        }
+
+        origDb.close();
+        newDb.close();
+    }
+
+
+    QSqlDatabase::removeDatabase("origDb");
+    QSqlDatabase::removeDatabase("newDb");
+
+    openFile(newFile.fileName());
+
+}
+
+
+
+void MainWindow::on_actionImport_triggered()
+{
+    QString dir = Default_Folder;
+    if (settings.contains("lastOpen"))
+        dir = settings.value("lastOpen").toString();
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Import project file"), dir, tr("Project file (*.ylink)"));
+    if (filename.isEmpty())
+        return;
+    else
+        importFile(filename);
+}
+
 
 void MainWindow::on_actionClose_triggered()
 {
@@ -483,10 +700,10 @@ void MainWindow::on_actionExportImage_triggered()
         settings.setValue("lastExportImage", dir.absolutePath());
 
         count++;
-//        QString str = QString(tr("Export %1 images successfully.")).arg(count);
-//        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
-//        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
-//        messageBox.exec();
+        QString str = QString(tr("Export %1 images successfully.")).arg(count);
+        QMessageBox messageBox(QMessageBox::NoIcon, tr("Success"), str, QMessageBox::Ok, this);
+        messageBox.button(QMessageBox::Ok)->setText(tr("Ok"));
+        messageBox.exec();
     }
     else
     {
@@ -1366,3 +1583,5 @@ void MainWindow::on_actionExit_triggered()
             break;
     }
 }
+
+

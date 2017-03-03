@@ -82,6 +82,7 @@
      <addaction name="actionExportExcel"/>
     </widget>
     <addaction name="actionOpen"/>
+    <addaction name="actionImport"/>
     <addaction name="actionSave"/>
     <addaction name="actionClose"/>
     <addaction name="recentMenu"/>
@@ -173,6 +174,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen"/>
+   <addaction name="actionImport"/>
    <addaction name="actionSave"/>
    <addaction name="actionClose"/>
    <addaction name="separator"/>
@@ -702,6 +704,15 @@
    </property>
    <property name="text">
     <string>导出表格</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/res/images/import.png</normaloff>:/res/images/import.png</iconset>
+   </property>
+   <property name="text">
+    <string>导入</string>
    </property>
   </action>
  </widget>

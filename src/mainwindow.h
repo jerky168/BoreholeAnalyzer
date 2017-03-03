@@ -88,6 +88,8 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_actionImport_triggered();
+
 private:
 
     enum AppStatus{
@@ -119,6 +121,7 @@ private:
     void resetActions();
 
     void openFile(QString filename);
+    void importFile(QString filename);
     void saveFile(qint32 itemIndex);
 
 
