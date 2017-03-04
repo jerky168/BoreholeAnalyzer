@@ -223,6 +223,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>startHeightEdit</tabstop>
+  <tabstop>endHeightEdit</tabstop>
+  <tabstop>totalLengthEdit</tabstop>
+  <tabstop>totalPartEdit</tabstop>
+  <tabstop>currentDepthEdit</tabstop>
+  <tabstop>currentPartEdit</tabstop>
+  <tabstop>switchEdit</tabstop>
+  <tabstop>switchButton</tabstop>
+  <tabstop>lastButton</tabstop>
+  <tabstop>nextButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

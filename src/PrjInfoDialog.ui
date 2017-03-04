@@ -178,6 +178,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>nameEdit</tabstop>
+  <tabstop>numberEdit</tabstop>
+  <tabstop>diameterSpinBox</tabstop>
+  <tabstop>startDepthSpinBox</tabstop>
+  <tabstop>endDepthSpinBox</tabstop>
+  <tabstop>testTimeEdit</tabstop>
+  <tabstop>testSiteEdit</tabstop>
+ </tabstops>
  <resources>
   <include location="res.qrc"/>
  </resources>

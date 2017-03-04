@@ -334,10 +334,14 @@ void MainWindow::importFile(QString filename)
     if (newFile.exists())
     {
         QMessageBox messagebox(QMessageBox::Warning, tr("Same filename"),
-                               tr("File") + " " + newFile.fileName().section('/', -1) + " " + tr("already exists."),
-                               QMessageBox::Ok, this);
-        messagebox.exec();
-        return;
+                               tr("File") + " " + newFile.fileName().section('/', -1) + " " + tr("already exists.") + " " + tr("Whether to override?"),
+                               QMessageBox::Yes | QMessageBox::No, this);
+        messagebox.setButtonText(QMessageBox::Yes, tr("Yes"));
+        messagebox.setButtonText(QMessageBox::No, tr("No"));
+        if (QMessageBox::No == messagebox.exec())
+            return;
+        else
+            newFile.remove();
     }
 
 
@@ -467,6 +471,7 @@ void MainWindow::importFile(QString filename)
             QProgressDialog progress(tr("Importing project..."), tr("Cancel"), 0, count, this);
             progress.setWindowTitle(tr("In progress..."));
             progress.setModal(true);
+            progress.setMinimumDuration(1000);
             progress.setValue(0);
 
             qint32 i = 0;

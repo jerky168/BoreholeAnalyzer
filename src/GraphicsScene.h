@@ -23,7 +23,7 @@
 
 
 
-#define Border          200
+#define Border          220
 #define Interval        30
 #define Segment         30
 
