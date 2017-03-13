@@ -29,7 +29,7 @@ public:
         bool isUp2Down;
         qreal startHeight;
         qreal endHeight;
-        qreal diameter;
+        qint32 diameter;
         QString projectName;
         QString projectTime;
         QString projectSite;
@@ -47,7 +47,7 @@ public:
 
 
     typedef struct {
-        qreal diameter;
+        qint32 diameter;
         qreal start;
         qreal end;
         QPixmap pixmap;

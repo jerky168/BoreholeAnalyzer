@@ -47,6 +47,9 @@ public slots:
      void handleModeChanged(GraphicsScene::Mode curMode);
      void showStatus(QString message);
 
+protected:
+     void closeEvent(QCloseEvent * event);
+
 private slots:
     void on_actionOpen_triggered();
     void on_actionClose_triggered();

@@ -55,7 +55,7 @@ bool DbHandler::openDatabase(QString filepath)
 
     if (!query.exec("select * from items"))
     {
-        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, depth INT NOT NULL, type INT NOT NULL, data TEXT, remark TEXT);");
+        query.exec("CREATE TABLE items (uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, depth INT, type INT NOT NULL, data TEXT, remark TEXT);");
     }
     else if (!query.exec("select remark from BigImages"))
     {
@@ -91,7 +91,7 @@ DbHandler::PrjInfo DbHandler::getPrjInfo()
         prjInfo.isUp2Down = true;
     else
         prjInfo.isUp2Down = false;
-    prjInfo.diameter = query.value("diameter").toDouble();
+    prjInfo.diameter = query.value("diameter").toInt() / 10;
     prjInfo.startHeight = query.value("startHeight").toDouble() / 10000.0;
     prjInfo.projectName = query.value("projectName").toString();
     prjInfo.projectTime = query.value("date").toString();
@@ -119,7 +119,7 @@ void DbHandler::setPrjInfo(PrjInfo prjInfo)
                   "orificeNumber = :orificeNumber, date = :date, projectSite = :projectSite");
 
     query.bindValue(":startHeight", prjInfo.startHeight * 10000);
-    query.bindValue(":diameter", prjInfo.diameter / 1000.0);
+    query.bindValue(":diameter", prjInfo.diameter * 10);
     query.bindValue(":projectName", prjInfo.projectName);
     query.bindValue(":orificeNumber", prjInfo.orificeNumber);
     query.bindValue(":date", prjInfo.projectTime);
@@ -148,7 +148,7 @@ DbHandler::BigImage DbHandler::getBigImage(qint32 index)
 
     query.exec("select diameter from ProjectInfo");
     query.first();
-    bigImage.diameter = query.value("diameter").toDouble();
+    bigImage.diameter = query.value("diameter").toInt() / 10;
 
     return bigImage;
 }

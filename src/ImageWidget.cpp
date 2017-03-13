@@ -44,6 +44,7 @@ void ImageWidget::updatePrjInfo(DbHandler::PrjInfo prjInfo)
 void ImageWidget::updateStartDepth(DbHandler::PrjInfo prjInfo)
 {
     ui->startHeightEdit->setText(QString::number(prjInfo.startHeight, 'f', 3).append(" m"));
+    emit sigSwitchImage(index);
 }
 
 

@@ -465,13 +465,18 @@ void MainWindow::importFile(QString filename)
             QPixmap firstPixmap;
             firstPixmap.loadFromData(origQuery.value(1).toByteArray());
 
-            qint32 imageHeight = firstPixmap.height() / (endDepth - lastDepth);
-            qint32 imageWidth = firstPixmap.width();
+            qDebug() << firstPixmap.width() << firstPixmap.height();
+
+//            qint32 imageHeight = firstPixmap.height() / (endDepth - lastDepth);
+//            qint32 imageWidth = firstPixmap.width();
+
+            qint32 imageHeight = 4000;
+            qint32 imageWidth = 2000;
 
             QProgressDialog progress(tr("Importing project..."), tr("Cancel"), 0, count, this);
             progress.setWindowTitle(tr("In progress..."));
             progress.setModal(true);
-            progress.setMinimumDuration(1000);
+            progress.setMinimumDuration(500);
             progress.setValue(0);
 
             qint32 i = 0;
@@ -510,9 +515,32 @@ void MainWindow::importFile(QString filename)
             }while(origQuery.next());
         }
 
+        // items -->items
+//        newQuery.exec("CREATE TABLE items "
+//                      "(uuid TEXT PRIMARY KEY NOT NULL, number INT NOT NULL, depth INT, type INT NOT NULL, data TEXT, remark TEXT)");
+//        if (origQuery.exec("SELECT uuid, number, type, data, remark FROM items"))
+//        {
+//            while(origQuery.next())
+//            {
+//                newQuery.prepare("INSERT INTO items (uuid, number, type, data, remark) "
+//                                 "VALUES(:uuid, :number, :type, :data, :remark)");
+//                newQuery.bindValue(":uuid", origQuery.value(0));
+//                newQuery.bindValue(":number", origQuery.value(1));
+//                newQuery.bindValue(":type", origQuery.value(2));
+//                newQuery.bindValue(":data", origQuery.value(3));
+//                newQuery.bindValue(":remark", origQuery.value(4));
+//                newQuery.exec();
+//            }
+//        }
+
+
+
         origDb.close();
         newDb.close();
     }
+
+
+
 
 
     QSqlDatabase::removeDatabase("origDb");
@@ -716,6 +744,7 @@ void MainWindow::on_actionExportImage_triggered()
         QProgressDialog progress(tr("Exporting images..."), tr("Cancel"), 0, ImageWidget::maxIndex+1, this);
         progress.setWindowTitle(tr("In progress..."));
         progress.setModal(true);
+        progress.setMinimumDuration(500);
         progress.setValue(0);
         for (int i = 0; i <= ImageWidget::maxIndex; i++)
         {
@@ -774,7 +803,11 @@ QString MainWindow::getWordString(qint32 index)
     QString str = "\n";
     for (int i = 0; i < tableDatas.count(); i++)
     {
-        str += tableDatas.at(i).data.section('\n', 0, 0) + "\n\n";
+        QString remark;
+        if (!tableDatas.at(i).remark.isEmpty())
+            remark = QString("\n") + tableDatas.at(i).remark;
+
+        str += tableDatas.at(i).data.section('\n', 0, 0) + remark + "\n\n";
     }
     str.chop(2);
     return str;
@@ -845,7 +878,7 @@ void MainWindow::on_actionExportWord_triggered()
     word.setCellString(2, 6, prjInfo.projectTime);
 
     word.setCellString(3, 1, tr("Diameter"));
-    word.setCellString(3, 2, QString::number(prjInfo.diameter, 'f', 3) + "m");
+    word.setCellString(3, 2, QString::number(prjInfo.diameter) + "mm");
     word.setCellString(3, 3, tr("Depth"));
     word.setCellString(3, 4, QString::number(prjInfo.endHeight, 'f', 3) + "m");
     word.setCellString(3, 5, tr("StartDepth"));
@@ -853,9 +886,16 @@ void MainWindow::on_actionExportWord_triggered()
 
     word.moveForEnd();
 
-    word.insertTable(1, 10);
-    word.mergeRowCells(4, 2, 4);
-    word.mergeRowCells(4, 5, 7);
+//    word.insertTable(1, 10);
+//    word.mergeRowCells(4, 2, 4);
+//    word.mergeRowCells(4, 5, 7);
+
+    word.insertTable(1, 14);
+    word.mergeRowCells(4, 2, 5);
+    word.mergeRowCells(4, 3, 4);
+    word.mergeRowCells(4, 5, 8);
+    word.mergeRowCells(4, 6, 7);
+
     word.setCellString(4, 1, tr("Position"));
     word.setCellString(4, 2, tr("Image"));
     word.setCellString(4, 3, tr("Remarks"));
@@ -868,11 +908,17 @@ void MainWindow::on_actionExportWord_triggered()
     int rows = (ImageWidget::maxIndex+2)/2;
     for (int i = 0; i < rows; i++)
     {
-        word.insertTable(1, 10);
-        word.mergeRowCells(i + 5, 2, 4);
-        word.mergeRowCells(i + 5, 5, 7);
+//        word.insertTable(1, 10);
+//        word.mergeRowCells(i + 5, 2, 4);
+//        word.mergeRowCells(i + 5, 5, 7);
+        word.insertTable(1, 14);
+        word.mergeRowCells(i + 5, 2, 5);
+        word.mergeRowCells(i + 5, 3, 4);
+        word.mergeRowCells(i + 5, 5, 8);
+        word.mergeRowCells(i + 5, 6, 7);
+
         QImage image = getPixmapImage(2*i);
-        image.setDotsPerMeterX(image.width() / 0.05);
+        image.setDotsPerMeterX(image.width() / 0.045);
         image.setDotsPerMeterY(image.width() / 0.05);
         image.save(QDir::temp().filePath("temp.jpg"));
         word.insertCellPic(i + 5, 2, QDir::temp().filePath("temp.jpg"));
@@ -882,7 +928,7 @@ void MainWindow::on_actionExportWord_triggered()
         if ((ImageWidget::maxIndex + 1) % 2 != 1 || (i != rows - 1))
         {
             image = getPixmapImage(2*i+1);
-            image.setDotsPerMeterX(image.width() / 0.05);
+            image.setDotsPerMeterX(image.width() / 0.045);
             image.setDotsPerMeterY(image.width() / 0.05);
             image.save(QDir::temp().filePath("temp.jpg"));
             word.insertCellPic(i + 5, 5, QDir::temp().filePath("temp.jpg"));
@@ -1186,6 +1232,7 @@ void MainWindow::on_actionCopyAndPaste_triggered()
         QProgressDialog progress(tr("Image is processing..."), QString(), 0, endIndex - currentIndex + 1, this);
         progress.setWindowTitle(tr("In progress..."));
         progress.setWindowModality(Qt::WindowModal);
+        progress.setMinimumDuration(500);
         progress.setValue(0);
 
         int value = 1;
@@ -1285,6 +1332,7 @@ void MainWindow::on_actionDelete_triggered()
             QProgressDialog progress(tr("Image is processing..."), QString(), 0, endIndex - currentIndex, this);
             progress.setWindowTitle(tr("In progress..."));
             progress.setWindowModality(Qt::WindowModal);
+            progress.setMinimumDuration(500);
             progress.setValue(0);
 
             qint32 value = 0;
@@ -1356,6 +1404,7 @@ void MainWindow::on_actionShift_triggered()
         QProgressDialog progress(tr("Image is shifting..."), QString(), 0, ImageWidget::maxIndex+1, this);
         progress.setWindowTitle(tr("In progress..."));
         progress.setModal(true);
+        progress.setMinimumDuration(500);
         progress.setValue(0);
 
         for (int i = 0; i <= ImageWidget::maxIndex; i++)
@@ -1534,6 +1583,11 @@ QMap<QString, QGraphicsItem *> MainWindow::index2Item(DbHandler::IndexData index
 // 退出程序 需要根据当前状态判定
 void MainWindow::on_actionExit_triggered()
 {
+    this->close();
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
     qDebug() << appStatus;
     switch(appStatus)
     {
@@ -1561,16 +1615,17 @@ void MainWindow::on_actionExit_triggered()
                     case QMessageBox::Yes:
                     {
                         on_actionSave_triggered();
-                        this->close();
+                        event->accept();
                         break;
                     }
                     case QMessageBox::No:
                     {
-                        this->close();
+                        event->accept();
                         break;
                     }
                     case QMessageBox::Cancel:
                     {
+                        event->ignore();
                         return;
                     }
                     default:
@@ -1588,5 +1643,3 @@ void MainWindow::on_actionExit_triggered()
             break;
     }
 }
-
-

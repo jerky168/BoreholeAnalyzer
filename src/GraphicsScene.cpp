@@ -60,9 +60,9 @@ void GraphicsScene::updateIndexData(QPixmap pixmap, qreal start, qreal end, qrea
     clearScene();
     showInfo = true;
 
-    qreal perimeter = diameter * M_PI;
+    qreal perimeter = (qreal)diameter / 1000.0 * M_PI;
 
-    pixmap_diameter = diameter;
+    pixmap_diameter = (qreal)diameter / 1000.0;
     pixmap_start = start;
     pixmap_end = end;
     pixmap_width = pixmap.width();
@@ -633,22 +633,22 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
                 qreal max = (pos2.x() > pos1.x()) ? pos2.x() : pos1.x();
                 min += 360;
                 angle2 = (min + max) / 2;
-                angle3 = angle2 - 90;
+//                angle3 = angle2 - 90;
             }
             // 如果方位角之差小于等于180°
             else
             {
                 angle2 = (pos2.x() - pos1.x()) / 2;
-                angle3 = angle2 + 90;
-                if (angle3 >= 360)
-                    angle3 -= 360;
+//                angle3 = angle2 + 90;
+//                if (angle3 >= 360)
+//                    angle3 -= 360;
             }
 
             if ((pos1.x() > pos2.x() && pos1.y() < pos2.y()) || (pos1.x() < pos2.x() && pos1.y() > pos2.y()))
             {
-                angle3 += 180;
-                if (angle3 >= 360)
-                    angle3 -= 360;
+//                angle3 += 180;
+//                if (angle3 >= 360)
+//                    angle3 -= 360;
             }
 
             qreal hemline = qSqrt(2 * qPow(radius, 2) - 2 * qPow(radius, 2) * qCos(qDegreesToRadians(angle1)));
@@ -661,15 +661,25 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             qreal y = qFabs(i->line().p1().y() - i->line().p2().y()) / GraphicsSettings::instance()->getYRatio();
             qreal length = QLineF(x, 0, 0, y).length();
 
+
+
             if (pos1.y() < pos2.y())
+            {
                 str += QString::number(pos1.y(), 'f', 3) + "m-" + QString::number(pos2.y(), 'f', 3) + "m  ";
+                angle3 = pos1.x();
+            }
+
             else
+            {
                 str += QString::number(pos2.y(), 'f', 3) + "m-" + QString::number(pos1.y(), 'f', 3) + "m  ";
+                angle3 = pos2.x();
+            }
+
             str += tr("Inclination angle:  ") + getAngleString(angle3) + tr(" ") + QString::number(angle, 'f', 2) + "°\n";
-            str += tr("Length:  ") + QString::number(length * 100, 'f', 2) + "cm\n";
-            str += tr("Real length:  ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
-            str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + "\n";
-            str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x());
+//            str += tr("Length:  ") + QString::number(length * 100, 'f', 2) + "cm\n";
+//            str += tr("Real length:  ") + QString::number(realLength * 100, 'f', 2) + "cm\n";
+            str += tr("Start:  ") + QString::number(pos1.y(), 'f', 3) + "m  " + getAngleString(pos1.x()) + tr("(Azimuth)") + "\n";
+            str += tr("End:  ") + QString::number(pos2.y(), 'f', 3) + "m  " + getAngleString(pos2.x()) + tr("(Azimuth)");
 
             break;
         }
