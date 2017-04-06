@@ -666,13 +666,13 @@ QString GraphicsScene::getShowString(QGraphicsItem *item)
             if (pos1.y() < pos2.y())
             {
                 str += QString::number(pos1.y(), 'f', 3) + "m-" + QString::number(pos2.y(), 'f', 3) + "m  ";
-                angle3 = pos1.x();
+                angle3 = pos2.x();
             }
 
             else
             {
                 str += QString::number(pos2.y(), 'f', 3) + "m-" + QString::number(pos1.y(), 'f', 3) + "m  ";
-                angle3 = pos2.x();
+                angle3 = pos1.x();
             }
 
             str += tr("Inclination angle:  ") + getAngleString(angle3) + tr(" ") + QString::number(angle, 'f', 2) + "°\n";
